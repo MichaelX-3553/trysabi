@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f0d17">
+  <title>Sabi — Your lessons, personalized</title>
+  <meta name="description" content="Study materials transformed for YOUR brain. Personalized lessons for Nigerian university students.">
+  <meta property="og:title" content="Sabi — Your lessons, personalized">
+  <meta property="og:description" content="Study materials transformed for YOUR brain.">
+  <meta property="og:image" content="https://trysabi.netlify.app/og-image.jpg">
+  <meta property="og:url" content="https://trysabi.netlify.app">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- ===== SCREEN 1: CODE ENTRY ===== -->
+  <div id="screen-entry" class="screen active">
+    <div class="container">
+
+      <!-- Wordmark -->
+      <div class="wordmark">
+        sabi<span class="dot">.</span>
+        <span class="beta-badge">PREVIEW</span>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero">
+        <h1 class="headline">Your study materials, transformed.</h1>
+        <p class="subline">Personalized lessons for your brain.</p>
+      </div>
+
+      <!-- Code Form -->
+      <form id="code-form" class="code-form" autocomplete="off">
+        <input
+          type="text"
+          id="code-input"
+          class="code-input"
+          maxlength="5"
+          placeholder="Enter your code"
+          aria-label="Enter your access code"
+          spellcheck="false"
+          autocapitalize="characters"
+          autocomplete="off"
+        >
+        <button type="submit" id="submit-btn" class="btn-primary" disabled aria-label="Open your lessons">
+          Open →
+        </button>
+        <p id="error-message" class="error-message" aria-live="polite"></p>
+      </form>
+
+      <!-- Divider + CTA -->
+      <div class="entry-footer">
+        <div class="divider"></div>
+        <p class="footer-text">Don't have a code?</p>
+        <a id="wa-link-entry" class="footer-link" href="#" target="_blank" rel="noopener noreferrer">
+          Get your first lesson →
+        </a>
+      </div>
+
+      <!-- What is this? -->
+      <div class="faq-section">
+        <button id="faq-toggle" class="faq-toggle" aria-expanded="false" aria-controls="faq-content">
+          <span>What is this?</span>
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div id="faq-content" class="faq-content" hidden>
+          <p>Send us any PDF that's giving you trouble.</p>
+          <p>We turn it into a lesson made for YOUR brain.</p>
+          <p>Your interests. Your language. Your name in it.</p>
+          <div class="how-it-works">
+            <p class="how-title">How it works:</p>
+            <p>1. 💬 &nbsp;Message us your PDF + your name + 2 interests</p>
+            <p>2. 💰 &nbsp;Pay ₦500 (up to 60 pages)</p>
+            <p>3. 🔥 &nbsp;Get your code, open your lesson here</p>
+          </div>
+          <p class="faq-teaser">And this? This is just the preview. You're not ready for what's next. 😏</p>
+        </div>
+      </div>
+
+      <!-- Preview Banner -->
+      <div class="preview-banner">
+        <div class="preview-glow"></div>
+        <p class="preview-text">
+          <span class="preview-tag">✦ PREVIEW</span>
+          What you're seeing is 10% of what's coming.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 2: PORTAL ===== -->
+  <div id="screen-portal" class="screen">
+    <div class="container">
+
+      <!-- Wordmark -->
+      <div class="wordmark">
+        sabi<span class="dot">.</span>
+        <span class="beta-badge">PREVIEW</span>
+      </div>
+
+      <!-- Greeting -->
+      <h2 id="portal-greeting" class="portal-greeting"></h2>
+      <p id="portal-subtitle" class="portal-subtitle"></p>
+
+      <!-- Lesson Cards -->
+      <div id="lessons-container" class="lessons-container"></div>
+
+      <!-- No Lessons State -->
+      <div id="no-lessons" class="no-lessons" hidden>
+        <p class="no-lessons-title">Your lesson is being prepared 🔥</p>
+        <p class="no-lessons-text">We'll message you on WhatsApp when it's ready.</p>
+      </div>
+
+      <!-- Portal Footer -->
+      <div class="portal-footer">
+        <div class="divider"></div>
+        <p class="footer-text">Need another lesson?</p>
+        <a id="wa-link-portal" class="btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+          💬 Message us
+        </a>
+      </div>
+
+      <!-- ===== TEASER SECTION ===== -->
+      <div class="teaser-section">
+        <div class="teaser-glow"></div>
+
+        <div class="teaser-header">
+          <h3 class="teaser-title">What you just experienced? That's the warm-up.</h3>
+          <p class="teaser-subtitle">Your personalized lesson is elite. But what we're building next? It makes this look like a rough draft.</p>
+        </div>
+
+        <div class="teaser-grid">
+
+          <div class="teaser-card" data-msg="AI Study Buddy is coming 🧠">
+            <span class="teaser-emoji" aria-hidden="true">🧠</span>
+            <p class="teaser-line">Your lessons will talk back</p>
+            <span class="teaser-badge">SOON</span>
+          </div>
+
+          <div class="teaser-card" data-msg="Study Streaks dropping soon 🔥">
+            <span class="teaser-emoji" aria-hidden="true">🔥</span>
+            <p class="teaser-line">We'll know if you skip a day</p>
+            <span class="teaser-badge">SOON</span>
+          </div>
+
+          <div class="teaser-card" data-msg="You'll love Name in Lights ✨">
+            <span class="teaser-emoji" aria-hidden="true">✨</span>
+            <p class="teaser-line">Your name. In lights. Literally.</p>
+            <span class="teaser-badge">SOON</span>
+          </div>
+
+          <div class="teaser-card" data-msg="Offline Mode loading 📱">
+            <span class="teaser-emoji" aria-hidden="true">📱</span>
+            <p class="teaser-line">No wifi? Still studying.</p>
+            <span class="teaser-badge">SOON</span>
+          </div>
+
+          <div class="teaser-card" data-msg="Celebrations incoming 🎊">
+            <span class="teaser-emoji" aria-hidden="true">🎊</span>
+            <p class="teaser-line">Confetti when you finish. We're dead serious.</p>
+            <span class="teaser-badge">SOON</span>
+          </div>
+
+          <div class="teaser-card" data-msg="Progress Map coming soon 🎯">
+            <span class="teaser-emoji" aria-hidden="true">🎯</span>
+            <p class="teaser-line">A map of your brain leveling up</p>
+            <span class="teaser-badge">SOON</span>
+          </div>
+
+        </div>
+
+        <div class="teaser-footer">
+          <p class="teaser-footer-text">You got in early. Remember that. 💜</p>
+          <a id="wa-link-teaser" class="teaser-cta" href="#" target="_blank" rel="noopener noreferrer">
+            Curious about what's coming? 👀
+          </a>
+        </div>
+      </div>
+
+      <!-- Switch User -->
+      <button id="switch-user" class="switch-user">
+        Not <span id="switch-name"></span>?
+      </button>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
