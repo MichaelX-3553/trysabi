@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Structures & Trees — Learn with Mathias</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--green-dark:#1a5c2a;--green-main:#2E7D32;--green-light:#4CAF50;--green-pale:#E8F5E9;--gold:#F9A825;--gold-light:#FFF8E1;--earth-brown:#5D4037;--earth-light:#8D6E63;--cream:#FAFAF5;--white:#FFFFFF;--dark:#1a1a2e;--text:#2c2c2c;--text-light:#666;--success:#2E7D32;--error:#EF5350;--error-dark:#C62828;--error-bg:#FFEBEE;--info-bg:#F3E5F5;--info-text:#4A148C;--shadow-sm:0 2px 8px rgba(0,0,0,0.06);--shadow:0 4px 24px rgba(0,0,0,0.08);--shadow-lg:0 12px 48px rgba(0,0,0,0.12);--radius:16px;--radius-sm:10px;--radius-xs:8px;--radius-full:50px;--surface:var(--white);--page-bg:var(--cream);--border-color:rgba(0,0,0,0.04);--code-bg:#1a1a2e}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);line-height:1.7;overflow-x:hidden;transition:background .3s,color .3s}
+body.dark-mode{--page-bg:#0f0f1a;--surface:#1a1a2e;--text:#d4d4d4;--text-light:#999;--green-pale:rgba(76,175,80,0.08);--gold-light:rgba(255,179,0,0.08);--border-color:rgba(255,255,255,0.06);--shadow-sm:0 2px 8px rgba(0,0,0,0.3);--shadow:0 4px 24px rgba(0,0,0,0.35);--shadow-lg:0 12px 48px rgba(0,0,0,0.4);--green-main:#66BB6A;--green-dark:#388E3C;--gold:#FFB300;--error-bg:rgba(239,83,80,0.1);--info-bg:rgba(74,20,140,0.1);--cream:#0f0f1a}
+#progressBar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--green-main),var(--gold),var(--green-light));z-index:10000;transition:width .3s;width:0}
+nav{position:fixed;top:4px;left:0;right:0;z-index:9999;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
+nav.scrolled{background:rgba(255,255,255,0.85);backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
+body.dark-mode nav.scrolled{background:rgba(15,15,26,0.85)}
+.nav-logo{font-weight:800;font-size:1.1rem;color:var(--green-main)}
+.nav-links{display:flex;gap:8px}
+.nav-links a{font-size:.78rem;font-weight:600;color:var(--text-light);text-decoration:none;padding:6px 12px;border-radius:var(--radius-full);transition:.2s}
+.nav-links a:hover,.nav-links a.active{background:var(--green-pale);color:var(--green-main)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#0d3318,var(--green-dark),var(--earth-brown));color:#fff;padding:40px 24px;position:relative}
+.hero-badge{display:inline-block;padding:6px 18px;border-radius:var(--radius-full);background:rgba(255,255,255,0.1);font-size:.8rem;font-weight:600;letter-spacing:1px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.15)}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;line-height:1.15;margin-bottom:16px}
+.hero h1 .accent{background:linear-gradient(135deg,var(--gold),#FFD54F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.1rem;opacity:.85;max-width:550px;margin-bottom:32px}
+.hero-btn{padding:16px 40px;border-radius:var(--radius-full);background:var(--gold);color:var(--dark);font-weight:700;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(249,168,37,0.35);transition:.3s}
+.hero-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(249,168,37,0.45)}
+.hero-btn:active{transform:scale(.96)}
+.scroll-hint{position:absolute;bottom:28px;animation:bounce 2s infinite;font-size:1.4rem;opacity:.7}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.section{padding:80px 24px;max-width:880px;margin:0 auto}
+.section.locked{opacity:.3;pointer-events:none;filter:blur(2px)}
+.section-label{text-transform:uppercase;font-size:.78rem;font-weight:700;letter-spacing:2px;color:var(--green-main);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green-main)}
+.section h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;margin-bottom:8px}
+.section h2 .hl{color:var(--green-main)}
+body.dark-mode .section h2{color:#e8e8e8}
+.section-intro{font-size:1.05rem;color:var(--text-light);margin-bottom:28px}
+.card{background:var(--surface);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow-sm);border:1px solid var(--border-color);margin-bottom:20px;transition:.3s}
+.card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.card h3{font-size:1.3rem;font-weight:700;margin-bottom:10px}
+.card h4{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.card p,.card li{margin-bottom:8px}
+.farm-box{background:linear-gradient(135deg,var(--green-pale),rgba(200,230,200,0.3));border-left:4px solid var(--green-main);padding:16px 20px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:14px 0;color:var(--green-dark)}
+body.dark-mode .farm-box{color:#81C784}
+.football-box{background:linear-gradient(135deg,var(--gold-light),rgba(255,240,200,0.3));border-left:4px solid var(--gold);padding:16px 20px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:14px 0;color:var(--earth-brown)}
+body.dark-mode .football-box{color:#FFB74D}
+.info-box{background:var(--info-bg);padding:16px 20px;border-radius:var(--radius-sm);margin:14px 0;display:flex;gap:10px;align-items:flex-start;color:var(--info-text);font-size:.95rem}
+body.dark-mode .info-box{color:#CE93D8}
+.btn{padding:10px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;border:none;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn:active{transform:scale(.96)}
+.btn-green{background:var(--green-main);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-gold{background:var(--gold);color:var(--dark)}
+.btn-red{background:var(--error);color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--green-main);color:var(--green-main)}
+.btn-outline:hover{background:var(--green-pale)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{padding:6px 14px;font-size:.82rem}
+input[type=text],input[type=number]{padding:10px 16px;border:2px solid #e0e0e0;border-radius:var(--radius-sm);font-family:inherit;font-size:.95rem;background:var(--surface);color:var(--text);transition:.2s;width:100%}
+input:focus{outline:none;border-color:var(--green-main)}
+body.dark-mode input{border-color:#333}
+.demo-area{background:var(--surface);border-radius:var(--radius);padding:24px;border:2px dashed var(--border-color);margin:16px 0;min-height:120px;position:relative}
+.stack-visual,.queue-visual{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:80px}
+.stack-item,.queue-item{padding:10px 24px;background:var(--green-pale);border:2px solid var(--green-main);border-radius:var(--radius-xs);font-weight:600;font-size:.9rem;animation:stackIn .3s ease;min-width:120px;text-align:center}
+@keyframes stackIn{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes queueIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.queue-visual{flex-direction:row;flex-wrap:wrap;justify-content:flex-start}
+.queue-item{animation:queueIn .3s ease}
+.top-label{font-size:.7rem;font-weight:700;color:var(--green-main);text-transform:uppercase;letter-spacing:1px}
+.empty-msg{color:var(--text-light);font-style:italic;font-size:.9rem;text-align:center;padding:20px}
+.log-area{max-height:150px;overflow-y:auto;font-size:.8rem;color:var(--text-light);border-top:1px solid var(--border-color);margin-top:12px;padding-top:8px}
+.log-area div{padding:3px 0;border-bottom:1px solid rgba(0,0,0,0.03)}
+.code-block{background:var(--code-bg);border-radius:var(--radius-sm);padding:20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.8;color:#d4d4d4;margin:14px 0}
+.code-block .kw{color:#C792EA}
+.code-block .str{color:#C3E88D}
+.code-block .typ{color:#FFCB6B}
+.code-block .fn{color:#82AAFF}
+.code-block .cm{color:#546E7A}
+.code-block .num{color:#F78C6C}
+.tree-svg{width:100%;max-width:500px;margin:0 auto;display:block}
+.tree-svg circle{transition:fill .3s,stroke .3s}
+.tree-svg .node-active{fill:var(--gold);stroke:#F57F17}
+.tree-svg .node-visited{fill:var(--green-main);stroke:var(--green-dark)}
+.tree-svg text{font-family:'Inter',sans-serif;font-weight:700;font-size:14px}
+.traversal-output{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0;min-height:36px;align-items:center}
+.traversal-output span{padding:4px 12px;border-radius:var(--radius-xs);background:var(--green-pale);font-weight:600;font-size:.9rem}
+.traversal-output .arrow{background:none;color:var(--text-light);font-weight:700}
+.quiz-container{background:var(--surface);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow)}
+.quiz-dots{display:flex;gap:6px;margin-bottom:20px;justify-content:center}
+.quiz-dot{width:12px;height:12px;border-radius:50%;background:var(--border-color);transition:.3s}
+.quiz-dot.current{background:var(--gold);transform:scale(1.3)}
+.quiz-dot.correct{background:var(--green-main)}
+.quiz-dot.wrong{background:var(--error)}
+.quiz-option{border:2px solid var(--border-color);border-radius:12px;padding:12px 18px;margin:6px 0;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.2s}
+.quiz-option:hover{border-color:var(--green-light);background:var(--green-pale)}
+.quiz-option.selected{border-color:var(--green-main);background:var(--green-pale)}
+.quiz-option.correct{border-color:var(--success);background:var(--green-pale)}
+.quiz-option.wrong{border-color:var(--error);background:var(--error-bg)}
+.quiz-option .letter{width:32px;height:32px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.quiz-option.correct .letter{background:var(--success);color:#fff}
+.quiz-option.wrong .letter{background:var(--error);color:#fff}
+.quiz-feedback{padding:14px;border-radius:12px;margin-top:10px;font-size:.92rem;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct-fb{background:var(--green-pale);color:var(--green-dark)}
+.quiz-feedback.wrong-fb{background:var(--error-bg);color:var(--error-dark)}
+body.dark-mode .quiz-feedback.correct-fb{color:#81C784}
+body.dark-mode .quiz-feedback.wrong-fb{color:#EF9A9A}
+.gate{background:var(--surface);border:2px solid var(--gold);border-radius:var(--radius);padding:28px;text-align:center;margin:28px 0}
+.gate h3{color:var(--gold);margin-bottom:10px}
+.comparison-section{background:linear-gradient(135deg,#0d3318,var(--green-dark),var(--earth-brown));color:#fff;padding:60px 24px;margin:40px 0}
+.comparison-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;max-width:880px;margin:0 auto}
+.comparison-card{background:rgba(255,255,255,0.08);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(8px)}
+.comparison-card h3{color:var(--gold);margin-bottom:8px;font-size:1.1rem}
+.comparison-card p{color:rgba(255,255,255,0.8);font-size:.9rem}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;margin:14px 0;border-radius:var(--radius-sm);overflow:hidden;font-size:.88rem}
+.data-table th{background:var(--green-dark);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border-color);background:var(--surface)}
+.data-table tr:nth-child(even) td{background:var(--green-pale)}
+body.dark-mode .data-table tr:nth-child(even) td{background:rgba(76,175,80,0.04)}
+.badge-panel{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:9998;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.badge-toggle{width:44px;height:44px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;font-size:1.2rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;transition:.3s}
+.badge-toggle:hover{transform:scale(1.1)}
+.badge-list{position:absolute;right:52px;top:0;background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-lg);width:240px;max-height:350px;overflow-y:auto;display:none;border:1px solid var(--border-color)}
+.badge-list.open{display:block}
+.badge-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-color);font-size:.82rem}
+.badge-item .b-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.badge-item.earned .b-icon{background:var(--gold-light);animation:badgePop .5s ease}
+.badge-item.locked .b-icon{background:var(--border-color);filter:grayscale(1);opacity:.4}
+@keyframes badgePop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+.glossary-btn{position:fixed;left:16px;bottom:16px;padding:10px 16px;border-radius:var(--radius-full);background:var(--surface);border:2px solid var(--green-main);color:var(--green-main);font-weight:700;cursor:pointer;z-index:99998;box-shadow:var(--shadow);font-size:.85rem;font-family:inherit;transition:.3s}
+.glossary-btn:hover{background:var(--green-pale)}
+.glossary-panel{position:fixed;left:0;top:0;bottom:0;width:300px;background:var(--surface);z-index:100000;box-shadow:var(--shadow-lg);transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column}
+.glossary-panel.open{transform:translateX(0)}
+.glossary-header{padding:16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
+.glossary-body{flex:1;overflow-y:auto;padding:12px 16px}
+.glossary-term{padding:10px 0;border-bottom:1px solid var(--border-color)}
+.glossary-term strong{color:var(--green-main);font-size:.9rem}
+.glossary-term p{font-size:.82rem;color:var(--text-light);margin-top:2px}
+.dark-toggle{position:fixed;right:16px;bottom:16px;width:48px;height:48px;border-radius:50%;background:var(--surface);border:2px solid var(--border-color);cursor:pointer;font-size:1.2rem;z-index:99999;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;transition:.3s}
+.dark-toggle:hover{transform:scale(1.1)}
+.controls-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.input-row{display:flex;gap:8px;margin:10px 0}
+.input-row input{flex:1;min-width:100px}
+.bst-node{transition:all .4s ease}
+.step-info{font-size:.9rem;color:var(--text-light);padding:8px 0;min-height:24px}
+.stat{text-align:center}.stat .num{font-size:2.2rem;font-weight:900;color:var(--green-main)}
+body.dark-mode .stat .num{color:#66BB6A}
+.stat .label{font-size:.82rem;font-weight:600;color:var(--text-light)}
+.footer{background:var(--dark);color:rgba(255,255,255,0.5);text-align:center;padding:40px 24px;font-size:.82rem}
+.footer a{color:var(--gold);text-decoration:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.shake{animation:shake .3s ease}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(46,125,50,0.4)}50%{box-shadow:0 0 0 8px rgba(46,125,50,0)}}
+.pulse{animation:pulse-green .6s ease}
+.hidden{display:none!important}
+.fade-in{opacity:0;transform:translateY(24px);transition:all .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){
+.nav-links{display:none}
+.section{padding:50px 16px}
+.card{padding:20px}
+.comparison-grid{grid-template-columns:1fr}
+.badge-panel{right:8px}
+.glossary-panel{width:85vw}
+.hero h1{font-size:clamp(1.8rem,7vw,3rem)}
+}
+</style>
+</head>
+<body>
+<div id="progressBar"></div>
+<nav id="mainNav">
+<div class="nav-logo">📚 Data Structures</div>
+<div class="nav-links" id="navLinks"></div>
+</nav>
+
+<section class="hero">
+<span class="hero-badge">MODULE 3 & 4 — DATA STRUCTURES</span>
+<h1>How Computers <span class="accent">Store & Find</span> Data</h1>
+<p>Learn how computers keep things in order — like stacking yams, lining up at a machine, or sorting a team. Step by step, made for you.</p>
+<button class="hero-btn" onclick="document.getElementById('sec1').scrollIntoView({behavior:'smooth'})">Start Learning</button>
+<div class="scroll-hint">↓</div>
+</section>
+
+<!-- SECTION 1: Access Methods -->
+<div class="section fade-in" id="sec1">
+<div class="section-label">Section 1</div>
+<h2>How Computers <span class="hl">Find Things</span></h2>
+<p class="section-intro">There are two ways to find something: jump straight to it, or search from the start.</p>
+
+<div class="card">
+<h3>Two Ways to Find Data</h3>
+<p>Think about this, Mathias. You have two ways to find a yam:</p>
+<div class="farm-box">
+<strong>🌾 Random Access — Like a yam barn with labels:</strong> Every yam has a spot number. You want yam #50? You walk straight to spot 50. It does not matter if the barn has 10 yams or 10,000 — you go right to the spot. The position does not change how fast you find it.
+</div>
+<div class="football-box">
+<strong>⚽ Sequential Access — Like a single-file line:</strong> Imagine players standing in a line. To find player #7, you must check player #1, then #2, then #3... all the way to #7. Finding someone at the end takes much longer than finding someone at the start.
+</div>
+<p><strong>Random Access</strong> means the position does not change the speed. Your computer's memory (RAM) works this way — it can grab any piece of data instantly.</p>
+<p><strong>Sequential Access</strong> means you must go through items one by one from the start. Old tape drives and text files work this way.</p>
+</div>
+
+<div class="card">
+<h3>Arrays — Your Numbered Shelf</h3>
+<p>An <strong>array</strong> is like a shelf with numbered slots. Each slot holds one item.</p>
+<div class="farm-box"><strong>🌾</strong> Think of a yam barn with 100 numbered spaces. Space 1 holds one yam, space 2 holds another. You can put a yam in space 50 just as fast as space 1. That is random access.</div>
+<p>In code, it looks like this:</p>
+<div class="code-block"><span class="typ">names</span>[<span class="num">1</span>] = <span class="str">"Alex"</span>      <span class="cm">// Put "Alex" in slot 1</span>
+<span class="typ">names</span>[<span class="num">1000000</span>] = <span class="str">"Zeke"</span> <span class="cm">// Put "Zeke" in slot 1000000</span>
+<span class="cm">// Both take the same time!</span></div>
+<p>You can also read the array backwards just as fast as forwards. Try the demo below.</p>
+</div>
+
+<div class="card">
+<h4>🛠️ Try It: Array Access</h4>
+<p>Click any slot to see its value. Notice: every slot is equally fast to reach.</p>
+<div class="demo-area" id="arrayDemo" style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center">
+</div>
+<div class="step-info" id="arrayInfo">Click a slot above to access it.</div>
+</div>
+
+<div class="gate" id="gate1">
+<h3>🔓 Check: Can you move on?</h3>
+<p>In Random Access, does the position of an item change how fast you find it?</p>
+<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline" onclick="checkGate(1,'no',this)">No, position does not matter</button>
+<button class="btn btn-outline" onclick="checkGate(1,'yes',this)">Yes, later items are slower</button>
+</div>
+<div class="quiz-feedback" id="gate1fb"></div>
+</div>
+</div>
+
+<!-- SECTION 2: Stacks -->
+<div class="section fade-in locked" id="sec2">
+<div class="section-label">Section 2</div>
+<h2>Stacks — <span class="hl">Last In, First Out</span></h2>
+<p class="section-intro">Like a pile of yams — the last one you put on top is the first one you take off.</p>
+
+<div class="card">
+<h3>What is a Stack?</h3>
+<p><strong>LIFO</strong> stands for <strong>Last In, First Out</strong>. The last item you add is the first item you remove.</p>
+<div class="farm-box"><strong>🌾 Stacking yams in a basket:</strong> You put yams in one by one. The last yam you placed sits on top. When you take yams out, you take the top one first. You cannot grab a yam from the bottom without removing the ones above it.</div>
+<div class="football-box"><strong>⚽ Stacking jerseys after training:</strong> Players throw jerseys in a pile. The last jersey thrown on top is the first one picked up. The first jersey thrown is buried at the bottom.</div>
+
+<h4 style="margin-top:16px">Stack Operations</h4>
+<table class="data-table">
+<thead><tr><th>Action</th><th>Name</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Start fresh</td><td><strong>Initialize</strong></td><td>Make the stack empty</td></tr>
+<tr><td>Add item</td><td><strong>Push</strong></td><td>Put a new item on TOP</td></tr>
+<tr><td>Remove item</td><td><strong>Pop</strong></td><td>Take the TOP item off</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h4>🛠️ Stack Sandbox — Try Push and Pop</h4>
+<div class="input-row">
+<input type="text" id="stackInput" placeholder="Type a name..." maxlength="15">
+<button class="btn btn-green" onclick="stackPush()">Push (Add Top)</button>
+<button class="btn btn-red" onclick="stackPop()">Pop (Remove Top)</button>
+</div>
+<div class="demo-area">
+<div class="top-label" id="stackTopLabel" style="display:none">← TOP (comes out first)</div>
+<div class="stack-visual" id="stackVisual"><div class="empty-msg">Stack is empty. Push something!</div></div>
+</div>
+<div class="step-info" id="stackInfo"></div>
+<div class="log-area" id="stackLog"></div>
+</div>
+
+<div class="card">
+<h4>📝 Stack Code</h4>
+<div class="code-block"><span class="kw">int</span> <span class="typ">top</span> = <span class="num">0</span>;
+<span class="typ">String</span>[] <span class="typ">stack</span> = <span class="kw">new</span> <span class="typ">String</span>[<span class="num">100</span>];
+
+<span class="kw">public void</span> <span class="fn">push</span>(<span class="typ">String</span> newItem) {
+    top = top + <span class="num">1</span>;          <span class="cm">// Move up one spot</span>
+    stack[top] = newItem;   <span class="cm">// Put the item there</span>
+}
+
+<span class="kw">public</span> <span class="typ">String</span> <span class="fn">pop</span>() {
+    <span class="typ">String</span> item = stack[top]; <span class="cm">// Take the top item</span>
+    top = top - <span class="num">1</span>;           <span class="cm">// Move down one spot</span>
+    <span class="kw">return</span> item;
+}</div>
+<div class="info-box"><span>💡</span><span>The <strong>top</strong> variable keeps track of where the top of the stack is. Push moves it up, Pop moves it down.</span></div>
+</div>
+
+<div class="gate" id="gate2">
+<h3>🔓 Quick Check</h3>
+<p>You push A, then B, then C onto a stack. Which comes out first when you pop?</p>
+<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline" onclick="checkGate(2,'a',this)">A (first pushed)</button>
+<button class="btn btn-outline" onclick="checkGate(2,'c',this)">C (last pushed)</button>
+<button class="btn btn-outline" onclick="checkGate(2,'b',this)">B (middle)</button>
+</div>
+<div class="quiz-feedback" id="gate2fb"></div>
+</div>
+</div>
+
+<!-- SECTION 3: Queues -->
+<div class="section fade-in locked" id="sec3">
+<div class="section-label">Section 3</div>
+<h2>Queues — <span class="hl">First In, First Out</span></h2>
+<p class="section-intro">Like a line at the grinding machine — the first person in line is served first.</p>
+
+<div class="card">
+<h3>What is a Queue?</h3>
+<p><strong>FIFO</strong> stands for <strong>First In, First Out</strong>. The first item you add is the first item you remove.</p>
+<div class="farm-box"><strong>🌾 Waiting at the grinding machine:</strong> Farmers line up. The first farmer who arrives gets served first. New farmers join at the back. This is fair — everyone waits their turn.</div>
+<div class="football-box"><strong>⚽ Penalty shootout order:</strong> Players line up to take penalty kicks. The first in line kicks first. A new player joins at the back of the line.</div>
+
+<h4 style="margin-top:16px">Queue Operations</h4>
+<table class="data-table">
+<thead><tr><th>Action</th><th>Name</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Start fresh</td><td><strong>Initialize</strong></td><td>Make the queue empty</td></tr>
+<tr><td>Add item</td><td><strong>Enqueue</strong></td><td>Join at the BACK</td></tr>
+<tr><td>Remove item</td><td><strong>Dequeue</strong></td><td>Leave from the FRONT</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h4>🛠️ Queue Sandbox — Try Enqueue and Dequeue</h4>
+<div class="input-row">
+<input type="text" id="queueInput" placeholder="Type a name..." maxlength="15">
+<button class="btn btn-green" onclick="queueEnqueue()">Enqueue (Join Back)</button>
+<button class="btn btn-red" onclick="queueDequeue()">Dequeue (Leave Front)</button>
+</div>
+<div class="demo-area">
+<div style="display:flex;justify-content:space-between;font-size:.7rem;font-weight:700;color:var(--text-light);margin-bottom:4px"><span>FRONT →</span><span>← BACK</span></div>
+<div class="queue-visual" id="queueVisual"><div class="empty-msg">Queue is empty. Enqueue someone!</div></div>
+</div>
+<div class="step-info" id="queueInfo"></div>
+<div class="log-area" id="queueLog"></div>
+</div>
+
+<div class="card">
+<h4>📝 Queue Code</h4>
+<div class="code-block"><span class="kw">int</span> <span class="typ">front</span> = <span class="num">0</span>, <span class="typ">back</span> = <span class="num">0</span>;
+<span class="typ">String</span>[] <span class="typ">queue</span> = <span class="kw">new</span> <span class="typ">String</span>[<span class="num">100</span>];
+
+<span class="kw">public void</span> <span class="fn">enqueue</span>(<span class="typ">String</span> newItem) {
+    queue[back] = newItem;  <span class="cm">// Put item at the back</span>
+    back = back + <span class="num">1</span>;       <span class="cm">// Move back pointer forward</span>
+}
+
+<span class="kw">public</span> <span class="typ">String</span> <span class="fn">dequeue</span>() {
+    <span class="kw">if</span> (front < back) {      <span class="cm">// Check: is queue empty?</span>
+        <span class="typ">String</span> item = queue[front]; <span class="cm">// Take front item</span>
+        front = front + <span class="num">1</span>;   <span class="cm">// Move front pointer</span>
+        <span class="kw">return</span> item;
+    } <span class="kw">else</span> {
+        <span class="kw">return</span> <span class="str">"Queue is empty!"</span>;
+    }
+}</div>
+<div class="info-box"><span>⚠️</span><span><strong>Underflow</strong> happens when you try to remove from an empty queue. The code checks <code>front &lt; back</code> to prevent this.</span></div>
+</div>
+
+<div class="gate" id="gate3">
+<h3>🔓 Quick Check</h3>
+<p>Three farmers line up: Ali first, then Bola, then Chidi. Who gets served first?</p>
+<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline" onclick="checkGate(3,'ali',this)">Ali (arrived first)</button>
+<button class="btn btn-outline" onclick="checkGate(3,'chidi',this)">Chidi (arrived last)</button>
+<button class="btn btn-outline" onclick="checkGate(3,'bola',this)">Bola (in the middle)</button>
+</div>
+<div class="quiz-feedback" id="gate3fb"></div>
+</div>
+</div>
+
+<!-- SECTION 4: Stack vs Queue + Deque -->
+<div class="section fade-in locked" id="sec4">
+<div class="section-label">Section 4</div>
+<h2>Stack vs Queue & <span class="hl">Deque</span></h2>
+<p class="section-intro">See the difference side by side. Plus, learn about the double-ended queue.</p>
+
+<div class="card">
+<h3>Side-by-Side: Stack vs Queue</h3>
+<p>Add the same items to both. Then remove — and see the difference!</p>
+<div class="controls-row">
+<button class="btn btn-green btn-sm" onclick="compAdd()">Add "Farmer" to Both</button>
+<button class="btn btn-red btn-sm" onclick="compRemove()">Remove from Both</button>
+<button class="btn btn-outline btn-sm" onclick="compReset()">Reset</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="demo-area"><h4 style="font-size:.85rem;text-align:center;margin-bottom:8px">Stack (LIFO)</h4><div class="stack-visual" id="compStack"><div class="empty-msg">Empty</div></div></div>
+<div class="demo-area"><h4 style="font-size:.85rem;text-align:center;margin-bottom:8px">Queue (FIFO)</h4><div class="queue-visual" id="compQueue" style="flex-direction:column"><div class="empty-msg">Empty</div></div></div>
+</div>
+<div class="step-info" id="compInfo">Add items to both structures, then remove to see how they differ.</div>
+</div>
+
+<div class="card">
+<h3>Deque — The Double-Ended Queue</h3>
+<p>A <strong>deque</strong> (say "deck") works like both a stack AND a queue. You can add or remove from both ends.</p>
+<div class="football-box"><strong>⚽ Think of substitutions:</strong> Normally players wait in line (queue). But if the coach says "you go in NOW!" — that player jumps to the front. A deque allows pushing to the front for urgent items.</div>
+<p>This is useful for <strong>priorities</strong>. Some jobs are more urgent. An urgent job can be pushed to the front.</p>
+<div class="info-box"><span>💡</span><span><strong>Stacks, Queues, and Deques</strong> are called <strong>Abstract Data Types (ADT)</strong>. This means they are general ideas — you can build them in many different ways.</span></div>
+</div>
+
+<div class="gate" id="gate4">
+<h3>🔓 Quick Check</h3>
+<p>A Stack removes the LAST item added. A Queue removes the FIRST item added. What does a Deque do?</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline btn-sm" onclick="checkGate(4,'both',this)">Can remove from both ends</button>
+<button class="btn btn-outline btn-sm" onclick="checkGate(4,'middle',this)">Removes from the middle</button>
+</div>
+<div class="quiz-feedback" id="gate4fb"></div>
+</div>
+</div>
+
+<!-- SECTION 5: Trees -->
+<div class="section fade-in locked" id="sec5">
+<div class="section-label">Section 5</div>
+<h2>Trees — <span class="hl">Family Structure</span></h2>
+<p class="section-intro">A tree stores data like a family tree — with parents, children, and branches.</p>
+
+<div class="card">
+<h3>What is a Tree?</h3>
+<p>Mathias, a <strong>tree</strong> in computing is NOT a straight line. It branches out, like a real tree — or like a family.</p>
+<div class="farm-box"><strong>🌾 Like a farming family:</strong> The grandfather (root) has children. Each child has their own children. The family branches out. Everyone connects back up to the grandfather.</div>
+<p>A tree has <strong>nodes</strong> (each box that holds data) connected by <strong>edges</strong> (the lines between them).</p>
+
+<h4 style="margin-top:16px">Key Tree Words</h4>
+<table class="data-table">
+<thead><tr><th>Word</th><th>Meaning</th><th>Analogy</th></tr></thead>
+<tbody>
+<tr><td><strong>Root</strong></td><td>The top node. Only one.</td><td>🌾 The grandfather of the farm family</td></tr>
+<tr><td><strong>Parent</strong></td><td>A node with children below it</td><td>⚽ The coach above the captain</td></tr>
+<tr><td><strong>Child</strong></td><td>A node below a parent</td><td>🌾 Sons/daughters of a farmer</td></tr>
+<tr><td><strong>Leaf</strong></td><td>A node with NO children</td><td>⚽ A player with nobody below them</td></tr>
+<tr><td><strong>Subtree</strong></td><td>A node and everything below it</td><td>🌾 One branch of the family</td></tr>
+<tr><td><strong>Level</strong></td><td>How deep a node is. Root = level 0</td><td>⚽ Coach=0, Captain=1, Players=2</td></tr>
+<tr><td><strong>Path</strong></td><td>Route from one node to another</td><td>🌾 Walking from grandfather to grandson</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h4>🛠️ Click the Tree — Learn Each Part</h4>
+<div class="demo-area" style="text-align:center">
+<svg class="tree-svg" viewBox="0 0 400 280" id="treeSvg1">
+<line x1="200" y1="40" x2="100" y2="120" stroke="#2E7D32" stroke-width="2"/>
+<line x1="200" y1="40" x2="300" y2="120" stroke="#2E7D32" stroke-width="2"/>
+<line x1="100" y1="120" x2="50" y2="200" stroke="#2E7D32" stroke-width="2"/>
+<line x1="100" y1="120" x2="150" y2="200" stroke="#2E7D32" stroke-width="2"/>
+<line x1="300" y1="120" x2="250" y2="200" stroke="#2E7D32" stroke-width="2"/>
+<line x1="300" y1="120" x2="350" y2="200" stroke="#2E7D32" stroke-width="2"/>
+<circle cx="200" cy="40" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="This is the ROOT — the top of the tree. Like the head of the farming family." style="cursor:pointer"/>
+<text x="200" y="45" text-anchor="middle" fill="#1a5c2a">A</text>
+<circle cx="100" cy="120" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="B is a CHILD of A, and a PARENT of D and E. It is on Level 1." style="cursor:pointer"/>
+<text x="100" y="125" text-anchor="middle" fill="#1a5c2a">B</text>
+<circle cx="300" cy="120" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="C is a CHILD of A, and a PARENT of F and G. B and C are SIBLINGS." style="cursor:pointer"/>
+<text x="300" y="125" text-anchor="middle" fill="#1a5c2a">C</text>
+<circle cx="50" cy="200" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="D is a LEAF — it has no children. It is on Level 2." style="cursor:pointer"/>
+<text x="50" y="205" text-anchor="middle" fill="#1a5c2a">D</text>
+<circle cx="150" cy="200" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="E is a LEAF — no children. D and E are siblings (same parent B)." style="cursor:pointer"/>
+<text x="150" y="205" text-anchor="middle" fill="#1a5c2a">E</text>
+<circle cx="250" cy="200" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="F is a LEAF — no children. It belongs to C's subtree." style="cursor:pointer"/>
+<text x="250" y="205" text-anchor="middle" fill="#1a5c2a">F</text>
+<circle cx="350" cy="200" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3" class="tree-click" data-info="G is a LEAF — no children. F and G are siblings." style="cursor:pointer"/>
+<text x="350" y="205" text-anchor="middle" fill="#1a5c2a">G</text>
+</svg>
+</div>
+<div class="step-info" id="treeClickInfo">Click any node above to learn about it.</div>
+</div>
+
+<div class="card">
+<h3>Types of Trees</h3>
+<p><strong>1. General Tree:</strong> Each node can have ANY number of children. No limit.</p>
+<div class="farm-box"><strong>🌾</strong> Like a farmer who can have 1, 3, or 10 children. No rule about how many.</div>
+<p><strong>2. Binary Tree:</strong> Each node can have AT MOST 2 children — a left child and a right child.</p>
+<div class="football-box"><strong>⚽</strong> Like each player can only pass to TWO people — one on the left, one on the right.</div>
+<p><strong>3. Binary Search Tree (BST):</strong> A binary tree with a sorting rule — smaller values go LEFT, bigger values go RIGHT.</p>
+<div class="farm-box"><strong>🌾</strong> Imagine sorting yams by weight. Lighter yams go in the left basket, heavier ones go right. At each step, you sort again. This makes finding any yam very fast.</div>
+</div>
+
+<div class="gate" id="gate5">
+<h3>🔓 Quick Check</h3>
+<p>A node with no children is called a:</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline btn-sm" onclick="checkGate(5,'root',this)">Root</button>
+<button class="btn btn-outline btn-sm" onclick="checkGate(5,'leaf',this)">Leaf</button>
+<button class="btn btn-outline btn-sm" onclick="checkGate(5,'parent',this)">Parent</button>
+</div>
+<div class="quiz-feedback" id="gate5fb"></div>
+</div>
+</div>
+
+<!-- SECTION 6: BST -->
+<div class="section fade-in locked" id="sec6">
+<div class="section-label">Section 6</div>
+<h2>Binary Search <span class="hl">Trees</span></h2>
+<p class="section-intro">A special tree where smaller goes left, bigger goes right. This makes searching fast!</p>
+
+<div class="card">
+<h3>The BST Rule</h3>
+<p>Mathias, this is the most important part about BSTs:</p>
+<ul style="margin-left:20px">
+<li>Values <strong>smaller</strong> than the node → go to the <strong>LEFT</strong></li>
+<li>Values <strong>bigger</strong> than the node → go to the <strong>RIGHT</strong></li>
+</ul>
+<div class="farm-box"><strong>🌾 Sorting yams by size:</strong> You pick up a yam. Is it lighter than the one in your hand? Put it LEFT. Heavier? Put it RIGHT. Do this at every step. Now to find any yam, just keep asking "lighter or heavier?" — you find it very fast!</div>
+
+<h4 style="margin-top:14px">Search in a BST</h4>
+<p>To find a value, start at the root. If the value is smaller, go left. If bigger, go right. Repeat until you find it or reach the end.</p>
+
+<h4>Insert in a BST</h4>
+<p>To add a new value, follow the same path (left if smaller, right if bigger). When you reach an empty spot, put it there.</p>
+</div>
+
+<div class="card">
+<h4>🛠️ Build a BST — Add Numbers</h4>
+<p>Type a number and click Add. Watch it find the right spot!</p>
+<div class="input-row">
+<input type="number" id="bstInput" placeholder="Enter number (1-99)" min="1" max="99">
+<button class="btn btn-green" onclick="bstInsert()">Add to Tree</button>
+<button class="btn btn-outline btn-sm" onclick="bstReset()">Reset</button>
+</div>
+<div class="demo-area" style="text-align:center;min-height:200px">
+<svg id="bstSvg" viewBox="0 0 500 300" class="tree-svg" style="max-width:100%"></svg>
+</div>
+<div class="step-info" id="bstInfo">Try adding: 27, 14, 35, 10, 19. Watch how each number goes left or right!</div>
+</div>
+
+<div class="card">
+<h3>Advantages & Disadvantages</h3>
+<p>✅ <strong>Fast searching</strong> — at each step you cut out half the tree.</p>
+<p>✅ <strong>Easy to search</strong> — just compare: smaller or bigger?</p>
+<p>❌ <strong>Can become unbalanced</strong> — if you add sorted numbers (1,2,3,4,5...), the tree becomes a straight line. This is called <strong>skewed</strong>.</p>
+<div class="football-box"><strong>⚽</strong> A skewed tree is like all players standing in a single line — you lose the advantage of branching. A <strong>balanced tree</strong> keeps both sides roughly equal, so searching stays fast.</div>
+</div>
+
+<div class="gate" id="gate6">
+<h3>🔓 Quick Check</h3>
+<p>In a BST with root 20, where does the number 15 go?</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline btn-sm" onclick="checkGate(6,'left',this)">Left (15 < 20)</button>
+<button class="btn btn-outline btn-sm" onclick="checkGate(6,'right',this)">Right (15 > 20)</button>
+</div>
+<div class="quiz-feedback" id="gate6fb"></div>
+</div>
+</div>
+
+<!-- SECTION 7: Tree Traversal -->
+<div class="section fade-in locked" id="sec7">
+<div class="section-label">Section 7</div>
+<h2>Tree <span class="hl">Traversal</span></h2>
+<p class="section-intro">Traversal means visiting every node. There are 3 ways to do it.</p>
+
+<div class="card">
+<h3>Three Ways to Visit Every Node</h3>
+<p><strong>Traversal</strong> means going through every node in the tree, one by one. There are 3 orders:</p>
+
+<h4>1. In-Order: Left → Root → Right</h4>
+<div class="farm-box"><strong>🌾</strong> Check the left field first. Then check the boss. Then check the right field. The boss is IN the middle.</div>
+
+<h4>2. Pre-Order: Root → Left → Right</h4>
+<div class="football-box"><strong>⚽</strong> The coach checks HIMSELF first (PRE = before). Then the left side. Then the right side.</div>
+
+<h4>3. Post-Order: Left → Right → Root</h4>
+<div class="farm-box"><strong>🌾</strong> Check all workers first. The boss checks himself LAST (POST = after).</div>
+
+<table class="data-table">
+<thead><tr><th>Method</th><th>Order</th><th>Memory trick</th></tr></thead>
+<tbody>
+<tr><td><strong>In-Order</strong></td><td>Left → Root → Right</td><td>Root is IN the middle</td></tr>
+<tr><td><strong>Pre-Order</strong></td><td>Root → Left → Right</td><td>Root comes BEFORE (pre)</td></tr>
+<tr><td><strong>Post-Order</strong></td><td>Left → Right → Root</td><td>Root comes AFTER (post)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h4>🛠️ Watch Traversal Step by Step</h4>
+<p>Tree: A has children B (left) and C (right). B has children D, E. C has children F, G.</p>
+<div class="controls-row">
+<button class="btn btn-green btn-sm" onclick="startTraversal('inorder')">In-Order</button>
+<button class="btn btn-gold btn-sm" onclick="startTraversal('preorder')">Pre-Order</button>
+<button class="btn btn-outline btn-sm" onclick="startTraversal('postorder')">Post-Order</button>
+<button class="btn btn-sm" onclick="stepTraversal()" id="travStepBtn" disabled style="background:#eee">▶ Next Step</button>
+<button class="btn btn-sm" onclick="resetTraversal()" style="background:#eee">↺ Reset</button>
+</div>
+<div class="demo-area" style="text-align:center">
+<svg class="tree-svg" viewBox="0 0 400 240" id="travSvg">
+<line x1="200" y1="35" x2="100" y2="105" stroke="#2E7D32" stroke-width="2"/>
+<line x1="200" y1="35" x2="300" y2="105" stroke="#2E7D32" stroke-width="2"/>
+<line x1="100" y1="105" x2="55" y2="180" stroke="#2E7D32" stroke-width="2"/>
+<line x1="100" y1="105" x2="145" y2="180" stroke="#2E7D32" stroke-width="2"/>
+<line x1="300" y1="105" x2="255" y2="180" stroke="#2E7D32" stroke-width="2"/>
+<line x1="300" y1="105" x2="345" y2="180" stroke="#2E7D32" stroke-width="2"/>
+<g id="tnA"><circle cx="200" cy="35" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="200" y="40" text-anchor="middle" fill="#1a5c2a">A</text></g>
+<g id="tnB"><circle cx="100" cy="105" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="100" y="110" text-anchor="middle" fill="#1a5c2a">B</text></g>
+<g id="tnC"><circle cx="300" cy="105" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="300" y="110" text-anchor="middle" fill="#1a5c2a">C</text></g>
+<g id="tnD"><circle cx="55" cy="180" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="55" y="185" text-anchor="middle" fill="#1a5c2a">D</text></g>
+<g id="tnE"><circle cx="145" cy="180" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="145" y="185" text-anchor="middle" fill="#1a5c2a">E</text></g>
+<g id="tnF"><circle cx="255" cy="180" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="255" y="185" text-anchor="middle" fill="#1a5c2a">F</text></g>
+<g id="tnG"><circle cx="345" cy="180" r="20" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="345" y="185" text-anchor="middle" fill="#1a5c2a">G</text></g>
+</svg>
+</div>
+<div class="step-info" id="travInfo">Choose a traversal method above, then click Next Step.</div>
+<div class="traversal-output" id="travOutput"></div>
+</div>
+
+<div class="card">
+<h4>📝 Traversal Code (In-Order)</h4>
+<div class="code-block"><span class="kw">void</span> <span class="fn">inorder_traversal</span>(<span class="typ">Node</span> node) {
+    <span class="kw">if</span>(node != <span class="kw">null</span>) {
+        <span class="fn">inorder_traversal</span>(node.leftChild);  <span class="cm">// Go left first</span>
+        System.out.<span class="fn">print</span>(node.data);       <span class="cm">// Visit this node</span>
+        <span class="fn">inorder_traversal</span>(node.rightChild); <span class="cm">// Go right last</span>
+    }
+}</div>
+<p>For Pre-Order, move the print line to the TOP. For Post-Order, move it to the BOTTOM.</p>
+</div>
+
+<div class="gate" id="gate7">
+<h3>🔓 Final Check</h3>
+<p>In Pre-Order traversal, what do you visit FIRST?</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<button class="btn btn-outline btn-sm" onclick="checkGate(7,'left',this)">Left child</button>
+<button class="btn btn-outline btn-sm" onclick="checkGate(7,'root',this)">Root (current node)</button>
+<button class="btn btn-outline btn-sm" onclick="checkGate(7,'right',this)">Right child</button>
+</div>
+<div class="quiz-feedback" id="gate7fb"></div>
+</div>
+</div>
+
+<!-- COMPARISON SECTION -->
+<div class="comparison-section" id="compSection">
+<h2 style="text-align:center;font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;margin-bottom:28px">All Structures — <span style="color:var(--gold)">Side by Side</span></h2>
+<div class="comparison-grid">
+<div class="comparison-card"><h3>Stack (LIFO)</h3><p>Last In, First Out. Push adds on top. Pop removes from top. Like a pile of yams.</p></div>
+<div class="comparison-card"><h3>Queue (FIFO)</h3><p>First In, First Out. Enqueue adds at back. Dequeue removes from front. Like a waiting line.</p></div>
+<div class="comparison-card"><h3>Binary Tree</h3><p>Each node has at most 2 children. Data branches out like a family tree.</p></div>
+<div class="comparison-card"><h3>BST</h3><p>Binary tree with a rule: smaller goes left, bigger goes right. Makes searching fast.</p></div>
+</div>
+</div>
+
+<!-- FINAL QUIZ -->
+<div class="section fade-in" id="quizSection">
+<div class="section-label">Final Quiz</div>
+<h2>Test Your <span class="hl">Knowledge</span></h2>
+<p class="section-intro">Mathias, let us see how much you learned. 10 questions!</p>
+<div class="quiz-container" id="quizBox">
+<div class="quiz-dots" id="quizDots"></div>
+<div id="quizContent"></div>
+<div class="quiz-feedback" id="quizFb"></div>
+<div style="margin-top:14px;display:flex;gap:8px;justify-content:center" id="quizBtns">
+<button class="btn btn-green" id="quizNextBtn" onclick="nextQuizQ()" style="display:none">Next →</button>
+</div>
+</div>
+<div id="quizResult" style="display:none;text-align:center" class="card">
+<h3 id="quizResultTitle"></h3>
+<div class="stat" style="margin:16px 0"><div class="num" id="quizScoreNum"></div><div class="label">Your Score</div></div>
+<p id="quizResultMsg"></p>
+<button class="btn btn-green" onclick="restartQuiz()">Try Again</button>
+</div>
+</div>
+
+<footer class="footer">
+<p>Module 3 & 4 — Data Structures and Access Methods / Trees Data Structure</p>
+<p style="margin-top:8px;font-size:.75rem">Built for Mathias | <a href="#" onclick="resetAll();return false">Reset All Progress</a></p>
+</footer>
+
+<button class="glossary-btn" onclick="toggleGlossary()">📖 Terms</button>
+<div class="glossary-panel" id="glossaryPanel">
+<div class="glossary-header"><h4>📖 Glossary</h4><button class="btn btn-sm" onclick="toggleGlossary()">✕</button></div>
+<div style="padding:8px 16px"><input type="text" placeholder="Search..." oninput="filterGlossary(this.value)" style="font-size:.85rem"></div>
+<div class="glossary-body" id="glossaryBody"></div>
+</div>
+<button class="dark-toggle" onclick="toggleDark()" id="darkBtn">🌙</button>
+
+<div class="badge-panel">
+<button class="badge-toggle" onclick="toggleBadges()">🏆</button>
+<div class="badge-list" id="badgeList"><h4 style="margin-bottom:8px">Badges (<span id="badgeCount">0</span>)</h4><div id="badgeItems"></div></div>
+</div>
+
+<script>
+// ===== STATE =====
+const SECTIONS=['sec1','sec2','sec3','sec4','sec5','sec6','sec7'];
+const GATE_ANSWERS={1:'no',2:'c',3:'ali',4:'both',5:'leaf',6:'left',7:'root'};
+const GATE_EXPLAIN={
+1:{right:'Correct! Random Access means position does not matter.',wrong:'Not quite. In Random Access, every position is equally fast. Position does not matter.'},
+2:{right:'Correct! C was pushed last, so it sits on top and comes out first.',wrong:'In a stack, the LAST item pushed goes on top and comes out first. C was last, so C comes out first.'},
+3:{right:'Correct! Ali arrived first, so he gets served first. That is FIFO.',wrong:'In a queue (FIFO), the FIRST person who arrived gets served first. Ali came first.'},
+4:{right:'Correct! A deque lets you add and remove from BOTH ends.',wrong:'A deque works at both ends — you can add or remove from the front AND the back.'},
+5:{right:'Correct! A leaf has no children. It is at the end of a branch.',wrong:'A leaf is a node with NO children. Root is the top. Parent has children below it.'},
+6:{right:'Correct! 15 is smaller than 20, so it goes to the LEFT.',wrong:'In a BST, smaller values go LEFT. 15 < 20, so 15 goes left.'},
+7:{right:'Correct! Pre means before. You visit the root FIRST, then left, then right.',wrong:'PRE means before. In Pre-Order, you visit the root (current node) FIRST.'}
+};
+let state={unlocked:[0],badges:[],quizScore:0,dark:false};
+
+function loadState(){try{const s=localStorage.getItem('mathias_ds2');if(s){state=JSON.parse(s)}}catch(e){}}
+function saveState(){try{localStorage.setItem('mathias_ds2',JSON.stringify(state))}catch(e){}}
+function resetAll(){localStorage.removeItem('mathias_ds2');location.reload()}
+
+// ===== INIT =====
+function init(){
+loadState();
+if(state.dark)document.body.classList.add('dark-mode');
+document.getElementById('darkBtn').textContent=state.dark?'☀️':'🌙';
+applyUnlocks();buildGlossary();buildBadges();buildQuiz();buildArrayDemo();
+document.querySelectorAll('.tree-click').forEach(c=>c.addEventListener('click',function(){
+document.getElementById('treeClickInfo').textContent=this.dataset.info;
+document.querySelectorAll('.tree-click').forEach(x=>{x.setAttribute('fill','#E8F5E9')});
+this.setAttribute('fill','#FFF8E1');
+}));
+setupObserver();setupNav();updateProgress();
+}
+
+function applyUnlocks(){
+SECTIONS.forEach((id,i)=>{
+const el=document.getElementById(id);
+if(state.unlocked.includes(i))el.classList.remove('locked');
+else el.classList.add('locked');
+});
+}
+function unlockNext(current){
+const next=current+1;
+if(!state.unlocked.includes(next)&&next<SECTIONS.length){
+state.unlocked.push(next);saveState();applyUnlocks();
+const el=document.getElementById(SECTIONS[next]);
+el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+awardBadge('sec'+current);updateProgress();
+}
+
+// ===== PROGRESS =====
+function updateProgress(){
+const total=SECTIONS.length+1;
+const done=state.unlocked.length;
+document.getElementById('progressBar').style.width=(done/total*100)+'%';
+}
+
+// ===== DARK MODE =====
+function toggleDark(){
+state.dark=!state.dark;
+document.body.classList.toggle('dark-mode');
+document.getElementById('darkBtn').textContent=state.dark?'☀️':'🌙';
+saveState();
+}
+
+// ===== NAV =====
+function setupNav(){
+let ticking=false;
+window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(()=>{
+document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>50);
+ticking=false;});ticking=true}});
+}
+
+// ===== OBSERVER =====
+function setupObserver(){
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+}
+
+// ===== GATES =====
+function checkGate(num,ans,btn){
+const fb=document.getElementById('gate'+num+'fb');
+const correct=GATE_ANSWERS[num];
+const explain=GATE_EXPLAIN[num];
+if(ans===correct){
+fb.className='quiz-feedback correct-fb show';
+fb.textContent='✅ '+explain.right;
+btn.style.background='var(--green-pale)';btn.style.borderColor='var(--green-main)';
+setTimeout(()=>unlockNext(num-1),800);
+}else{
+fb.className='quiz-feedback wrong-fb show';
+fb.textContent='❌ '+explain.wrong;
+btn.classList.add('shake');
+setTimeout(()=>btn.classList.remove('shake'),400);
+}
+}
+
+// ===== ARRAY DEMO =====
+function buildArrayDemo(){
+const d=document.getElementById('arrayDemo');
+const names=['Ali','Bola','Chi','Dan','Eve','Femi','Gab','Hawa'];
+d.innerHTML='';
+names.forEach((n,i)=>{
+const s=document.createElement('button');
+s.className='btn btn-sm';
+s.style.cssText='background:var(--green-pale);border:1px solid var(--green-main);color:var(--green-dark);min-width:60px';
+s.textContent=`[${i}]`;
+s.onclick=()=>{
+document.getElementById('arrayInfo').textContent=`Slot ${i} = "${n}" — accessed instantly! No matter if it is slot 0 or slot 7.`;
+s.classList.add('pulse');setTimeout(()=>s.classList.remove('pulse'),600);
+};
+d.appendChild(s);
+});
+}
+
+// ===== STACK =====
+let stackData=[];
+function stackPush(){
+const inp=document.getElementById('stackInput');
+let val=inp.value.trim();
+if(!val)val='Yam '+(stackData.length+1);
+if(stackData.length>=8){document.getElementById('stackInfo').textContent='⚠️ Stack is full! Pop something first.';return}
+stackData.push(val);inp.value='';renderStack();
+document.getElementById('stackInfo').textContent=`Pushed "${val}" on top. It will come out first.`;
+addLog('stackLog',`PUSH: "${val}" added to top`);
+}
+function stackPop(){
+if(!stackData.length){document.getElementById('stackInfo').textContent='⚠️ Stack is empty! Nothing to pop.';return}
+const val=stackData.pop();renderStack();
+document.getElementById('stackInfo').textContent=`Popped "${val}" from top. It was the last one added.`;
+addLog('stackLog',`POP: "${val}" removed from top`);
+}
+function renderStack(){
+const v=document.getElementById('stackVisual');
+const tl=document.getElementById('stackTopLabel');
+if(!stackData.length){v.innerHTML='<div class="empty-msg">Stack is empty. Push something!</div>';tl.style.display='none';return}
+tl.style.display='block';
+v.innerHTML=stackData.slice().reverse().map((s,i)=>`<div class="stack-item" style="background:${i===0?'var(--gold-light)':'var(--green-pale)'};border-color:${i===0?'var(--gold)':'var(--green-main)'}">${s}</div>`).join('');
+}
+
+// ===== QUEUE =====
+let queueData=[];
+function queueEnqueue(){
+const inp=document.getElementById('queueInput');
+let val=inp.value.trim();
+if(!val)val='Farmer '+(queueData.length+1);
+if(queueData.length>=8){document.getElementById('queueInfo').textContent='⚠️ Queue is full!';return}
+queueData.push(val);inp.value='';renderQueue();
+document.getElementById('queueInfo').textContent=`"${val}" joined at the back of the queue.`;
+addLog('queueLog',`ENQUEUE: "${val}" joined at back`);
+}
+function queueDequeue(){
+if(!queueData.length){document.getElementById('queueInfo').textContent='⚠️ Queue is empty! Nobody to serve.';return}
+const val=queueData.shift();renderQueue();
+document.getElementById('queueInfo').textContent=`"${val}" left from the front. They waited the longest.`;
+addLog('queueLog',`DEQUEUE: "${val}" served from front`);
+}
+function renderQueue(){
+const v=document.getElementById('queueVisual');
+if(!queueData.length){v.innerHTML='<div class="empty-msg">Queue is empty. Enqueue someone!</div>';return}
+v.innerHTML=queueData.map((s,i)=>`<div class="queue-item" style="background:${i===0?'var(--gold-light)':'var(--green-pale)'};border-color:${i===0?'var(--gold)':'var(--green-main)'}">${s}${i===0?' ← Front':''}</div>`).join('');
+}
+function addLog(id,msg){
+const l=document.getElementById(id);
+const d=document.createElement('div');d.textContent='• '+msg;
+l.insertBefore(d,l.firstChild);
+}
+
+// ===== COMPARISON =====
+let compN=0,compSData=[],compQData=[];
+function compAdd(){
+compN++;const name='F'+compN;
+compSData.push(name);compQData.push(name);
+renderComp();
+document.getElementById('compInfo').textContent=`Added "${name}" to both. Stack puts it on top. Queue puts it at back.`;
+}
+function compRemove(){
+if(!compSData.length){document.getElementById('compInfo').textContent='Both are empty!';return}
+const s=compSData.pop(),q=compQData.shift();
+renderComp();
+document.getElementById('compInfo').textContent=`Stack removed "${s}" (last added, LIFO). Queue removed "${q}" (first added, FIFO). See the difference!`;
+}
+function compReset(){compN=0;compSData=[];compQData=[];renderComp();document.getElementById('compInfo').textContent='Reset! Add items to both.'}
+function renderComp(){
+const sv=document.getElementById('compStack'),qv=document.getElementById('compQueue');
+sv.innerHTML=compSData.length?compSData.slice().reverse().map((s,i)=>`<div class="stack-item" style="font-size:.8rem;padding:6px 16px">${s}${i===0?' ←TOP':''}</div>`).join(''):'<div class="empty-msg">Empty</div>';
+qv.innerHTML=compQData.length?compQData.map((s,i)=>`<div class="stack-item" style="font-size:.8rem;padding:6px 16px">${s}${i===0?' ←FRONT':''}</div>`).join(''):'<div class="empty-msg">Empty</div>';
+}
+
+// ===== BST =====
+let bstRoot=null;
+class BSTNode{constructor(v){this.val=v;this.left=null;this.right=null;this.x=0;this.y=0}}
+function bstInsertNode(node,val){
+if(!node){return new BSTNode(val)}
+if(val<node.val)node.left=bstInsertNode(node.left,val);
+else if(val>node.val)node.right=bstInsertNode(node.right,val);
+return node;
+}
+function bstInsert(){
+const inp=document.getElementById('bstInput');
+const val=parseInt(inp.value);
+if(isNaN(val)||val<1||val>99){document.getElementById('bstInfo').textContent='Please enter a number between 1 and 99.';return}
+const info=document.getElementById('bstInfo');
+if(!bstRoot){
+bstRoot=new BSTNode(val);
+info.textContent=`${val} is the first number — it becomes the ROOT.`;
+}else{
+let msg=bstTrace(bstRoot,val);
+bstRoot=bstInsertNode(bstRoot,val);
+info.textContent=msg;
+}
+inp.value='';renderBST();
+}
+function bstTrace(node,val){
+let path=[];let cur=node;
+while(cur){
+path.push(cur.val);
+if(val<cur.val){if(cur.left)cur=cur.left;else break}
+else if(val>cur.val){if(cur.right)cur=cur.right;else break}
+else return `${val} is already in the tree!`;
+}
+return `${val}: compared with ${path.join(' → ')}. ${val<path[path.length-1]?'Smaller, goes LEFT.':'Bigger, goes RIGHT.'}`;
+}
+function bstReset(){bstRoot=null;document.getElementById('bstSvg').innerHTML='';document.getElementById('bstInfo').textContent='Tree cleared. Add numbers!'}
+function renderBST(){
+const svg=document.getElementById('bstSvg');
+svg.innerHTML='';
+if(!bstRoot)return;
+function layout(node,x,y,spread){
+if(!node)return;
+node.x=x;node.y=y;
+if(node.left){layout(node.left,x-spread,y+55,spread*0.55)}
+if(node.right){layout(node.right,x+spread,y+55,spread*0.55)}
+}
+layout(bstRoot,250,35,100);
+function draw(node){
+if(!node)return;
+if(node.left){
+const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+l.setAttribute('x1',node.x);l.setAttribute('y1',node.y);l.setAttribute('x2',node.left.x);l.setAttribute('y2',node.left.y);
+l.setAttribute('stroke','#2E7D32');l.setAttribute('stroke-width','2');svg.appendChild(l);
+draw(node.left);
+}
+if(node.right){
+const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+l.setAttribute('x1',node.x);l.setAttribute('y1',node.y);l.setAttribute('x2',node.right.x);l.setAttribute('y2',node.right.y);
+l.setAttribute('stroke','#2E7D32');l.setAttribute('stroke-width','2');svg.appendChild(l);
+draw(node.right);
+}
+const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+c.setAttribute('cx',node.x);c.setAttribute('cy',node.y);c.setAttribute('r','18');
+c.setAttribute('fill','#E8F5E9');c.setAttribute('stroke','#2E7D32');c.setAttribute('stroke-width','3');
+svg.appendChild(c);
+const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+t.setAttribute('x',node.x);t.setAttribute('y',node.y+5);t.setAttribute('text-anchor','middle');
+t.setAttribute('fill','#1a5c2a');t.setAttribute('font-size','13');t.setAttribute('font-weight','700');
+t.setAttribute('font-family','Inter,sans-serif');t.textContent=node.val;
+svg.appendChild(t);
+}
+draw(bstRoot);
+}
+
+// ===== TRAVERSAL =====
+let travOrder=[],travIdx=-1,travType='';
+const travNodes=['D','B','E','A','F','C','G'];
+const travOrders={
+inorder:['D','B','E','A','F','C','G'],
+preorder:['A','B','D','E','C','F','G'],
+postorder:['D','E','B','F','G','C','A']
+};
+const travExplain={
+inorder:{D:'Go left as far as possible → D is leftmost leaf. Visit D.',B:'Back to B (root of left subtree). Visit B.',E:'Go right from B → visit E. Left subtree done!',A:'Back to root A. Visit A.',F:'Go to right subtree, then left → visit F.',C:'Back to C. Visit C.',G:'Go right → visit G. Done!'},
+preorder:{A:'Visit root A FIRST (pre = before).',B:'Go left to B. Visit B.',D:'Go left to D. Visit D.',E:'Go right to E. Visit E. B\'s subtree done!',C:'Go to right subtree. Visit C.',F:'Go left to F. Visit F.',G:'Go right to G. Visit G. Done!'},
+postorder:{D:'Go to deepest left leaf D. Visit D.',E:'Visit E. Both of B\'s children done.',B:'Now visit B (parent comes last).',F:'Go right subtree. Visit F.',G:'Visit G. Both of C\'s children done.',C:'Visit C.',A:'Finally visit root A. Root is always LAST in post-order!'}
+};
+function startTraversal(type){
+travType=type;travOrder=travOrders[type].slice();travIdx=-1;
+resetTraversalVisuals();
+document.getElementById('travStepBtn').disabled=false;
+document.getElementById('travInfo').textContent=type.charAt(0).toUpperCase()+type.slice(1)+' selected. Click Next Step!';
+document.getElementById('travOutput').innerHTML='';
+}
+function stepTraversal(){
+if(travIdx>=travOrder.length-1){document.getElementById('travInfo').textContent='Done! All nodes visited.';document.getElementById('travStepBtn').disabled=true;return}
+travIdx++;
+const node=travOrder[travIdx];
+const g=document.getElementById('tn'+node);
+g.querySelector('circle').setAttribute('fill','#F9A825');g.querySelector('circle').setAttribute('stroke','#F57F17');
+// Mark previous as visited
+if(travIdx>0){
+const prev=travOrder[travIdx-1];
+const pg=document.getElementById('tn'+prev);
+pg.querySelector('circle').setAttribute('fill','#2E7D32');pg.querySelector('circle').setAttribute('stroke','#1a5c2a');
+pg.querySelector('text').setAttribute('fill','#fff');
+}
+document.getElementById('travInfo').textContent=`Step ${travIdx+1}/${travOrder.length}: ${travExplain[travType][node]}`;
+const out=document.getElementById('travOutput');
+if(travIdx>0)out.innerHTML+='<span class="arrow">→</span>';
+out.innerHTML+=`<span>${node}</span>`;
+}
+function resetTraversal(){
+travIdx=-1;travOrder=[];travType='';
+resetTraversalVisuals();
+document.getElementById('travStepBtn').disabled=true;
+document.getElementById('travInfo').textContent='Choose a traversal method above.';
+document.getElementById('travOutput').innerHTML='';
+}
+function resetTraversalVisuals(){
+['A','B','C','D','E','F','G'].forEach(n=>{
+const g=document.getElementById('tn'+n);
+g.querySelector('circle').setAttribute('fill','#E8F5E9');
+g.querySelector('circle').setAttribute('stroke','#2E7D32');
+g.querySelector('text').setAttribute('fill','#1a5c2a');
+});
+}
+
+// ===== GLOSSARY =====
+const GLOSSARY=[
+{term:'Random Access',def:'Getting any item equally fast, no matter where it is.',analogy:'🌾 Walking to any numbered yam spot instantly.'},
+{term:'Sequential Access',def:'Must go through items one by one from the start.',analogy:'⚽ Checking each player in line until you find the right one.'},
+{term:'Array',def:'A numbered list of slots. Each slot holds one item.',analogy:'🌾 Numbered spaces in a yam barn.'},
+{term:'Stack',def:'Last In, First Out. Add and remove from the top only.',analogy:'🌾 A pile of yams — last one on top comes off first.'},
+{term:'Push',def:'Add an item to the top of a stack.',analogy:'⚽ Throwing a jersey on top of the pile.'},
+{term:'Pop',def:'Remove the top item from a stack.',analogy:'⚽ Picking up the top jersey from the pile.'},
+{term:'Queue',def:'First In, First Out. Add at back, remove from front.',analogy:'🌾 Line at the grinding machine — first farmer served first.'},
+{term:'Enqueue',def:'Add an item to the back of a queue.',analogy:'🌾 A new farmer joining the back of the line.'},
+{term:'Dequeue',def:'Remove the front item from a queue.',analogy:'🌾 The first farmer getting their turn at the machine.'},
+{term:'LIFO',def:'Last In, First Out. How stacks work.',analogy:'⚽ Last jersey thrown on pile is first picked up.'},
+{term:'FIFO',def:'First In, First Out. How queues work.',analogy:'⚽ First player in penalty line kicks first.'},
+{term:'Deque',def:'Double-ended queue. Add/remove from both ends.',analogy:'⚽ Urgent player can jump to the front.'},
+{term:'ADT',def:'Abstract Data Type. A general idea for organizing data.',analogy:'🌾 A plan for organizing, not a specific tool.'},
+{term:'Tree',def:'Data stored in a branching, family-like structure.',analogy:'🌾 Like a farming family — grandpa at top, children below.'},
+{term:'Root',def:'The top node of a tree. Only one root.',analogy:'🌾 The grandfather — head of the family.'},
+{term:'Parent',def:'A node that has children below it.',analogy:'⚽ A coach with players under them.'},
+{term:'Child',def:'A node connected below a parent.',analogy:'🌾 A son or daughter of a farmer.'},
+{term:'Leaf',def:'A node with no children.',analogy:'⚽ A player at the bottom with nobody below them.'},
+{term:'Binary Tree',def:'A tree where each node has at most 2 children.',analogy:'⚽ Each player can pass to at most 2 others.'},
+{term:'BST',def:'Binary Search Tree. Smaller left, bigger right.',analogy:'🌾 Sorting yams: lighter left, heavier right.'},
+{term:'Traversal',def:'Visiting every node in a tree in some order.',analogy:'🌾 Walking through every plot on the farm.'},
+{term:'In-Order',def:'Left → Root → Right traversal.',analogy:'🌾 Left field, then boss, then right field.'},
+{term:'Pre-Order',def:'Root → Left → Right traversal.',analogy:'⚽ Coach first, then left side, then right side.'},
+{term:'Post-Order',def:'Left → Right → Root traversal.',analogy:'🌾 Workers first, boss last.'},
+{term:'Underflow',def:'Trying to remove from empty structure.',analogy:'🌾 Trying to take yams from an empty basket.'},
+{term:'Overflow',def:'Trying to add when structure is full.',analogy:'🌾 Basket is full — no more room for yams.'},
+{term:'Balanced Tree',def:'A tree with roughly equal left and right sides.',analogy:'⚽ A team with equal players on both wings.'},
+{term:'Skewed Tree',def:'A tree leaning to one side, like a line.',analogy:'⚽ All players standing in one long line — no branching.'}
+];
+function buildGlossary(){
+const body=document.getElementById('glossaryBody');
+body.innerHTML=GLOSSARY.map(g=>`<div class="glossary-term"><strong>${g.term}</strong><p>${g.def}</p><p style="font-size:.78rem;margin-top:2px">${g.analogy}</p></div>`).join('');
+}
+function filterGlossary(val){
+const terms=document.querySelectorAll('.glossary-term');
+val=val.toLowerCase();
+terms.forEach(t=>{t.style.display=t.textContent.toLowerCase().includes(val)?'block':'none'});
+}
+function toggleGlossary(){document.getElementById('glossaryPanel').classList.toggle('open')}
+
+// ===== BADGES =====
+const BADGE_DEFS=[
+{id:'sec0',name:'🌱 First Steps',desc:'Completed Section 1'},
+{id:'sec1',name:'📚 Stack Master',desc:'Completed Stacks'},
+{id:'sec2',name:'🚶 Queue Expert',desc:'Completed Queues'},
+{id:'sec3',name:'⚖️ Comparison Pro',desc:'Completed Stack vs Queue'},
+{id:'sec4',name:'🌳 Tree Grower',desc:'Completed Trees'},
+{id:'sec5',name:'🔍 BST Builder',desc:'Completed BST'},
+{id:'sec6',name:'🚶‍♂️ Traversal Walker',desc:'Completed Traversal'},
+{id:'quiz90',name:'🏆 Quiz Champion',desc:'90%+ on Final Quiz'},
+{id:'allDone',name:'👑 Master',desc:'Completed everything!'}
+];
+function buildBadges(){
+const items=document.getElementById('badgeItems');
+let count=0;
+items.innerHTML=BADGE_DEFS.map(b=>{
+const earned=state.badges.includes(b.id);
+if(earned)count++;
+return`<div class="badge-item ${earned?'earned':'locked'}"><div class="b-icon">${earned?b.name.split(' ')[0]:'🔒'}</div><div><strong>${b.name}</strong><br><span style="font-size:.75rem;color:var(--text-light)">${b.desc}</span></div></div>`;
+}).join('');
+document.getElementById('badgeCount').textContent=count;
+}
+function awardBadge(id){
+if(!state.badges.includes(id)){state.badges.push(id);saveState();buildBadges()}
+}
+function toggleBadges(){document.getElementById('badgeList').classList.toggle('open')}
+
+// ===== QUIZ =====
+const QUIZ=[
+{q:'What does Random Access mean?',opts:['You must search from the start','Position does not affect speed','Data is stored randomly','It only works with tapes'],ans:1,explain:'Random Access means every position is equally fast. Like numbered yam barn slots.'},
+{q:'A stack follows which rule?',opts:['First In, First Out','Last In, First Out','Random order','Alphabetical order'],ans:1,explain:'Stack = LIFO. Last item pushed goes on top and comes out first. Like stacking jerseys.'},
+{q:'What is the name for adding to a queue?',opts:['Push','Pop','Enqueue','Insert'],ans:2,explain:'Adding to a queue is called Enqueue. The item joins at the BACK.'},
+{q:'You push A, B, C to a stack then pop twice. What remains?',opts:['A','B','C','A and B'],ans:0,explain:'Push A, B, C. Pop removes C (top), then B. Only A remains at the bottom.'},
+{q:'3 farmers in a queue: X, Y, Z. You dequeue once. Who is left at front?',opts:['X','Y','Z','Nobody'],ans:1,explain:'X was at front and gets dequeued. Y is now at the front. Queue = FIFO.'},
+{q:'In a Binary Search Tree, where does a smaller value go?',opts:['Right','Left','Up','Anywhere'],ans:1,explain:'BST rule: smaller values go LEFT, bigger values go RIGHT. Like sorting yams by weight.'},
+{q:'What is the root of a tree?',opts:['The bottom node','Any node','The top node','A leaf node'],ans:2,explain:'The root is the TOP node. There is only one root. Like the head of a farming family.'},
+{q:'A leaf node is a node that has:',opts:['Many children','Exactly 2 children','Exactly 1 child','No children'],ans:3,explain:'A leaf has NO children. It is at the end of a branch.'},
+{q:'In-Order traversal visits in which order?',opts:['Root, Left, Right','Left, Right, Root','Left, Root, Right','Right, Root, Left'],ans:2,explain:'In-Order: Left → Root → Right. The root is IN the middle.'},
+{q:'Pre-Order traversal visits the root:',opts:['Last','In the middle','First','Never'],ans:2,explain:'PRE means before. The root is visited FIRST. Then left, then right.'}
+];
+let quizIdx=0,quizScore=0,quizAnswered=false;
+function buildQuiz(){
+quizIdx=0;quizScore=0;
+document.getElementById('quizResult').style.display='none';
+document.getElementById('quizBox').style.display='block';
+renderQuizQ();
+}
+function renderQuizQ(){
+if(quizIdx>=QUIZ.length){showQuizResult();return}
+const q=QUIZ[quizIdx];
+const dots=document.getElementById('quizDots');
+dots.innerHTML=QUIZ.map((_,i)=>`<div class="quiz-dot ${i===quizIdx?'current':i<quizIdx?'correct':''}"></div>`).join('');
+const c=document.getElementById('quizContent');
+c.innerHTML=`<h4 style="margin-bottom:12px">Q${quizIdx+1}/${QUIZ.length}: ${q.q}</h4>`+
+q.opts.map((o,i)=>`<div class="quiz-option" onclick="selectQuiz(${i},this)"><span class="letter">${String.fromCharCode(65+i)}</span><span>${o}</span></div>`).join('');
+document.getElementById('quizFb').className='quiz-feedback';
+document.getElementById('quizNextBtn').style.display='none';
+quizAnswered=false;
+}
+function selectQuiz(idx,el){
+if(quizAnswered)return;quizAnswered=true;
+const q=QUIZ[quizIdx];const fb=document.getElementById('quizFb');
+document.querySelectorAll('.quiz-option').forEach((o,i)=>{
+if(i===q.ans)o.classList.add('correct');
+else if(i===idx)o.classList.add('wrong');
+o.style.pointerEvents='none';
+});
+if(idx===q.ans){
+quizScore++;
+fb.className='quiz-feedback correct-fb show';
+fb.textContent='✅ Correct! '+q.explain;
+}else{
+fb.className='quiz-feedback wrong-fb show';
+fb.textContent='❌ '+q.explain;
+}
+document.getElementById('quizNextBtn').style.display='inline-flex';
+}
+function nextQuizQ(){quizIdx++;renderQuizQ()}
+function showQuizResult(){
+document.getElementById('quizBox').style.display='none';
+document.getElementById('quizResult').style.display='block';
+const pct=Math.round(quizScore/QUIZ.length*100);
+document.getElementById('quizScoreNum').textContent=quizScore+'/'+QUIZ.length+' ('+pct+'%)';
+let title,msg;
+if(pct===100){title='🎉 PERFECT SCORE!';msg='Mathias, you got every single one right! You truly understand data structures now.';}
+else if(pct>=80){title='🏅 Great Job!';msg='Mathias, you really know this material well. Review the ones you missed and try again for 100%!';}
+else if(pct>=60){title='👍 Good Effort!';msg='Mathias, you are getting there. Go back through the sections you found tricky and try again.';}
+else{title='📚 Keep Learning!';msg='Mathias, take your time. Go through each section again, try the demos, and come back. You can do it!';}
+document.getElementById('quizResultTitle').textContent=title;
+document.getElementById('quizResultMsg').textContent=msg;
+if(pct>=90)awardBadge('quiz90');
+if(state.unlocked.length>=7)awardBadge('allDone');
+state.quizScore=quizScore;saveState();
+}
+function restartQuiz(){buildQuiz()}
+
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!-- Generated from: CYB 201 Introduction to Cybersecurity and Strategy | For: Mathias | Theme: dark -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYB 201 – Cybersecurity for Mathias</title>
+<script>
+(function(){
+  var s=localStorage.getItem('theme');
+  if(s==='dark'||(s===null&&'dark'==='dark')){
+    document.documentElement.classList.add('dark-mode');
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Ambient Visual Layer -->
+<div class="noise-overlay" aria-hidden="true"></div>
+<div class="ambient-orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
+<div class="nav-inner">
+  <a href="#hero" class="nav-logo">🛡️ CYB 201</a>
+  <div class="nav-links" id="navLinks"></div>
+</div>
+</nav>
+
+<!-- Hero Section -->
+<header class="hero" id="hero">
+<div class="hero-bg-pattern"></div>
+<div class="hero-content">
+  <div class="hero-badge" id="heroBadge">CYB 201 • Federal University Lafia</div>
+  <h1 class="hero-title" id="heroTitle">
+    Introduction to<br><span class="hero-accent">Cybersecurity</span> & Strategy
+  </h1>
+  <p class="hero-subtitle" id="heroSubtitle">Built for Mathias — a 300-level learning experience to take you from zero to mastery.</p>
+  <p class="hero-time" id="heroTime">⏱ About 45 minutes</p>
+  <button class="btn-hero" id="startBtn" onclick="smoothScroll('section-1')">Start Learning ↓</button>
+  <div class="scroll-hint" id="scrollHint">↓ Scroll to begin</div>
+</div>
+</header>
+
+<!-- Main Content -->
+<main id="main-content"></main>
+
+<!-- Quiz Section -->
+<section class="section quiz-section" id="quiz-section" style="display:none">
+<div class="section-inner">
+  <div class="section-label"><span class="dot"></span>Final Quiz</div>
+  <h2 class="section-heading">Test Your Knowledge</h2>
+  <p class="section-desc">Mathias, show what you have learned. Answer each question carefully.</p>
+  <div id="quizContainer"></div>
+  <div id="quizResult" style="display:none"></div>
+</div>
+</section>
+
+<!-- Completion Screen -->
+<div class="completion-overlay" id="completionScreen" style="display:none">
+<div class="completion-content">
+  <div class="completion-emoji">🏆</div>
+  <h2 class="completion-title">You Did It, Mathias!</h2>
+  <p class="completion-text" id="completionText"></p>
+  <div class="completion-badges" id="completionBadges"></div>
+  <div class="completion-actions">
+    <button class="btn-primary" onclick="exploreFree()">Explore Freely</button>
+    <button class="btn-ghost" onclick="resetAll()">Start Over</button>
+  </div>
+</div>
+</div>
+
+<!-- Welcome Back Overlay -->
+<div class="modal-overlay" id="welcomeBack" style="display:none">
+<div class="modal-card">
+  <h2>Welcome Back, Mathias!</h2>
+  <p id="welcomeBackMsg"></p>
+  <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+    <button class="btn-primary" onclick="continueSession()">Continue Where I Left Off</button>
+    <button class="btn-ghost" onclick="resetAll()">Start Over</button>
+  </div>
+</div>
+</div>
+
+<!-- Glossary Panel -->
+<div class="glossary-panel" id="glossaryPanel">
+<div class="panel-header">
+  <h3>📖 Glossary</h3>
+  <button class="panel-close" onclick="toggleGlossary()" aria-label="Close glossary">✕</button>
+</div>
+<input type="text" class="panel-search" id="glossarySearch" placeholder="Search terms..." oninput="filterGlossary()" maxlength="30">
+<div class="panel-body" id="glossaryList"></div>
+</div>
+<div class="panel-backdrop" id="glossaryBackdrop" onclick="toggleGlossary()" style="display:none"></div>
+
+<!-- Badge Panel -->
+<div class="badge-pill" id="badgePill" onclick="toggleBadges()">
+<span id="badgeCount">0</span> 🏅
+</div>
+<div class="badge-panel" id="badgePanel">
+<div class="panel-header">
+  <h3>🏅 Your Badges</h3>
+  <button class="panel-close" onclick="toggleBadges()" aria-label="Close badges">✕</button>
+</div>
+<div class="panel-body" id="badgeList"></div>
+</div>
+
+<!-- Floating Buttons -->
+<button class="fab glossary-fab" onclick="toggleGlossary()" aria-label="Open glossary">📖 Terms</button>
+<button class="fab dark-toggle" id="darkToggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">☀️</button>
+
+<!-- Concept Map -->
+<section class="section concept-map-section" id="concept-map" style="display:none">
+<div class="section-inner">
+  <div class="section-label"><span class="dot"></span>Big Picture</div>
+  <h2 class="section-heading">How Everything <span class="accent">Connects</span></h2>
+  <div class="concept-map" id="conceptMap"></div>
+</div>
+</section>
+
+<!-- Comparison Section -->
+<section class="comparison-section" id="comparison-section" style="display:none">
+<div class="section-inner">
+  <h2 class="comparison-title">Key Concepts at a Glance</h2>
+  <div class="comparison-grid" id="comparisonGrid"></div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+<p><strong>CYB 201</strong> — Introduction to Cybersecurity and Strategy</p>
+<p>Department of Cybersecurity, Faculty of Computing, Federal University Lafia, Nasarawa State, Nigeria</p>
+<p style="margin-top:16px"><a href="#" onclick="event.preventDefault();if(confirm('Reset all progress?'))resetAll()" style="color:#999;text-decoration:underline">Reset All Progress</a></p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

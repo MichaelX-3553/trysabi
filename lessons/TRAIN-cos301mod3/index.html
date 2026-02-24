@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trees — Learn with Mathias</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--green-dark:#1a5c2a;--green-main:#2E7D32;--green-light:#4CAF50;--green-pale:#E8F5E9;
+--gold:#F9A825;--gold-light:#FFF8E1;
+--earth-brown:#5D4037;--earth-light:#8D6E63;
+--cream:#FAFAF5;--white:#FFFFFF;--dark:#1a1a2e;
+--text:#2c2c2c;--text-light:#666;
+--success:#2E7D32;--error:#EF5350;--error-dark:#C62828;--error-bg:#FFEBEE;
+--info-bg:#F3E5F5;--info-text:#4A148C;
+--shadow-sm:0 2px 8px rgba(0,0,0,0.06);--shadow:0 4px 24px rgba(0,0,0,0.08);--shadow-lg:0 12px 48px rgba(0,0,0,0.12);
+--radius:16px;--radius-sm:10px;--radius-xs:8px;--radius-full:50px;
+--surface:var(--white);--page-bg:var(--cream);--border-c:rgba(0,0,0,0.04);
+}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--page-bg);line-height:1.7;overflow-x:hidden;transition:background .3s,color .3s}
+body.dark-mode{--page-bg:#0f0f1a;--surface:#1a1a2e;--text:#d4d4d4;--text-light:#999;--green-pale:rgba(76,175,80,0.08);--gold-light:rgba(249,168,37,0.08);--border-c:rgba(255,255,255,0.06);--cream:#0f0f1a;--white:#1a1a2e;--dark:#e8e8e8;--info-bg:rgba(243,229,245,0.08);--info-text:#CE93D8;--error-bg:rgba(239,83,80,0.1);--shadow-sm:0 2px 8px rgba(0,0,0,0.3);--shadow:0 4px 24px rgba(0,0,0,0.35);--shadow-lg:0 12px 48px rgba(0,0,0,0.4)}
+
+/* Progress Bar */
+#progressBar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--green-main),var(--gold),var(--green-light));z-index:10000;transition:width .3s ease;width:0}
+
+/* Nav */
+.nav{position:fixed;top:4px;left:0;right:0;z-index:9999;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
+.nav.scrolled{background:rgba(255,255,255,0.85);backdrop-filter:blur(16px);box-shadow:var(--shadow-sm)}
+body.dark-mode .nav.scrolled{background:rgba(15,15,26,0.85)}
+.nav-logo{font-weight:800;font-size:1.15rem;color:var(--green-main)}
+.nav-links{display:flex;gap:8px;flex-wrap:wrap}
+.nav-links a{font-size:.82rem;font-weight:600;color:var(--text-light);text-decoration:none;padding:6px 14px;border-radius:var(--radius-full);transition:all .2s}
+.nav-links a:hover,.nav-links a.active{background:var(--green-pale);color:var(--green-main)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(135deg,#0d3318 0%,var(--green-dark) 40%,var(--earth-brown) 100%);color:#fff;padding:40px 24px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-badge{display:inline-block;padding:6px 20px;border-radius:var(--radius-full);background:rgba(255,255,255,0.12);font-size:.82rem;font-weight:600;letter-spacing:1px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.15)}
+.hero h1{font-size:clamp(2.5rem,6vw,4rem);font-weight:900;line-height:1.15;margin-bottom:16px}
+.hero h1 .accent{background:linear-gradient(135deg,var(--gold),#FFD54F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;opacity:.85;max-width:560px;margin-bottom:36px}
+.hero-btn{display:inline-block;padding:16px 40px;border-radius:var(--radius-full);background:var(--gold);color:var(--dark);font-weight:700;font-size:1.05rem;text-decoration:none;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(249,168,37,0.35);transition:all .3s}
+.hero-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(249,168,37,0.45)}
+.hero-btn:active{transform:scale(.96)}
+.scroll-hint{position:absolute;bottom:32px;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* Sections */
+.section{padding:80px 24px;max-width:900px;margin:0 auto;opacity:0;transform:translateY(30px);transition:all .6s ease}
+.section.visible{opacity:1;transform:translateY(0)}
+.section.locked{pointer-events:none;filter:blur(2px);opacity:.3}
+.section-label{text-transform:uppercase;font-size:.82rem;font-weight:700;letter-spacing:2px;color:var(--green-main);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green-main)}
+.section h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:800;margin-bottom:8px;color:var(--dark)}
+body.dark-mode .section h2{color:#e8e8e8}
+.section h2 .hl{color:var(--green-main)}
+body.dark-mode .section h2 .hl{color:#66BB6A}
+.section-intro{font-size:1.1rem;color:var(--text-light);margin-bottom:32px}
+
+/* Cards */
+.card{background:var(--surface);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow-sm);border:1px solid var(--border-c);margin-bottom:24px;transition:all .3s}
+.card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.card h3{font-size:1.35rem;font-weight:700;margin-bottom:12px}
+.card h4{font-size:1.15rem;font-weight:700;margin-bottom:8px}
+.card p{margin-bottom:12px}
+
+/* Analogy Boxes */
+.farm-box{background:linear-gradient(135deg,var(--green-pale),rgba(232,245,233,0.5));border-left:4px solid var(--green-main);padding:20px 24px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:16px 0;color:var(--green-dark)}
+body.dark-mode .farm-box{background:rgba(76,175,80,0.08);color:#81C784}
+.football-box{background:linear-gradient(135deg,var(--gold-light),rgba(255,248,225,0.5));border-left:4px solid var(--gold);padding:20px 24px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:16px 0;color:var(--earth-brown)}
+body.dark-mode .football-box{background:rgba(249,168,37,0.08);color:#FFB74D}
+.info-box{background:var(--info-bg);padding:20px 24px;border-radius:var(--radius-sm);margin:16px 0;display:flex;gap:12px;align-items:flex-start;color:var(--info-text)}
+
+/* Buttons */
+.btn{padding:10px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:.95rem;border:none;cursor:pointer;transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.btn:active{transform:scale(.96)}
+.btn-green{background:var(--green-main);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-gold{background:var(--gold);color:var(--dark)}
+.btn-gold:hover{background:#F57F17}
+.btn-red{background:var(--error);color:#fff}
+.btn-red:hover{background:var(--error-dark)}
+.btn-outline{background:transparent;border:2px solid var(--green-main);color:var(--green-main)}
+.btn-outline:hover{background:var(--green-pale)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-sm{padding:6px 16px;font-size:.85rem}
+
+/* Interactive Tree Visuals */
+.tree-canvas{position:relative;min-height:300px;background:var(--surface);border-radius:var(--radius);border:2px dashed var(--border-c);margin:16px 0;overflow:auto;padding:20px}
+.tree-node{position:absolute;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;transition:all .4s ease;z-index:2;border:3px solid var(--green-main);background:var(--green-pale);color:var(--green-dark);cursor:pointer}
+body.dark-mode .tree-node{background:rgba(76,175,80,0.15);color:#81C784}
+.tree-node.highlight{background:var(--gold);border-color:var(--gold);color:var(--dark);transform:scale(1.2);box-shadow:0 0 20px rgba(249,168,37,0.5)}
+.tree-node.visited{background:var(--green-main);color:#fff}
+.tree-edge{position:absolute;z-index:1;background:var(--green-main);height:2px;transform-origin:left center}
+
+/* Traversal Controls */
+.traversal-controls{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;align-items:center}
+.step-counter{font-size:.92rem;font-weight:600;color:var(--text-light);margin-left:auto}
+.traversal-output{background:var(--surface);border:2px solid var(--border-c);border-radius:var(--radius-sm);padding:16px;margin:12px 0;min-height:48px;font-family:'JetBrains Mono',monospace;font-size:1rem;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.traversal-output .t-node{padding:4px 12px;border-radius:var(--radius-xs);background:var(--green-pale);font-weight:600;transition:all .3s}
+.traversal-output .t-node.active{background:var(--gold);color:var(--dark)}
+.traversal-output .t-arrow{color:var(--text-light);font-weight:700}
+
+/* Quiz */
+.quiz-option{border:2px solid var(--border-c);border-radius:12px;padding:14px 20px;margin:8px 0;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s;background:var(--surface)}
+.quiz-option:hover{border-color:var(--green-light);background:var(--green-pale)}
+.quiz-option.selected{border-color:var(--green-main);background:var(--green-pale)}
+.quiz-option.correct{border-color:var(--success);background:var(--green-pale)}
+.quiz-option.wrong{border-color:var(--error);background:var(--error-bg)}
+.quiz-option .letter{width:32px;height:32px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.quiz-option.correct .letter{background:var(--success);color:#fff}
+.quiz-option.wrong .letter{background:var(--error);color:#fff}
+.quiz-feedback{padding:16px;border-radius:12px;margin:12px 0;font-weight:500}
+.quiz-feedback.correct{background:var(--green-pale);color:var(--green-dark)}
+.quiz-feedback.wrong{background:var(--error-bg);color:var(--error-dark)}
+body.dark-mode .quiz-feedback.correct{color:#81C784}
+body.dark-mode .quiz-feedback.wrong{color:#EF9A9A}
+.quiz-progress{display:flex;gap:6px;margin-bottom:20px}
+.quiz-dot{width:12px;height:12px;border-radius:50%;background:var(--border-c);transition:all .3s}
+.quiz-dot.current{background:var(--gold);transform:scale(1.3)}
+.quiz-dot.done{background:var(--green-main)}
+.quiz-dot.wrong-dot{background:var(--error)}
+
+/* Gate */
+.gate{background:var(--surface);border:2px solid var(--gold);border-radius:var(--radius);padding:32px;text-align:center;margin:32px 0}
+.gate h3{color:var(--gold);margin-bottom:12px}
+.gate .gate-options{display:flex;flex-direction:column;gap:8px;max-width:500px;margin:16px auto}
+
+/* Sandbox */
+.sandbox{background:var(--surface);border-radius:var(--radius);padding:24px;border:1px solid var(--border-c);margin:16px 0}
+.sandbox-input{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sandbox-input input{padding:10px 16px;border:2px solid #e0e0e0;border-radius:var(--radius-sm);font-family:inherit;font-size:1rem;flex:1;min-width:120px;background:var(--surface);color:var(--text);transition:border .2s}
+body.dark-mode .sandbox-input input{border-color:#333}
+.sandbox-input input:focus{outline:none;border-color:var(--green-main)}
+.sandbox-log{max-height:150px;overflow-y:auto;font-size:.85rem;color:var(--text-light);border-top:1px solid var(--border-c);padding-top:12px;margin-top:12px}
+.sandbox-log div{padding:4px 0;border-bottom:1px solid var(--border-c)}
+
+/* Comparison Dark Section */
+.comparison-section{background:linear-gradient(135deg,#0d3318,var(--green-dark),var(--earth-brown));color:#fff;padding:80px 24px;margin:40px 0}
+.comparison-section h2{color:#fff;text-align:center;margin-bottom:40px}
+.comparison-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:900px;margin:0 auto}
+.comparison-card{background:rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(8px)}
+.comparison-card h3{color:var(--gold);margin-bottom:12px}
+.comparison-card p{color:rgba(255,255,255,0.8);font-size:.95rem}
+
+/* Drag Drop */
+.drag-zone{min-height:60px;border:2px dashed var(--green-light);border-radius:var(--radius-sm);padding:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;transition:all .2s;margin:8px 0}
+.drag-zone.over{border-color:var(--gold);background:var(--gold-light)}
+.drag-item{padding:8px 16px;border-radius:var(--radius-xs);background:var(--green-main);color:#fff;font-weight:600;cursor:grab;transition:all .2s;user-select:none;touch-action:none}
+.drag-item:active{cursor:grabbing;transform:scale(1.05)}
+.drag-item.placed{background:var(--earth-light);cursor:default}
+
+/* Badges */
+.badge-panel{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:9998;display:flex;flex-direction:column;gap:8px}
+.badge-toggle{width:48px;height:48px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;font-size:1.3rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;transition:all .3s}
+.badge-toggle:hover{transform:scale(1.1)}
+.badge-list{position:absolute;right:60px;top:0;background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-lg);width:260px;max-height:400px;overflow-y:auto;display:none;border:1px solid var(--border-c)}
+.badge-list.open{display:block}
+.badge-list h4{margin-bottom:12px;font-size:1rem}
+.badge-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-c);font-size:.85rem}
+.badge-item .badge-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.badge-item.earned .badge-icon{background:var(--gold-light);animation:badgePop .5s ease}
+.badge-item.locked .badge-icon{background:var(--border-c);filter:grayscale(1);opacity:.4}
+.badge-item .badge-info{flex:1}
+.badge-item .badge-info strong{display:block;font-size:.85rem}
+.badge-item .badge-info span{font-size:.75rem;color:var(--text-light)}
+@keyframes badgePop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+
+/* Glossary */
+.glossary-btn{position:fixed;left:16px;bottom:16px;padding:10px 18px;border-radius:var(--radius-full);background:var(--surface);border:2px solid var(--green-main);color:var(--green-main);font-weight:700;cursor:pointer;z-index:99998;box-shadow:var(--shadow);font-size:.9rem;transition:all .3s;font-family:inherit}
+.glossary-btn:hover{background:var(--green-pale)}
+.glossary-panel{position:fixed;left:0;top:0;bottom:0;width:320px;background:var(--surface);z-index:100000;box-shadow:var(--shadow-lg);transform:translateX(-100%);transition:transform .3s ease;display:flex;flex-direction:column;overflow:hidden}
+.glossary-panel.open{transform:translateX(0)}
+.glossary-header{padding:20px;border-bottom:1px solid var(--border-c);display:flex;align-items:center;justify-content:space-between}
+.glossary-header h3{font-size:1.1rem}
+.glossary-search{padding:12px 20px;border-bottom:1px solid var(--border-c)}
+.glossary-search input{width:100%;padding:8px 12px;border:2px solid var(--border-c);border-radius:var(--radius-xs);font-family:inherit;font-size:.9rem;background:var(--surface);color:var(--text)}
+.glossary-search input:focus{outline:none;border-color:var(--green-main)}
+.glossary-body{flex:1;overflow-y:auto;padding:12px 20px}
+.glossary-term{padding:12px 0;border-bottom:1px solid var(--border-c)}
+.glossary-term strong{color:var(--green-main);font-size:.95rem}
+.glossary-term p{font-size:.85rem;color:var(--text-light);margin-top:4px}
+.glossary-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text);padding:4px}
+
+/* Dark Toggle */
+.dark-toggle{position:fixed;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;background:var(--surface);border:2px solid var(--border-c);cursor:pointer;font-size:1.4rem;z-index:99999;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;transition:all .3s}
+.dark-toggle:hover{transform:scale(1.1)}
+
+/* Story Animation */
+.story-container{background:var(--surface);border-radius:var(--radius);padding:24px;border:1px solid var(--border-c);margin:16px 0;text-align:center;min-height:200px;position:relative;overflow:hidden}
+.story-stage{height:180px;position:relative;margin:12px 0}
+.story-text{font-size:.95rem;color:var(--text-light);margin-top:12px;min-height:40px;transition:opacity .3s}
+
+/* Table */
+.data-table{width:100%;border-collapse:separate;border-spacing:0;margin:16px 0;font-size:.92rem;overflow:hidden;border-radius:var(--radius-sm)}
+.data-table th{background:var(--green-dark);color:#fff;padding:12px 16px;text-align:left;font-weight:600}
+.data-table td{padding:12px 16px;border-bottom:1px solid var(--border-c);background:var(--surface)}
+.data-table tr:nth-child(even) td{background:var(--green-pale)}
+body.dark-mode .data-table tr:nth-child(even) td{background:rgba(76,175,80,0.04)}
+
+/* Stat */
+.stat{text-align:center}
+.stat .num{font-size:2.5rem;font-weight:900;color:var(--green-main)}
+body.dark-mode .stat .num{color:#66BB6A}
+.stat .label{font-size:.85rem;font-weight:600;color:var(--text-light)}
+
+/* Code Block */
+.code-block{background:#1a1a2e;border-radius:var(--radius-sm);padding:24px;margin:16px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.88rem;line-height:1.8;color:#d4d4d4}
+.code-block .kw{color:#C792EA}.code-block .str{color:#C3E88D}.code-block .typ{color:#FFCB6B}.code-block .fn{color:#82AAFF}.code-block .cm{color:#546E7A}.code-block .num{color:#F78C6C}
+
+/* Tree Visual with SVG */
+.tree-visual{text-align:center;margin:24px 0;position:relative}
+.tree-visual svg{max-width:100%;height:auto}
+.tv-node{cursor:pointer;transition:all .3s}
+.tv-node circle{transition:all .3s}
+.tv-node text{font-family:'Inter',sans-serif;font-weight:700;transition:all .3s}
+.tv-node.active circle{fill:var(--gold);stroke:var(--gold)}
+.tv-node.active text{fill:#1a1a2e}
+.tv-node.done circle{fill:var(--green-main);stroke:var(--green-main)}
+.tv-node.done text{fill:#fff}
+
+/* Shake & Pulse */
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(46,125,50,0.4)}50%{box-shadow:0 0 0 12px rgba(46,125,50,0)}}
+.shake{animation:shake .4s ease}
+.pulse{animation:pulse .6s ease}
+
+/* Footer */
+.footer{background:var(--dark);color:rgba(255,255,255,0.6);text-align:center;padding:40px 24px;font-size:.85rem}
+body.dark-mode .footer{background:#080812}
+.footer a{color:var(--gold);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+/* Responsive */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .section{padding:60px 16px}
+  .card{padding:24px}
+  .hero h1{font-size:clamp(2rem,8vw,3rem)}
+  .comparison-grid{grid-template-columns:1fr}
+  .badge-list{right:auto;left:-200px;top:50px}
+  .glossary-panel{width:100%}
+  .traversal-controls{flex-direction:column;align-items:stretch}
+  .step-counter{margin-left:0;text-align:center}
+}
+.hidden{display:none!important}
+.fade-in{opacity:0;transform:translateY(30px);transition:all .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* BST Interactive */
+.bst-demo{position:relative}
+.bst-svg{width:100%;min-height:320px}
+.bst-input-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.bst-input-row input{padding:10px 16px;border:2px solid #e0e0e0;border-radius:var(--radius-sm);font-family:inherit;font-size:1rem;width:100px;background:var(--surface);color:var(--text)}
+body.dark-mode .bst-input-row input{border-color:#333}
+
+/* Progress tracker */
+.progress-tracker{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:9997;display:flex;flex-direction:column;gap:4px}
+.pt-dot{width:12px;height:12px;border-radius:50%;background:var(--border-c);transition:all .3s;cursor:pointer;border:2px solid transparent;position:relative}
+.pt-dot.done{background:var(--green-main);border-color:var(--green-main)}
+.pt-dot.current{background:var(--gold);border-color:var(--gold);transform:scale(1.4)}
+.pt-dot.locked{background:var(--border-c);opacity:.4}
+.pt-dot::after{content:attr(data-label);position:absolute;left:20px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:.72rem;font-weight:600;color:var(--text-light);opacity:0;transition:opacity .2s;pointer-events:none}
+.pt-dot:hover::after{opacity:1}
+@media(max-width:768px){.progress-tracker{display:none}}
+
+/* Spaced recall */
+.recall-box{background:linear-gradient(135deg,var(--info-bg),rgba(243,229,245,0.3));border:2px solid rgba(74,20,140,0.15);border-radius:var(--radius);padding:28px;margin:32px 0;text-align:center}
+body.dark-mode .recall-box{background:rgba(243,229,245,0.05);border-color:rgba(206,147,216,0.15)}
+.recall-box h3{color:var(--info-text);margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progressBar"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="mainNav">
+  <div class="nav-logo">🌳 Trees</div>
+  <div class="nav-links">
+    <a href="#s1" data-sec="0">What is a Tree</a>
+    <a href="#s2" data-sec="1">Key Words</a>
+    <a href="#s3" data-sec="2">Types</a>
+    <a href="#s4" data-sec="3">Traversal</a>
+    <a href="#s5" data-sec="4">Practice</a>
+    <a href="#quiz" data-sec="5">Quiz</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <span class="hero-badge">CSC 301 — MODULE 3</span>
+  <h1>Understanding <span class="accent">Trees</span></h1>
+  <p>Learn how computers store things in a family-like structure — step by step, at your own speed.</p>
+  <button class="hero-btn" onclick="startLearning()">Start Learning</button>
+  <div class="scroll-hint" style="font-size:1.5rem">↓</div>
+</section>
+
+<!-- ============ SECTION 1: What is a Tree? ============ -->
+<section class="section" id="s1">
+  <div class="section-label">Section 1</div>
+  <h2>What is a <span class="hl">Tree</span>?</h2>
+  <p class="section-intro">After this part, you will know what a tree is and why it matters.</p>
+
+  <!-- Story Hook -->
+  <div class="story-container" id="story1">
+    <h4>🌱 Watch This First</h4>
+    <div class="story-stage" id="storyStage1"></div>
+    <div class="story-text" id="storyText1">Press play to see how a farming family is like a tree.</div>
+    <button class="btn btn-green btn-sm" onclick="playStory1()" id="storyBtn1">▶ Play</button>
+  </div>
+
+  <div class="card">
+    <h3>A tree is a family structure</h3>
+    <p>Think about your farm. There is a <strong>head farmer</strong> — the person who started it all. That farmer taught two or three people. Each of those people taught others. This makes a <strong>family tree shape</strong>.</p>
+
+    <div class="farm-box">
+      <strong>🌾 Farming analogy:</strong> The head farmer sits at the top. Below him are the people he trained. Below them are the people <em>they</em> trained. Every person connects to the person above them — like branches on a real tree, but upside down.
+    </div>
+
+    <p>In the computer world, a <strong>tree data structure</strong> works the same way. It is a way to store data (information) in a shape where things are connected from top to bottom.</p>
+    <p>Each piece of data sits in a <strong>node</strong> (a small box). Nodes connect to other nodes below them through <strong>links</strong> (like paths between farm plots).</p>
+
+    <div class="football-box">
+      <strong>⚽ Football analogy:</strong> Think of your team lineup. The coach is at the top. Under the coach are the captain and vice-captain. Under them are the defenders, midfielders, and strikers. Each level has a clear position, and everyone connects to someone above them.
+    </div>
+
+    <div class="info-box">
+      <span style="font-size:1.3rem">💡</span>
+      <span>A tree is <strong>not</strong> a straight line like a queue. It <strong>branches out</strong> — one node can connect to many nodes below it.</span>
+    </div>
+  </div>
+
+  <!-- Interactive: Simple Tree Builder -->
+  <div class="card">
+    <h4>🛠️ Try It: See a Tree</h4>
+    <p>Click the buttons to add nodes and see a tree grow.</p>
+    <div class="sandbox-input">
+      <input type="text" id="treeInput1" placeholder="Type a name..." maxlength="8">
+      <button class="btn btn-green" onclick="addToSimpleTree()">Add Node</button>
+      <button class="btn btn-outline btn-sm" onclick="resetSimpleTree()">Clear</button>
+    </div>
+    <div class="tree-visual" id="simpleTreeVis">
+      <svg id="simpleTreeSvg" width="100%" height="280" viewBox="0 0 500 280"></svg>
+    </div>
+    <div class="sandbox-log" id="simpleTreeLog"><em style="color:var(--text-light)">Add some names to build your tree.</em></div>
+  </div>
+
+  <!-- Gate -->
+  <div class="gate" id="gate1">
+    <h3>🔓 Quick Check</h3>
+    <p>Answer this to move to the next section.</p>
+    <p style="font-weight:600;margin:12px 0">A tree data structure stores data in what kind of shape?</p>
+    <div class="gate-options">
+      <div class="quiz-option" onclick="checkGate(1,'a',this)"><span class="letter">A</span> A straight line</div>
+      <div class="quiz-option" onclick="checkGate(1,'b',this)"><span class="letter">B</span> A circle</div>
+      <div class="quiz-option" onclick="checkGate(1,'c',this)"><span class="letter">C</span> A branching shape from top to bottom</div>
+    </div>
+    <div id="gate1feedback" class="quiz-feedback hidden"></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: Important Terms ============ -->
+<section class="section locked" id="s2">
+  <div class="section-label">Section 2</div>
+  <h2>Key <span class="hl">Words</span> You Need</h2>
+  <p class="section-intro">After this part, you will know all the important tree words.</p>
+
+  <div class="card">
+    <h3>The parts of a tree</h3>
+    <p>Every tree has special parts. Let us learn each one.</p>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">1. Root</h4>
+    <p>The <strong>root</strong> is the very first node at the top. There is only one root in a tree.</p>
+    <div class="farm-box"><strong>🌾</strong> The root is like the <strong>head farmer</strong> — the one who started the whole farm. Every other person traces back to him.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">2. Node</h4>
+    <p>A <strong>node</strong> is any single item in the tree. It holds data (a value, a name, a number).</p>
+    <div class="football-box"><strong>⚽</strong> Each <strong>player</strong> on the team is a node. Each one has a name and a position.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">3. Parent</h4>
+    <p>A <strong>parent</strong> is a node that has nodes below it. The node above you is your parent.</p>
+    <div class="farm-box"><strong>🌾</strong> The farmer who <strong>trained you</strong> is your parent. You learned from them.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">4. Child</h4>
+    <p>A <strong>child</strong> is a node below a parent. A parent can have many children.</p>
+    <div class="football-box"><strong>⚽</strong> If the captain passes to two midfielders, those midfielders are the captain's <strong>children</strong> in the tree.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">5. Leaf</h4>
+    <p>A <strong>leaf</strong> is a node with <strong>no children</strong>. It is at the bottom. Nothing grows below it.</p>
+    <div class="farm-box"><strong>🌾</strong> A leaf is like a farmer who has <strong>no apprentice</strong> — no one is learning under them yet.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">6. Path</h4>
+    <p>A <strong>path</strong> is the route you take from one node to another, following the links.</p>
+    <div class="football-box"><strong>⚽</strong> The path is the <strong>passing chain</strong> — goalkeeper to defender to midfielder. Each pass is one step on the path.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">7. Subtree</h4>
+    <p>A <strong>subtree</strong> is a smaller tree inside the big tree. Pick any node — that node and everything below it is a subtree.</p>
+    <div class="farm-box"><strong>🌾</strong> If one senior farmer has 3 workers under him, that group is a <strong>subtree</strong> — a small farm team inside the bigger farm.</div>
+
+    <h4 style="margin-top:20px;color:var(--green-main)">8. Level</h4>
+    <p>The <strong>level</strong> tells you how deep a node is. The root is at level 0. Its children are at level 1. Their children are at level 2, and so on.</p>
+    <div class="football-box"><strong>⚽</strong> Level 0 is the goalkeeper. Level 1 is the defenders. Level 2 is the midfielders. Level 3 is the strikers. Each line is one level deeper.</div>
+  </div>
+
+  <!-- Interactive: Label the Tree -->
+  <div class="card">
+    <h4>🛠️ Try It: Name the Parts</h4>
+    <p>Look at this tree. Click each node to see what it is called.</p>
+    <div class="tree-visual">
+      <svg id="labelTreeSvg" width="100%" height="300" viewBox="0 0 500 300"></svg>
+    </div>
+    <div id="labelInfo" style="text-align:center;font-weight:600;color:var(--green-main);min-height:24px">Click any node above.</div>
+  </div>
+
+  <!-- Terms Table -->
+  <div class="card">
+    <h4>📋 All Terms at a Glance</h4>
+    <table class="data-table">
+      <thead><tr><th>Term</th><th>What it means</th><th>Analogy</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Root</strong></td><td>The top node, only one</td><td>🌾 Head farmer</td></tr>
+        <tr><td><strong>Node</strong></td><td>Any single item in the tree</td><td>⚽ A player</td></tr>
+        <tr><td><strong>Parent</strong></td><td>A node with children below it</td><td>🌾 The farmer who trained you</td></tr>
+        <tr><td><strong>Child</strong></td><td>A node below a parent</td><td>⚽ Player who gets the pass</td></tr>
+        <tr><td><strong>Leaf</strong></td><td>A node with no children</td><td>🌾 Farmer with no apprentice</td></tr>
+        <tr><td><strong>Path</strong></td><td>Route from one node to another</td><td>⚽ Passing chain</td></tr>
+        <tr><td><strong>Subtree</strong></td><td>A node and all nodes below it</td><td>🌾 Small team inside big farm</td></tr>
+        <tr><td><strong>Level</strong></td><td>How deep a node is (root = 0)</td><td>⚽ Goalkeeper line, defender line...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gate" id="gate2">
+    <h3>🔓 Quick Check</h3>
+    <p style="font-weight:600;margin:12px 0">A node with NO children is called a:</p>
+    <div class="gate-options">
+      <div class="quiz-option" onclick="checkGate(2,'a',this)"><span class="letter">A</span> Root</div>
+      <div class="quiz-option" onclick="checkGate(2,'b',this)"><span class="letter">B</span> Leaf</div>
+      <div class="quiz-option" onclick="checkGate(2,'c',this)"><span class="letter">C</span> Parent</div>
+    </div>
+    <div id="gate2feedback" class="quiz-feedback hidden"></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: Types of Trees ============ -->
+<section class="section locked" id="s3">
+  <div class="section-label">Section 3</div>
+  <h2>Types of <span class="hl">Trees</span></h2>
+  <p class="section-intro">After this part, you will know the three main kinds of trees.</p>
+
+  <!-- Recall checkpoint -->
+  <div class="recall-box" id="recall1">
+    <h3>🧠 Quick Memory Check</h3>
+    <p>Before we go on — what is the <strong>root</strong> of a tree?</p>
+    <div style="max-width:400px;margin:12px auto">
+      <div class="quiz-option" onclick="checkRecall('recall1','a',this)"><span class="letter">A</span> The bottom node</div>
+      <div class="quiz-option" onclick="checkRecall('recall1','b',this)"><span class="letter">B</span> The very top node</div>
+      <div class="quiz-option" onclick="checkRecall('recall1','c',this)"><span class="letter">C</span> Any node with children</div>
+    </div>
+    <div id="recall1feedback" class="quiz-feedback hidden"></div>
+  </div>
+
+  <!-- General Tree -->
+  <div class="card">
+    <h3>1. General Tree</h3>
+    <p>A <strong>general tree</strong> is the simplest kind. Each node can have <strong>any number</strong> of children. There is no limit.</p>
+    <div class="farm-box"><strong>🌾</strong> This is like a farm where each farmer can train <strong>as many workers as they want</strong>. One farmer might train 2 people. Another might train 5. There is no rule about the number.</div>
+
+    <div class="tree-visual">
+      <svg width="100%" height="220" viewBox="0 0 500 220">
+        <line x1="250" y1="40" x2="120" y2="120" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="250" y1="40" x2="250" y2="120" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="250" y1="40" x2="380" y2="120" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="120" y1="120" x2="60" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="120" y1="120" x2="120" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="120" y1="120" x2="180" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <circle cx="250" cy="40" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="250" y="45" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">1</text>
+        <circle cx="120" cy="120" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="120" y="125" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">2</text>
+        <circle cx="250" cy="120" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="250" y="125" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">3</text>
+        <circle cx="380" cy="120" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="380" y="125" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">4</text>
+        <circle cx="60" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="60" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">5</text>
+        <circle cx="120" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="120" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">6</text>
+        <circle cx="180" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="180" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">7</text>
+      </svg>
+    </div>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-light)">Node 2 has 3 children (5, 6, 7). Node 3 and 4 have none. No limit on children.</p>
+  </div>
+
+  <!-- Binary Tree -->
+  <div class="card">
+    <h3>2. Binary Tree</h3>
+    <p>A <strong>binary tree</strong> is a tree where each node can have <strong>at most 2 children</strong>. We call them the <strong>left child</strong> and the <strong>right child</strong>.</p>
+    <div class="football-box"><strong>⚽</strong> Think of it this way: each player can only pass to <strong>two people</strong> — one on the left and one on the right. Never more than two.</div>
+
+    <div class="tree-visual">
+      <svg width="100%" height="220" viewBox="0 0 500 220">
+        <line x1="250" y1="40" x2="150" y2="120" stroke="#F9A825" stroke-width="2"/>
+        <line x1="250" y1="40" x2="350" y2="120" stroke="#F9A825" stroke-width="2"/>
+        <line x1="150" y1="120" x2="100" y2="190" stroke="#F9A825" stroke-width="2"/>
+        <line x1="150" y1="120" x2="200" y2="190" stroke="#F9A825" stroke-width="2"/>
+        <line x1="350" y1="120" x2="300" y2="190" stroke="#F9A825" stroke-width="2"/>
+        <line x1="350" y1="120" x2="400" y2="190" stroke="#F9A825" stroke-width="2"/>
+        <circle cx="250" cy="40" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="250" y="45" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">1</text>
+        <circle cx="150" cy="120" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="150" y="125" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">2</text>
+        <circle cx="350" cy="120" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="350" y="125" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">4</text>
+        <circle cx="100" cy="190" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="100" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">5</text>
+        <circle cx="200" cy="190" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="200" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">6</text>
+        <circle cx="300" cy="190" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="300" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">7</text>
+        <circle cx="400" cy="190" r="22" fill="#FFF8E1" stroke="#F9A825" stroke-width="3"/>
+        <text x="400" y="195" text-anchor="middle" font-weight="700" font-size="14" fill="#5D4037">3</text>
+        <text x="140" y="80" font-size="11" fill="#5D4037" font-weight="600">Left</text>
+        <text x="310" y="80" font-size="11" fill="#5D4037" font-weight="600">Right</text>
+      </svg>
+    </div>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-light)">Every node has at most 2 children: left and right. No node has 3 or more.</p>
+  </div>
+
+  <!-- BST -->
+  <div class="card">
+    <h3>3. Binary Search Tree (BST)</h3>
+    <p>A <strong>binary search tree</strong> is a special binary tree with one important rule:</p>
+    <ul style="margin:12px 0 12px 24px">
+      <li>Numbers <strong>smaller</strong> than a node go to the <strong>left</strong>.</li>
+      <li>Numbers <strong>bigger</strong> than a node go to the <strong>right</strong>.</li>
+    </ul>
+    <p>This rule makes it very fast to find any number.</p>
+    <div class="farm-box"><strong>🌾</strong> Imagine you are sorting yams by size. You put <strong>smaller yams</strong> in the left basket and <strong>bigger yams</strong> in the right basket. Then for each basket, you sort again: smaller goes left, bigger goes right. This way, you can find any yam quickly — just keep asking "is it smaller or bigger?" at each step.</div>
+
+    <div class="tree-visual">
+      <svg width="100%" height="240" viewBox="0 0 500 240">
+        <line x1="250" y1="40" x2="150" y2="110" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="250" y1="40" x2="350" y2="110" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="150" y1="110" x2="90" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="150" y1="110" x2="210" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="350" y1="110" x2="290" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="350" y1="110" x2="410" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <circle cx="250" cy="40" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="250" y="46" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">20</text>
+        <circle cx="150" cy="110" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="150" y="116" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">11</text>
+        <circle cx="350" cy="110" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="350" y="116" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">23</text>
+        <circle cx="90" cy="190" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="90" y="196" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">9</text>
+        <circle cx="210" cy="190" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="210" y="196" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">13</text>
+        <circle cx="290" cy="190" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="290" y="196" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">21</text>
+        <circle cx="410" cy="190" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+        <text x="410" y="196" text-anchor="middle" font-weight="700" font-size="15" fill="#1a5c2a">30</text>
+        <text x="130" y="68" font-size="11" fill="#2E7D32" font-weight="700">smaller ←</text>
+        <text x="310" y="68" font-size="11" fill="#2E7D32" font-weight="700">→ bigger</text>
+      </svg>
+    </div>
+    <p style="text-align:center;font-size:.9rem;color:var(--text-light)">9 and 13 are less than 20, so they are on the left side. 21 and 30 are more than 20, so they are on the right.</p>
+  </div>
+
+  <!-- BST Interactive Builder -->
+  <div class="card">
+    <h4>🛠️ Try It: Build a BST</h4>
+    <p>Type a number and add it. Watch it go to the correct spot — smaller goes left, bigger goes right.</p>
+    <div class="bst-input-row">
+      <input type="number" id="bstInput" placeholder="Number..." min="1" max="99">
+      <button class="btn btn-green" onclick="insertBST()">Add to Tree</button>
+      <button class="btn btn-outline btn-sm" onclick="resetBST()">Clear</button>
+    </div>
+    <div class="bst-demo">
+      <svg id="bstSvg" width="100%" height="320" viewBox="0 0 600 320"></svg>
+    </div>
+    <div id="bstLog" class="sandbox-log"><em style="color:var(--text-light)">Add numbers to build your BST. Try: 15, 10, 25, 5, 12.</em></div>
+  </div>
+
+  <div class="gate" id="gate3">
+    <h3>🔓 Quick Check</h3>
+    <p style="font-weight:600;margin:12px 0">In a Binary Search Tree, where does a smaller number go?</p>
+    <div class="gate-options">
+      <div class="quiz-option" onclick="checkGate(3,'a',this)"><span class="letter">A</span> To the right</div>
+      <div class="quiz-option" onclick="checkGate(3,'b',this)"><span class="letter">B</span> To the left</div>
+      <div class="quiz-option" onclick="checkGate(3,'c',this)"><span class="letter">C</span> To the top</div>
+    </div>
+    <div id="gate3feedback" class="quiz-feedback hidden"></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: Tree Traversal ============ -->
+<section class="section locked" id="s4">
+  <div class="section-label">Section 4</div>
+  <h2>Tree <span class="hl">Traversal</span></h2>
+  <p class="section-intro">After this part, you will know how to visit every node in a tree in three different ways.</p>
+
+  <!-- Recall -->
+  <div class="recall-box" id="recall2">
+    <h3>🧠 Quick Memory Check</h3>
+    <p>In a binary tree, each node can have at most how many children?</p>
+    <div style="max-width:400px;margin:12px auto">
+      <div class="quiz-option" onclick="checkRecall('recall2','a',this)"><span class="letter">A</span> 1</div>
+      <div class="quiz-option" onclick="checkRecall('recall2','b',this)"><span class="letter">B</span> 2</div>
+      <div class="quiz-option" onclick="checkRecall('recall2','c',this)"><span class="letter">C</span> 5</div>
+    </div>
+    <div id="recall2feedback" class="quiz-feedback hidden"></div>
+  </div>
+
+  <div class="card">
+    <h3>What is Traversal?</h3>
+    <p><strong>Traversal</strong> means visiting every node in the tree, one by one. You might do this to search for something, or to print all the values.</p>
+    <div class="football-box"><strong>⚽</strong> Imagine the coach needs to check every player after a match — check their health, one by one. The <strong>order</strong> the coach visits them matters. Does he start with himself first? Or the left wing first?</div>
+    <p>There are <strong>three main ways</strong> to traverse a tree:</p>
+  </div>
+
+  <!-- In-Order -->
+  <div class="card">
+    <h4 style="color:var(--green-main)">1. In-Order Traversal</h4>
+    <p>The rule: <strong>Left → Root → Right</strong></p>
+    <p>First visit everything on the left. Then visit the current node. Then visit everything on the right.</p>
+    <div class="farm-box"><strong>🌾</strong> Imagine you check farms from <strong>left to right</strong>. You go to the leftmost farm plot first, check it. Then you come back to the farmer in charge, check him. Then you go to the right farm plot. Always: left field, then boss, then right field.</div>
+  </div>
+
+  <!-- Pre-Order -->
+  <div class="card">
+    <h4 style="color:var(--green-main)">2. Pre-Order Traversal</h4>
+    <p>The rule: <strong>Root → Left → Right</strong></p>
+    <p>First visit the current node. Then go left. Then go right.</p>
+    <div class="football-box"><strong>⚽</strong> The coach checks <strong>himself first</strong>, then goes to check the left wing players, then the right wing players. The boss always comes first — that is why it is called <strong>pre</strong>-order (pre means before).</div>
+  </div>
+
+  <!-- Post-Order -->
+  <div class="card">
+    <h4 style="color:var(--green-main)">3. Post-Order Traversal</h4>
+    <p>The rule: <strong>Left → Right → Root</strong></p>
+    <p>First go left. Then go right. Visit the current node <strong>last</strong>.</p>
+    <div class="farm-box"><strong>🌾</strong> The head farmer checks the <strong>left workers first</strong>, then the <strong>right workers</strong>, and only after everyone else is checked, he checks <strong>himself last</strong>. The boss comes last — that is <strong>post</strong>-order (post means after).</div>
+  </div>
+
+  <!-- Traversal Summary Table -->
+  <div class="card">
+    <h4>📋 Summary</h4>
+    <table class="data-table">
+      <thead><tr><th>Method</th><th>Order</th><th>Easy way to remember</th></tr></thead>
+      <tbody>
+        <tr><td><strong>In-Order</strong></td><td>Left → Root → Right</td><td>Boss is IN the middle</td></tr>
+        <tr><td><strong>Pre-Order</strong></td><td>Root → Left → Right</td><td>Boss comes BEFORE (pre)</td></tr>
+        <tr><td><strong>Post-Order</strong></td><td>Left → Right → Root</td><td>Boss comes AFTER (post)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Interactive Traversal -->
+  <div class="card">
+    <h4>🛠️ Try It: Watch Traversal Step by Step</h4>
+    <p>Pick a traversal method and press Step to watch the order.</p>
+    <div class="tree-visual">
+      <svg id="travSvg" width="100%" height="280" viewBox="0 0 500 280">
+        <!-- Tree: A(B(D,E),C(F,G)) -->
+        <line x1="250" y1="45" x2="140" y2="125" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="250" y1="45" x2="360" y2="125" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="140" y1="125" x2="80" y2="215" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="140" y1="125" x2="200" y2="215" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="360" y1="125" x2="300" y2="215" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="360" y1="125" x2="420" y2="215" stroke="#2E7D32" stroke-width="2"/>
+        <g class="tv-node" id="trvA"><circle cx="250" cy="45" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="250" y="51" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">A</text></g>
+        <g class="tv-node" id="trvB"><circle cx="140" cy="125" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="140" y="131" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">B</text></g>
+        <g class="tv-node" id="trvC"><circle cx="360" cy="125" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="360" y="131" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">C</text></g>
+        <g class="tv-node" id="trvD"><circle cx="80" cy="215" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="80" y="221" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">D</text></g>
+        <g class="tv-node" id="trvE"><circle cx="200" cy="215" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="200" y="221" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">E</text></g>
+        <g class="tv-node" id="trvF"><circle cx="300" cy="215" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="300" y="221" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">F</text></g>
+        <g class="tv-node" id="trvG"><circle cx="420" cy="215" r="24" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="420" y="221" text-anchor="middle" font-weight="700" font-size="16" fill="#1a5c2a">G</text></g>
+      </svg>
+    </div>
+    <div class="traversal-controls">
+      <button class="btn btn-green btn-sm" onclick="setTraversal('inorder')">In-Order</button>
+      <button class="btn btn-gold btn-sm" onclick="setTraversal('preorder')">Pre-Order</button>
+      <button class="btn btn-outline btn-sm" onclick="setTraversal('postorder')">Post-Order</button>
+      <span style="color:var(--text-light);font-size:.85rem" id="travMode">Pick a method</span>
+    </div>
+    <div class="traversal-controls">
+      <button class="btn btn-green btn-sm" onclick="travStep()" id="travStepBtn" disabled>⏭ Step</button>
+      <button class="btn btn-outline btn-sm" onclick="travReset()">↺ Reset</button>
+      <span class="step-counter" id="travCounter"></span>
+    </div>
+    <div class="traversal-output" id="travOutput"><em style="color:var(--text-light)">Pick a method above, then press Step.</em></div>
+    <div id="travNarration" style="margin-top:8px;font-size:.92rem;color:var(--text-light);min-height:24px"></div>
+  </div>
+
+  <div class="gate" id="gate4">
+    <h3>🔓 Quick Check</h3>
+    <p style="font-weight:600;margin:12px 0">In Pre-Order traversal, what do you visit first?</p>
+    <div class="gate-options">
+      <div class="quiz-option" onclick="checkGate(4,'a',this)"><span class="letter">A</span> The left child</div>
+      <div class="quiz-option" onclick="checkGate(4,'b',this)"><span class="letter">B</span> The right child</div>
+      <div class="quiz-option" onclick="checkGate(4,'c',this)"><span class="letter">C</span> The root (current node)</div>
+    </div>
+    <div id="gate4feedback" class="quiz-feedback hidden"></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: Practice & Examples ============ -->
+<section class="section locked" id="s5">
+  <div class="section-label">Section 5</div>
+  <h2>Traversal <span class="hl">Practice</span></h2>
+  <p class="section-intro">Mathias, now you put it all together. Practice with a bigger tree.</p>
+
+  <!-- Recall -->
+  <div class="recall-box" id="recall3">
+    <h3>🧠 Quick Memory Check</h3>
+    <p>In Post-Order traversal, the root node is visited:</p>
+    <div style="max-width:400px;margin:12px auto">
+      <div class="quiz-option" onclick="checkRecall('recall3','a',this)"><span class="letter">A</span> First</div>
+      <div class="quiz-option" onclick="checkRecall('recall3','b',this)"><span class="letter">B</span> In the middle</div>
+      <div class="quiz-option" onclick="checkRecall('recall3','c',this)"><span class="letter">C</span> Last</div>
+    </div>
+    <div id="recall3feedback" class="quiz-feedback hidden"></div>
+  </div>
+
+  <!-- Bigger tree example -->
+  <div class="card">
+    <h3>Bigger Tree Example</h3>
+    <p>Here is a tree with 10 nodes. Let us find the traversal order together.</p>
+    <div class="tree-visual">
+      <svg id="bigTreeSvg" width="100%" height="340" viewBox="0 0 600 340">
+        <!-- Tree: 1(2(4,5(8)),3(6,7(9,10))) -->
+        <line x1="300" y1="40" x2="160" y2="110" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="300" y1="40" x2="440" y2="110" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="160" y1="110" x2="90" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="160" y1="110" x2="230" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="440" y1="110" x2="370" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="440" y1="110" x2="510" y2="190" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="230" y1="190" x2="230" y2="280" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="510" y1="190" x2="470" y2="280" stroke="#2E7D32" stroke-width="2"/>
+        <line x1="510" y1="190" x2="550" y2="280" stroke="#2E7D32" stroke-width="2"/>
+        <g class="tv-node" id="bt1"><circle cx="300" cy="40" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="300" y="46" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">1</text></g>
+        <g class="tv-node" id="bt2"><circle cx="160" cy="110" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="160" y="116" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">2</text></g>
+        <g class="tv-node" id="bt3"><circle cx="440" cy="110" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="440" y="116" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">3</text></g>
+        <g class="tv-node" id="bt4"><circle cx="90" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="90" y="196" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">4</text></g>
+        <g class="tv-node" id="bt5"><circle cx="230" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="230" y="196" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">5</text></g>
+        <g class="tv-node" id="bt6"><circle cx="370" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="370" y="196" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">6</text></g>
+        <g class="tv-node" id="bt7"><circle cx="510" cy="190" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="510" y="196" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">7</text></g>
+        <g class="tv-node" id="bt8"><circle cx="230" cy="280" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="230" y="286" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">8</text></g>
+        <g class="tv-node" id="bt9"><circle cx="470" cy="280" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="470" y="286" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">9</text></g>
+        <g class="tv-node" id="bt10"><circle cx="550" cy="280" r="22" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/><text x="550" y="286" text-anchor="middle" font-weight="700" font-size="14" fill="#1a5c2a">10</text></g>
+      </svg>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px">
+      <div style="padding:16px;background:var(--green-pale);border-radius:var(--radius-sm)">
+        <strong>In-Order:</strong><br>4, 2, 8, 5, 1, 6, 3, 9, 7, 10
+      </div>
+      <div style="padding:16px;background:var(--gold-light);border-radius:var(--radius-sm)">
+        <strong>Pre-Order:</strong><br>1, 2, 4, 5, 8, 3, 6, 7, 9, 10
+      </div>
+      <div style="padding:16px;background:var(--info-bg);border-radius:var(--radius-sm)">
+        <strong>Post-Order:</strong><br>4, 8, 5, 2, 6, 9, 10, 7, 3, 1
+      </div>
+    </div>
+  </div>
+
+  <!-- Drag & Drop Challenge -->
+  <div class="card">
+    <h4>🎯 Challenge: Put Them in Order</h4>
+    <p>Drag the nodes into the correct <strong>In-Order</strong> sequence for the tree above (A-G tree).</p>
+    <p style="font-size:.85rem;color:var(--text-light)">Remember: In-Order = Left → Root → Right. The answer is: D, B, E, A, F, C, G</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0" id="dragSource">
+      <div class="drag-item" draggable="true" data-val="A">A</div>
+      <div class="drag-item" draggable="true" data-val="B">B</div>
+      <div class="drag-item" draggable="true" data-val="C">C</div>
+      <div class="drag-item" draggable="true" data-val="D">D</div>
+      <div class="drag-item" draggable="true" data-val="E">E</div>
+      <div class="drag-item" draggable="true" data-val="F">F</div>
+      <div class="drag-item" draggable="true" data-val="G">G</div>
+    </div>
+    <p style="font-size:.85rem;font-weight:600">Drop them here in order (left to right):</p>
+    <div class="drag-zone" id="dragTarget"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-green btn-sm" onclick="checkDragOrder()">Check Order</button>
+      <button class="btn btn-outline btn-sm" onclick="resetDrag()">Reset</button>
+    </div>
+    <div id="dragFeedback" class="quiz-feedback hidden" style="margin-top:8px"></div>
+  </div>
+
+  <!-- Scenario Mission -->
+  <div class="card" style="border:2px solid var(--gold)">
+    <h4>⭐ Mission: The Farm Inspection</h4>
+    <p>You are the head farmer (root). You have two senior workers (B and C). B has two helpers (D and E). C has two helpers (F and G).</p>
+    <p>You want to check everyone using <strong>Post-Order</strong>. That means: check helpers first, yourself last.</p>
+    <p style="font-weight:600">What is the correct Post-Order? Type the letters separated by commas:</p>
+    <div class="sandbox-input">
+      <input type="text" id="missionInput" placeholder="e.g., D,E,B,F,G,C,A" style="flex:2">
+      <button class="btn btn-gold" onclick="checkMission()">Check</button>
+    </div>
+    <div id="missionFeedback" class="quiz-feedback hidden"></div>
+  </div>
+</section>
+
+<!-- ============ COMPARISON SECTION ============ -->
+<div class="comparison-section" id="comparison">
+  <h2 style="font-size:clamp(2rem,4vw,2.8rem);font-weight:800">Three Types of Trees — <span style="color:var(--gold)">Side by Side</span></h2>
+  <div class="comparison-grid">
+    <div class="comparison-card">
+      <h3>General Tree</h3>
+      <p>Each node can have <strong>any number</strong> of children. No rules about how many.</p>
+      <p style="font-size:.85rem;margin-top:8px">🌾 Like a farm where each farmer trains as many workers as they want.</p>
+    </div>
+    <div class="comparison-card">
+      <h3>Binary Tree</h3>
+      <p>Each node has <strong>at most 2</strong> children: left and right. No sorting rule.</p>
+      <p style="font-size:.85rem;margin-top:8px">⚽ Like a player who can only pass to two people — left and right.</p>
+    </div>
+    <div class="comparison-card">
+      <h3>Binary Search Tree</h3>
+      <p>Like a binary tree, but <strong>smaller goes left, bigger goes right</strong>. This makes searching fast.</p>
+      <p style="font-size:.85rem;margin-top:8px">🌾 Like sorting yams: smaller yams in the left basket, bigger in the right.</p>
+    </div>
+  </div>
+  <div style="max-width:900px;margin:40px auto 0">
+    <div class="comparison-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="comparison-card" style="text-align:center">
+        <h3 style="font-size:1rem">Traversals</h3>
+        <p style="font-size:.85rem"><strong style="color:var(--gold)">In-Order:</strong> L → Root → R</p>
+        <p style="font-size:.85rem"><strong style="color:var(--gold)">Pre-Order:</strong> Root → L → R</p>
+        <p style="font-size:.85rem"><strong style="color:var(--gold)">Post-Order:</strong> L → R → Root</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FINAL QUIZ ============ -->
+<section class="section" id="quiz" style="opacity:1;transform:none">
+  <div class="section-label">Final Quiz</div>
+  <h2>Test Your <span class="hl">Knowledge</span></h2>
+  <p class="section-intro">Mathias, let us see how much you learned. Answer all questions.</p>
+  <div class="card" id="quizCard">
+    <div class="quiz-progress" id="quizProgress"></div>
+    <div id="quizQuestion"></div>
+    <div id="quizOptions"></div>
+    <div id="quizFeedback" class="quiz-feedback hidden"></div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-green" id="quizNextBtn" onclick="nextQuizQuestion()" style="display:none">Next →</button>
+    </div>
+  </div>
+  <div id="quizResults" class="card hidden" style="text-align:center">
+    <h3 id="quizResultTitle"></h3>
+    <div class="stat" style="margin:20px 0"><div class="num" id="quizScore"></div><div class="label">Your Score</div></div>
+    <p id="quizResultMsg" style="font-size:1.1rem;margin:12px 0"></p>
+    <button class="btn btn-green" onclick="restartQuiz()">Try Again</button>
+  </div>
+</section>
+
+<!-- ============ COMPLETION ============ -->
+<div id="completionSection" class="section hidden" style="text-align:center;opacity:1;transform:none">
+  <div style="font-size:4rem;margin-bottom:16px">🎉</div>
+  <h2>Great Work, <span class="hl">Mathias</span>!</h2>
+  <p style="font-size:1.1rem;color:var(--text-light);margin:12px 0">You have learned about trees, their types, and how to traverse them. You now understand a key part of how computers organize information.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:32px 0" id="completionBadges"></div>
+  <div class="card" style="text-align:left;margin-top:32px">
+    <h4>What You Learned:</h4>
+    <ul style="margin:12px 0 0 24px">
+      <li>Trees store data in a branching, top-to-bottom shape</li>
+      <li>Key words: Root, Node, Parent, Child, Leaf, Path, Subtree, Level</li>
+      <li>Three types: General Tree, Binary Tree, Binary Search Tree</li>
+      <li>BST rule: smaller goes left, bigger goes right</li>
+      <li>Three traversal methods: In-Order, Pre-Order, Post-Order</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p><strong>CSC 301 — Data Structure</strong> | Module 3: Trees Data Structure</p>
+  <p style="margin-top:8px">Mrs Aisha I. Galadima — Department of Computer Science, Federal University of Lafia</p>
+  <p style="margin-top:12px;font-size:.78rem">References: Liang, Y. D. (2020). <em>Introduction to Java programming and data structures</em>. Pearson. | Cormen et al. (2009). <em>Introduction to algorithms</em>. MIT Press.</p>
+  <p style="margin-top:16px"><a href="#" onclick="resetAllProgress();return false;">Reset All Progress</a></p>
+</footer>
+
+<!-- Glossary Button & Panel -->
+<button class="glossary-btn" onclick="toggleGlossary()">📖 Terms</button>
+<div class="glossary-panel" id="glossaryPanel">
+  <div class="glossary-header">
+    <h3>📖 Glossary</h3>
+    <button class="glossary-close" onclick="toggleGlossary()">×</button>
+  </div>
+  <div class="glossary-search"><input type="text" placeholder="Search terms..." oninput="filterGlossary(this.value)"></div>
+  <div class="glossary-body" id="glossaryBody"></div>
+</div>
+
+<!-- Dark Mode Toggle -->
+<button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode" id="darkBtn">🌙</button>
+
+<!-- Badge Panel -->
+<div class="badge-panel">
+  <button class="badge-toggle" onclick="toggleBadges()" aria-label="View badges" id="badgeToggle">🏆</button>
+  <div class="badge-list" id="badgeList">
+    <h4>Your Badges (<span id="badgeCount">0</span>)</h4>
+    <div id="badgeItems"></div>
+  </div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="progress-tracker" id="progressTracker"></div>
+
+<script>
+// ===== STATE =====
+const STATE={
+  unlocked:[0],currentSection:0,badges:{},quizScore:0,quizAnswers:[],darkMode:false
+};
+const SECTIONS=['s1','s2','s3','s4','s5'];
+const GATE_ANSWERS={1:'c',2:'b',3:'b',4:'c'};
+const RECALL_ANSWERS={recall1:'b',recall2:'b',recall3:'c'};
+
+// ===== GLOSSARY DATA =====
+const GLOSSARY=[
+  {term:'Tree',def:'A way to store data in a branching shape from top to bottom.',analogy:'🌾 Like a farming family tree — head farmer at top, workers below.'},
+  {term:'Node',def:'A single item in the tree that holds data.',analogy:'⚽ Like a player on the team — each one has a name and position.'},
+  {term:'Root',def:'The one node at the very top of the tree.',analogy:'🌾 The head farmer who started the farm.'},
+  {term:'Parent',def:'A node that has children below it.',analogy:'🌾 The farmer who trained other workers.'},
+  {term:'Child',def:'A node connected below a parent.',analogy:'⚽ A player who receives the pass from above.'},
+  {term:'Leaf',def:'A node with no children — at the bottom.',analogy:'🌾 A farmer with no apprentice.'},
+  {term:'Path',def:'The route from one node to another along the links.',analogy:'⚽ The passing chain from one player to another.'},
+  {term:'Subtree',def:'A node and all the nodes below it.',analogy:'🌾 A small team inside the bigger farm.'},
+  {term:'Level',def:'How deep a node is. Root is level 0.',analogy:'⚽ Goalkeeper line (0), defender line (1), midfield line (2)...'},
+  {term:'General Tree',def:'A tree where each node can have any number of children.',analogy:'🌾 Farm where each farmer trains as many workers as they want.'},
+  {term:'Binary Tree',def:'A tree where each node has at most 2 children (left and right).',analogy:'⚽ Each player can only pass to two people — left and right.'},
+  {term:'Binary Search Tree',def:'A binary tree where smaller values go left and bigger values go right.',analogy:'🌾 Sorting yams: smaller in left basket, bigger in right basket.'},
+  {term:'Traversal',def:'Visiting every node in the tree in some order.',analogy:'⚽ Coach checking every player one by one after a match.'},
+  {term:'In-Order',def:'Left → Root → Right traversal.',analogy:'🌾 Check left field, then boss, then right field.'},
+  {term:'Pre-Order',def:'Root → Left → Right traversal.',analogy:'⚽ Boss checks himself first, then left wing, then right wing.'},
+  {term:'Post-Order',def:'Left → Right → Root traversal.',analogy:'🌾 Check all workers first. Boss checks himself last.'},
+];
+
+// ===== BADGES DATA =====
+const BADGE_DEFS=[
+  {id:'s1',name:'🌱 Seed Planted',desc:'Completed Section 1'},
+  {id:'s2',name:'📖 Word Master',desc:'Completed Section 2'},
+  {id:'s3',name:'🌳 Tree Expert',desc:'Completed Section 3'},
+  {id:'s4',name:'🚶 Trail Walker',desc:'Completed Section 4'},
+  {id:'s5',name:'💪 Practice Pro',desc:'Completed Section 5'},
+  {id:'quiz80',name:'🏅 Quiz Star',desc:'Scored 80%+ on quiz'},
+  {id:'quiz100',name:'👑 Perfect Score',desc:'Got 100% on quiz'},
+  {id:'drag',name:'🎯 Order Master',desc:'Correct drag & drop order'},
+  {id:'mission',name:'⭐ Mission Done',desc:'Completed the farm mission'},
+  {id:'bst5',name:'🔧 BST Builder',desc:'Added 5+ nodes to BST'},
+];
+
+// ===== QUIZ DATA =====
+const QUIZ=[
+  {q:'A tree stores data in what shape?',opts:['A straight line','A circle','A branching shape from top to bottom','A flat table'],ans:2,explain:'A tree branches out from one root at the top to many nodes below — like a farming family.'},
+  {q:'What is the node at the very top of the tree called?',opts:['Leaf','Child','Root','Branch'],ans:2,explain:'The root is the first node. Like the head farmer — only one, at the top.'},
+  {q:'A node with NO children is called a:',opts:['Root','Parent','Path','Leaf'],ans:3,explain:'A leaf has no children below it. Like a farmer with no apprentice.'},
+  {q:'How many children can each node have in a binary tree?',opts:['1','At most 2','At most 3','Any number'],ans:1,explain:'Binary means two. Each node can have at most a left child and a right child.'},
+  {q:'In a BST, where does a smaller number go?',opts:['Right','Left','Up','Anywhere'],ans:1,explain:'In a BST, smaller goes left, bigger goes right. Like sorting yams by size into baskets.'},
+  {q:'What does "traversal" mean?',opts:['Deleting all nodes','Adding a new node','Visiting every node in order','Making the tree bigger'],ans:2,explain:'Traversal means visiting each node one by one. Like a coach checking every player.'},
+  {q:'In-Order traversal visits nodes in what order?',opts:['Root → Left → Right','Left → Root → Right','Left → Right → Root','Right → Root → Left'],ans:1,explain:'In-Order: Left first, then Root (boss in the middle), then Right.'},
+  {q:'In Pre-Order, the root is visited:',opts:['Last','In the middle','First','Never'],ans:2,explain:'Pre means before. The root comes first, then left, then right.'},
+  {q:'In Post-Order, the root is visited:',opts:['First','In the middle','Last','Never'],ans:2,explain:'Post means after. Left first, right second, root last.'},
+  {q:'For tree A(B(D,E),C(F,G)), what is the In-Order?',opts:['A,B,D,E,C,F,G','D,B,E,A,F,C,G','D,E,B,F,G,C,A','A,B,C,D,E,F,G'],ans:1,explain:'In-Order (Left→Root→Right): Go left to B, left to D → D. Back to B → B. Right to E → E. Back to A → A. Right to C, left to F → F. Back to C → C. Right to G → G.'},
+  {q:'What makes a BST different from a regular binary tree?',opts:['It has more nodes','Smaller values go left, bigger go right','It has no root','Nodes have 3 children'],ans:1,explain:'A BST follows the sorting rule: smaller left, bigger right. A regular binary tree has no such rule.'},
+  {q:'For tree A(B(D,E),C(F,G)), what is the Post-Order?',opts:['A,B,D,E,C,F,G','D,B,E,A,F,C,G','D,E,B,F,G,C,A','A,D,E,B,F,G,C'],ans:2,explain:'Post-Order (Left→Right→Root): D, E, then B (left subtree done). F, G, then C (right subtree done). Finally A (root last).'},
+];
+
+// ===== INIT =====
+function init(){
+  loadState();
+  buildGlossary();
+  buildBadges();
+  buildProgressTracker();
+  buildLabelTree();
+  buildQuiz();
+  applyUnlockState();
+  updateProgressBar();
+  setupScrollObserver();
+  setupNavScroll();
+  if(STATE.darkMode){document.body.classList.add('dark-mode');document.getElementById('darkBtn').textContent='☀️'}
+}
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('mathias_trees');
+    if(s){const d=JSON.parse(s);Object.assign(STATE,d)}
+  }catch(e){}
+}
+function saveState(){
+  try{localStorage.setItem('mathias_trees',JSON.stringify(STATE))}catch(e){}
+}
+function resetAllProgress(){
+  if(confirm('This will erase all your progress. Are you sure?')){
+    localStorage.removeItem('mathias_trees');
+    location.reload();
+  }
+}
+
+// ===== DARK MODE =====
+function toggleDark(){
+  STATE.darkMode=!STATE.darkMode;
+  document.body.classList.toggle('dark-mode');
+  document.getElementById('darkBtn').textContent=STATE.darkMode?'☀️':'🌙';
+  saveState();
+}
+
+// ===== PROGRESS BAR =====
+function updateProgressBar(){
+  const total=SECTIONS.length+1;
+  const done=STATE.unlocked.length;
+  const pct=Math.min((done/total)*100,100);
+  document.getElementById('progressBar').style.width=pct+'%';
+}
+
+// ===== NAV SCROLL =====
+function setupNavScroll(){
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!ticking){requestAnimationFrame(()=>{
+      const nav=document.getElementById('mainNav');
+      nav.classList.toggle('scrolled',window.scrollY>50);
+      ticking=false;
+    });ticking=true}
+  });
+}
+
+// ===== SCROLL OBSERVER =====
+function setupScrollObserver(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:0.1});
+  document.querySelectorAll('.section,.fade-in').forEach(el=>obs.observe(el));
+}
+
+// ===== PROGRESSIVE UNLOCK =====
+function unlockSection(idx){
+  if(!STATE.unlocked.includes(idx)){
+    STATE.unlocked.push(idx);
+    saveState();
+  }
+  applyUnlockState();
+  updateProgressBar();
+  updateProgressTracker();
+}
+function applyUnlockState(){
+  SECTIONS.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(STATE.unlocked.includes(i)){
+      el.classList.remove('locked');
+    }else{
+      el.classList.add('locked');
+    }
+  });
+}
+
+// ===== PROGRESS TRACKER =====
+function buildProgressTracker(){
+  const c=document.getElementById('progressTracker');
+  c.innerHTML='';
+  const labels=['Tree Intro','Key Words','Types','Traversal','Practice'];
+  SECTIONS.forEach((id,i)=>{
+    const d=document.createElement('div');
+    d.className='pt-dot'+(STATE.unlocked.includes(i)?(i===STATE.currentSection?' current':' done'):' locked');
+    d.dataset.label=labels[i]||'Section '+(i+1);
+    d.onclick=()=>{if(STATE.unlocked.includes(i))document.getElementById(id).scrollIntoView({behavior:'smooth'})};
+    c.appendChild(d);
+  });
+}
+function updateProgressTracker(){buildProgressTracker()}
+
+// ===== GATES =====
+function checkGate(num,ans,el){
+  const fb=document.getElementById('gate'+num+'feedback');
+  const correct=GATE_ANSWERS[num];
+  const parent=el.parentElement;
+  if(ans===correct){
+    el.classList.add('correct');
+    fb.className='quiz-feedback correct';
+    fb.textContent='✅ Correct! You can move on.';
+    fb.classList.remove('hidden');
+    parent.querySelectorAll('.quiz-option').forEach(o=>o.style.pointerEvents='none');
+    const nextIdx=num;
+    unlockSection(nextIdx);
+    awardBadge(SECTIONS[num-1]);
+    setTimeout(()=>{
+      const next=document.getElementById(SECTIONS[nextIdx]);
+      if(next)next.scrollIntoView({behavior:'smooth',block:'start'});
+    },800);
+  }else{
+    el.classList.add('wrong');
+    el.classList.add('shake');
+    fb.className='quiz-feedback wrong';
+    fb.textContent='❌ Not quite. Try again!';
+    fb.classList.remove('hidden');
+    setTimeout(()=>{el.classList.remove('wrong','shake')},600);
+  }
+}
+
+// ===== RECALLS =====
+function checkRecall(id,ans,el){
+  const fb=document.getElementById(id+'feedback');
+  const correct=RECALL_ANSWERS[id];
+  const parent=el.parentElement;
+  if(ans===correct){
+    el.classList.add('correct');
+    fb.className='quiz-feedback correct';
+    fb.textContent='✅ Good, you still remember!';
+    fb.classList.remove('hidden');
+    parent.querySelectorAll('.quiz-option').forEach(o=>o.style.pointerEvents='none');
+  }else{
+    el.classList.add('wrong');
+    el.classList.add('shake');
+    fb.className='quiz-feedback wrong';
+    let hint='';
+    if(id==='recall1')hint='The root is the very top node — like the head farmer.';
+    if(id==='recall2')hint='Binary means two. At most 2 children per node.';
+    if(id==='recall3')hint='Post means after. The root is visited last.';
+    fb.textContent='❌ '+hint;
+    fb.classList.remove('hidden');
+    setTimeout(()=>{el.classList.remove('wrong','shake')},600);
+  }
+}
+
+// ===== GLOSSARY =====
+function buildGlossary(){
+  const body=document.getElementById('glossaryBody');
+  body.innerHTML='';
+  GLOSSARY.forEach(g=>{
+    const d=document.createElement('div');
+    d.className='glossary-term';
+    d.dataset.term=g.term.toLowerCase();
+    d.innerHTML=`<strong>${g.term}</strong><p>${g.def}</p><p style="font-size:.8rem;margin-top:4px">${g.analogy}</p>`;
+    body.appendChild(d);
+  });
+}
+function filterGlossary(val){
+  const v=val.toLowerCase();
+  document.querySelectorAll('.glossary-term').forEach(t=>{
+    t.style.display=t.dataset.term.includes(v)?'block':'none';
+  });
+}
+function toggleGlossary(){
+  document.getElementById('glossaryPanel').classList.toggle('open');
+}
+
+// ===== BADGES =====
+function buildBadges(){
+  const c=document.getElementById('badgeItems');
+  c.innerHTML='';
+  let count=0;
+  BADGE_DEFS.forEach(b=>{
+    const earned=!!STATE.badges[b.id];
+    if(earned)count++;
+    const d=document.createElement('div');
+    d.className='badge-item'+(earned?' earned':' locked');
+    d.id='badge-'+b.id;
+    d.innerHTML=`<div class="badge-icon">${earned?b.name.split(' ')[0]:'🔒'}</div><div class="badge-info"><strong>${earned?b.name:'???'}</strong><span>${earned?b.desc:'Keep going!'}</span></div>`;
+    c.appendChild(d);
+  });
+  document.getElementById('badgeCount').textContent=count;
+}
+function awardBadge(id){
+  if(STATE.badges[id])return;
+  STATE.badges[id]=true;
+  saveState();
+  buildBadges();
+  // Brief visual notification
+  const el=document.getElementById('badge-'+id);
+  if(el){
+    el.classList.remove('locked');
+    el.classList.add('earned');
+    const def=BADGE_DEFS.find(b=>b.id===id);
+    if(def){
+      el.querySelector('.badge-icon').textContent=def.name.split(' ')[0];
+      el.querySelector('strong').textContent=def.name;
+      el.querySelector('span').textContent=def.desc;
+    }
+  }
+}
+function toggleBadges(){
+  document.getElementById('badgeList').classList.toggle('open');
+}
+
+// ===== HERO START =====
+function startLearning(){
+  document.getElementById('s1').scrollIntoView({behavior:'smooth'});
+}
+
+// ===== STORY ANIMATION =====
+function playStory1(){
+  const stage=document.getElementById('storyStage1');
+  const text=document.getElementById('storyText1');
+  const btn=document.getElementById('storyBtn1');
+  btn.disabled=true;
+  const steps=[
+    {html:'<div style="display:flex;justify-content:center"><div style="width:56px;height:56px;border-radius:50%;background:#2E7D32;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;animation:badgePop .5s ease">Head</div></div>',text:'The head farmer starts the farm. He is the ROOT — the top of the tree.'},
+    {html:'<div style="display:flex;justify-content:center;flex-direction:column;align-items:center;gap:8px"><div style="width:50px;height:50px;border-radius:50%;background:#2E7D32;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem">Head</div><div style="width:2px;height:20px;background:#2E7D32"></div><div style="display:flex;gap:40px"><div style="width:46px;height:46px;border-radius:50%;background:#4CAF50;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;animation:badgePop .5s ease">Ali</div><div style="width:46px;height:46px;border-radius:50%;background:#4CAF50;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;animation:badgePop .5s ease">Bala</div></div></div>',text:'He trains two workers: Ali and Bala. They are his CHILDREN. He is their PARENT.'},
+    {html:'<div style="display:flex;justify-content:center;flex-direction:column;align-items:center;gap:4px"><div style="width:46px;height:46px;border-radius:50%;background:#2E7D32;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem">Head</div><div style="width:2px;height:16px;background:#2E7D32"></div><div style="display:flex;gap:60px"><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:42px;height:42px;border-radius:50%;background:#4CAF50;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.7rem">Ali</div><div style="width:2px;height:12px;background:#4CAF50"></div><div style="display:flex;gap:12px"><div style="width:36px;height:36px;border-radius:50%;background:#81C784;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.65rem;animation:badgePop .5s ease">Dan</div><div style="width:36px;height:36px;border-radius:50%;background:#81C784;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.65rem;animation:badgePop .5s ease">Eva</div></div></div><div style="display:flex;flex-direction:column;align-items:center"><div style="width:42px;height:42px;border-radius:50%;background:#4CAF50;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.7rem">Bala</div><div style="font-size:.7rem;color:var(--text-light);margin-top:8px">No workers<br>(LEAF)</div></div></div></div>',text:'Ali trains Dan and Eva. Bala has no workers — Bala is a LEAF node. The whole shape is a TREE!'},
+  ];
+  let step=0;
+  function showStep(){
+    if(step>=steps.length){btn.disabled=false;btn.textContent='▶ Replay';return}
+    stage.innerHTML=steps[step].html;
+    text.textContent=steps[step].text;
+    step++;
+    setTimeout(showStep,2500);
+  }
+  step=0;showStep();
+}
+
+// ===== SIMPLE TREE BUILDER =====
+let simpleTreeData=[];
+function addToSimpleTree(){
+  const input=document.getElementById('treeInput1');
+  let val=input.value.trim()||'Node'+(simpleTreeData.length+1);
+  if(val.length>8)val=val.substring(0,8);
+  if(simpleTreeData.length>=15){
+    document.getElementById('simpleTreeLog').innerHTML+='<div>Tree is full! Clear to start over.</div>';
+    return;
+  }
+  simpleTreeData.push(val);
+  input.value='';
+  renderSimpleTree();
+  document.getElementById('simpleTreeLog').innerHTML+='<div>Added "'+val+'" to the tree.</div>';
+  const log=document.getElementById('simpleTreeLog');
+  log.scrollTop=log.scrollHeight;
+}
+function resetSimpleTree(){
+  simpleTreeData=[];
+  renderSimpleTree();
+  document.getElementById('simpleTreeLog').innerHTML='<em style="color:var(--text-light)">Tree cleared. Add names to build again.</em>';
+}
+function renderSimpleTree(){
+  const svg=document.getElementById('simpleTreeSvg');
+  svg.innerHTML='';
+  if(!simpleTreeData.length)return;
+  // BFS layout
+  const nodes=simpleTreeData.map((v,i)=>({val:v,i}));
+  const positions=[];
+  const levels=[];
+  nodes.forEach((n,i)=>{
+    const level=Math.floor(Math.log2(i+1));
+    const posInLevel=i-Math.pow(2,level)+1;
+    const totalInLevel=Math.min(Math.pow(2,level),nodes.length-Math.pow(2,level)+1);
+    levels[i]=level;
+    const maxLevels=Math.floor(Math.log2(nodes.length))+1;
+    const y=30+level*(220/Math.max(maxLevels,1));
+    const levelWidth=500;
+    const nodesInThisLevel=Math.pow(2,level);
+    const spacing=levelWidth/(nodesInThisLevel+1);
+    const x=spacing*(posInLevel+1);
+    positions.push({x,y});
+  });
+  // Draw edges
+  nodes.forEach((n,i)=>{
+    const li=2*i+1,ri=2*i+2;
+    if(li<nodes.length){
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',positions[i].x);line.setAttribute('y1',positions[i].y);
+      line.setAttribute('x2',positions[li].x);line.setAttribute('y2',positions[li].y);
+      line.setAttribute('stroke','#2E7D32');line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+    }
+    if(ri<nodes.length){
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',positions[i].x);line.setAttribute('y1',positions[i].y);
+      line.setAttribute('x2',positions[ri].x);line.setAttribute('y2',positions[ri].y);
+      line.setAttribute('stroke','#2E7D32');line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+    }
+  });
+  // Draw nodes
+  nodes.forEach((n,i)=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',positions[i].x);c.setAttribute('cy',positions[i].y);
+    c.setAttribute('r','20');c.setAttribute('fill','#E8F5E9');c.setAttribute('stroke','#2E7D32');c.setAttribute('stroke-width','3');
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',positions[i].x);t.setAttribute('y',positions[i].y+5);
+    t.setAttribute('text-anchor','middle');t.setAttribute('font-weight','700');t.setAttribute('font-size','11');t.setAttribute('fill','#1a5c2a');
+    t.textContent=n.val;
+    g.appendChild(c);g.appendChild(t);svg.appendChild(g);
+  });
+}
+
+// ===== LABEL TREE =====
+function buildLabelTree(){
+  const svg=document.getElementById('labelTreeSvg');
+  const treeData=[
+    {id:'lt-A',val:'A',x:250,y:40,info:'A is the ROOT — the top node. There is only one root.'},
+    {id:'lt-B',val:'B',x:130,y:130,info:'B is a CHILD of A. B is also a PARENT of D and E.'},
+    {id:'lt-C',val:'C',x:370,y:130,info:'C is a CHILD of A. C is also a PARENT of F and G.'},
+    {id:'lt-D',val:'D',x:60,y:230,info:'D is a LEAF — it has no children. D is a child of B.'},
+    {id:'lt-E',val:'E',x:200,y:230,info:'E is a LEAF — it has no children. E is a child of B.'},
+    {id:'lt-F',val:'F',x:310,y:230,info:'F is a LEAF — it has no children. F is a child of C.'},
+    {id:'lt-G',val:'G',x:430,y:230,info:'G is a LEAF — it has no children. G is a child of C.'},
+  ];
+  const edges=[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
+  edges.forEach(([a,b])=>{
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',treeData[a].x);line.setAttribute('y1',treeData[a].y);
+    line.setAttribute('x2',treeData[b].x);line.setAttribute('y2',treeData[b].y);
+    line.setAttribute('stroke','#2E7D32');line.setAttribute('stroke-width','2');
+    svg.appendChild(line);
+  });
+  treeData.forEach(n=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.style.cursor='pointer';
+    g.onclick=()=>{document.getElementById('labelInfo').textContent=n.info};
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r','24');
+    c.setAttribute('fill','#E8F5E9');c.setAttribute('stroke','#2E7D32');c.setAttribute('stroke-width','3');
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',n.x);t.setAttribute('y',n.y+6);t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-weight','700');t.setAttribute('font-size','16');t.setAttribute('fill','#1a5c2a');
+    t.textContent=n.val;
+    g.appendChild(c);g.appendChild(t);svg.appendChild(g);
+  });
+}
+
+// ===== BST BUILDER =====
+let bstRoot=null;
+class BSTNode{constructor(v){this.val=v;this.left=null;this.right=null}}
+function insertBSTNode(node,val){
+  if(!node)return new BSTNode(val);
+  if(val<node.val)node.left=insertBSTNode(node.left,val);
+  else if(val>node.val)node.right=insertBSTNode(node.right,val);
+  return node;
+}
+let bstCount=0;
+function insertBST(){
+  const input=document.getElementById('bstInput');
+  const val=parseInt(input.value);
+  if(isNaN(val)||val<1||val>99){
+    document.getElementById('bstLog').innerHTML+='<div>Please type a number between 1 and 99.</div>';
+    return;
+  }
+  bstRoot=insertBSTNode(bstRoot,val);
+  bstCount++;
+  input.value='';
+  renderBST();
+  const log=document.getElementById('bstLog');
+  log.innerHTML+='<div>Added '+val+'. '+(val<(bstRoot?bstRoot.val:val)?'It went LEFT (smaller).':'It went RIGHT (bigger).')+'</div>';
+  log.scrollTop=log.scrollHeight;
+  if(bstCount>=5)awardBadge('bst5');
+}
+function resetBST(){
+  bstRoot=null;bstCount=0;
+  document.getElementById('bstSvg').innerHTML='';
+  document.getElementById('bstLog').innerHTML='<em style="color:var(--text-light)">Tree cleared. Add numbers again.</em>';
+}
+function renderBST(){
+  const svg=document.getElementById('bstSvg');
+  svg.innerHTML='';
+  if(!bstRoot)return;
+  const positions=[];
+  function layout(node,x,y,spread,depth){
+    if(!node)return;
+    positions.push({val:node.val,x,y});
+    if(node.left){
+      const lx=x-spread,ly=y+70;
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',x);line.setAttribute('y1',y);line.setAttribute('x2',lx);line.setAttribute('y2',ly);
+      line.setAttribute('stroke','#2E7D32');line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+      layout(node.left,lx,ly,spread/2,depth+1);
+    }
+    if(node.right){
+      const rx=x+spread,ry=y+70;
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',x);line.setAttribute('y1',y);line.setAttribute('x2',rx);line.setAttribute('y2',ry);
+      line.setAttribute('stroke','#2E7D32');line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+      layout(node.right,rx,ry,spread/2,depth+1);
+    }
+  }
+  layout(bstRoot,300,40,130,0);
+  positions.forEach(p=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','22');
+    c.setAttribute('fill','#E8F5E9');c.setAttribute('stroke','#2E7D32');c.setAttribute('stroke-width','3');
+    svg.appendChild(c);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',p.x);t.setAttribute('y',p.y+6);t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-weight','700');t.setAttribute('font-size','14');t.setAttribute('fill','#1a5c2a');
+    t.textContent=p.val;
+    svg.appendChild(t);
+  });
+}
+
+// ===== TRAVERSAL INTERACTIVE =====
+const TRAV_TREE={val:'A',left:{val:'B',left:{val:'D',left:null,right:null},right:{val:'E',left:null,right:null}},right:{val:'C',left:{val:'F',left:null,right:null},right:{val:'G',left:null,right:null}}};
+let travOrder=[];
+let travStep_i=0;
+let travType='';
+
+function getInOrder(node){if(!node)return[];return[...getInOrder(node.left),node.val,...getInOrder(node.right)]}
+function getPreOrder(node){if(!node)return[];return[node.val,...getPreOrder(node.left),...getPreOrder(node.right)]}
+function getPostOrder(node){if(!node)return[];return[...getPostOrder(node.left),...getPostOrder(node.right),node.val]}
+
+const TRAV_NARRATIONS={
+  inorder:{D:'Go left as far as possible. D is the leftmost — visit D first.',B:'Come back up to B. B is the root of this subtree — visit B.',E:'Now go right to E — visit E. Left subtree of A is done!',A:'Come back to the main root A — visit A.',F:'Now go into the right subtree. Go left to F — visit F.',C:'Come back up to C — visit C.',G:'Go right to G — visit G. Done!'},
+  preorder:{A:'Visit the root A first. Pre means boss comes first.',B:'Go left to B — visit B right away.',D:'Go left to D — visit D.',E:'Back up and right to E — visit E. Left subtree done!',C:'Go to right subtree. Visit C first.',F:'Go left to F — visit F.',G:'Go right to G — visit G. Done!'},
+  postorder:{D:'Go to the deepest left: D. Visit D first.',E:'Go to E (right child of B). Visit E.',B:'Both children of B are done. Now visit B.',F:'Go to right subtree. Visit F (left child of C).',G:'Visit G (right child of C).',C:'Both children of C are done. Visit C.',A:'Everything else is done. Visit the root A last!'}
+};
+
+function setTraversal(type){
+  travType=type;
+  if(type==='inorder')travOrder=getInOrder(TRAV_TREE);
+  else if(type==='preorder')travOrder=getPreOrder(TRAV_TREE);
+  else travOrder=getPostOrder(TRAV_TREE);
+  travStep_i=0;
+  document.getElementById('travStepBtn').disabled=false;
+  document.getElementById('travMode').textContent={inorder:'In-Order (L→Root→R)',preorder:'Pre-Order (Root→L→R)',postorder:'Post-Order (L→R→Root)'}[type];
+  travReset();
+}
+function travStep(){
+  if(travStep_i>=travOrder.length){
+    document.getElementById('travNarration').textContent='All done! You visited every node.';
+    document.getElementById('travStepBtn').disabled=true;
+    return;
+  }
+  const nodeId='trv'+travOrder[travStep_i];
+  // Clear previous highlight, keep visited
+  document.querySelectorAll('#travSvg .tv-node').forEach(n=>{
+    if(n.classList.contains('active')){n.classList.remove('active');n.classList.add('done')}
+  });
+  const el=document.getElementById(nodeId);
+  if(el)el.classList.add('active');
+  // Output
+  const out=document.getElementById('travOutput');
+  if(travStep_i===0)out.innerHTML='';
+  if(travStep_i>0){const arrow=document.createElement('span');arrow.className='t-arrow';arrow.textContent='→';out.appendChild(arrow)}
+  const span=document.createElement('span');span.className='t-node active';span.textContent=travOrder[travStep_i];out.appendChild(span);
+  // Narration
+  const nar=TRAV_NARRATIONS[travType]?.[travOrder[travStep_i]]||'';
+  document.getElementById('travNarration').textContent=nar;
+  // Counter
+  document.getElementById('travCounter').textContent='Step '+(travStep_i+1)+' of '+travOrder.length;
+  travStep_i++;
+}
+function travReset(){
+  travStep_i=0;
+  document.querySelectorAll('#travSvg .tv-node').forEach(n=>{n.classList.remove('active','done')});
+  document.getElementById('travOutput').innerHTML='<em style="color:var(--text-light)">Press Step to begin.</em>';
+  document.getElementById('travNarration').textContent='';
+  document.getElementById('travCounter').textContent='';
+  if(travType)document.getElementById('travStepBtn').disabled=false;
+}
+
+// ===== DRAG AND DROP =====
+let draggedItem=null;
+function setupDrag(){
+  const source=document.getElementById('dragSource');
+  const target=document.getElementById('dragTarget');
+  source.querySelectorAll('.drag-item').forEach(item=>{
+    item.addEventListener('dragstart',e=>{
+      draggedItem=item;
+      e.dataTransfer.setData('text/plain',item.dataset.val);
+      setTimeout(()=>item.style.opacity='.4',0);
+    });
+    item.addEventListener('dragend',()=>{item.style.opacity='1';draggedItem=null});
+    // Touch support
+    item.addEventListener('touchstart',e=>{draggedItem=item;item.style.opacity='.6'},{passive:true});
+    item.addEventListener('touchend',e=>{
+      item.style.opacity='1';
+      if(draggedItem){
+        const clone=draggedItem.cloneNode(true);
+        clone.classList.add('placed');
+        clone.draggable=false;
+        clone.onclick=()=>{clone.remove();draggedItem.style.display='';};
+        target.appendChild(clone);
+        draggedItem.style.display='none';
+        draggedItem=null;
+      }
+    },{passive:true});
+  });
+  target.addEventListener('dragover',e=>{e.preventDefault();target.classList.add('over')});
+  target.addEventListener('dragleave',()=>target.classList.remove('over'));
+  target.addEventListener('drop',e=>{
+    e.preventDefault();target.classList.remove('over');
+    if(draggedItem){
+      const clone=draggedItem.cloneNode(true);
+      clone.classList.add('placed');
+      clone.draggable=false;
+      clone.onclick=()=>{clone.remove();draggedItem.style.display=''};
+      target.appendChild(clone);
+      draggedItem.style.display='none';
+    }
+  });
+}
+function checkDragOrder(){
+  const target=document.getElementById('dragTarget');
+  const items=[...target.querySelectorAll('.drag-item')].map(i=>i.dataset.val);
+  const correct=['D','B','E','A','F','C','G'];
+  const fb=document.getElementById('dragFeedback');
+  if(items.length!==7){
+    fb.className='quiz-feedback wrong';
+    fb.textContent='❌ Place all 7 nodes first!';
+    fb.classList.remove('hidden');
+    return;
+  }
+  if(JSON.stringify(items)===JSON.stringify(correct)){
+    fb.className='quiz-feedback correct';
+    fb.textContent='✅ Perfect! D → B → E → A → F → C → G is correct In-Order!';
+    fb.classList.remove('hidden');
+    awardBadge('drag');
+  }else{
+    fb.className='quiz-feedback wrong';
+    fb.textContent='❌ Not right. In-Order is Left → Root → Right. Try: D, B, E, A, F, C, G.';
+    fb.classList.remove('hidden');
+    target.classList.add('shake');
+    setTimeout(()=>target.classList.remove('shake'),500);
+  }
+}
+function resetDrag(){
+  const source=document.getElementById('dragSource');
+  const target=document.getElementById('dragTarget');
+  target.innerHTML='';
+  source.querySelectorAll('.drag-item').forEach(i=>{i.style.display='';i.style.opacity='1'});
+  document.getElementById('dragFeedback').classList.add('hidden');
+}
+
+// ===== MISSION =====
+function checkMission(){
+  const input=document.getElementById('missionInput');
+  const val=input.value.trim().toUpperCase().replace(/\s/g,'');
+  const fb=document.getElementById('missionFeedback');
+  const correct='D,E,B,F,G,C,A';
+  if(val===correct||val===correct.replace(/,/g,'')){
+    fb.className='quiz-feedback correct';
+    fb.textContent='✅ Perfect! Post-Order: D, E, B, F, G, C, A. Check workers first, boss last!';
+    fb.classList.remove('hidden');
+    awardBadge('mission');
+  }else{
+    fb.className='quiz-feedback wrong';
+    fb.textContent='❌ Not quite. Post-Order = Left → Right → Root. D and E first (B\'s workers), then B. F and G (C\'s workers), then C. Finally A (boss) last.';
+    fb.classList.remove('hidden');
+  }
+}
+
+// ===== QUIZ =====
+let quizIdx=0;
+let quizScore=0;
+let quizAnswered=[];
+function buildQuiz(){
+  quizIdx=0;quizScore=0;quizAnswered=[];
+  showQuizQuestion();
+}
+function showQuizQuestion(){
+  if(quizIdx>=QUIZ.length){showQuizResults();return}
+  const q=QUIZ[quizIdx];
+  // Progress dots
+  const prog=document.getElementById('quizProgress');
+  prog.innerHTML='';
+  QUIZ.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='quiz-dot'+(i===quizIdx?' current':(i<quizIdx?(quizAnswered[i]?' done':' wrong-dot'):''));
+    prog.appendChild(d);
+  });
+  document.getElementById('quizQuestion').innerHTML='<h4 style="margin-bottom:12px">Question '+(quizIdx+1)+' of '+QUIZ.length+'</h4><p style="font-weight:600;font-size:1.05rem">'+q.q+'</p>';
+  const opts=document.getElementById('quizOptions');
+  opts.innerHTML='';
+  const letters=['A','B','C','D'];
+  q.opts.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='quiz-option';
+    d.innerHTML='<span class="letter">'+letters[i]+'</span><span>'+o+'</span>';
+    d.onclick=()=>selectQuizAnswer(i,d);
+    opts.appendChild(d);
+  });
+  document.getElementById('quizFeedback').classList.add('hidden');
+  document.getElementById('quizNextBtn').style.display='none';
+}
+function selectQuizAnswer(idx,el){
+  const q=QUIZ[quizIdx];
+  const opts=document.getElementById('quizOptions');
+  if(opts.dataset.answered)return;
+  opts.dataset.answered='true';
+  const correct=q.ans===idx;
+  const fb=document.getElementById('quizFeedback');
+  if(correct){
+    el.classList.add('correct');
+    fb.className='quiz-feedback correct';
+    fb.textContent='✅ Correct! '+q.explain;
+    quizScore++;
+    quizAnswered.push(true);
+  }else{
+    el.classList.add('wrong');
+    opts.children[q.ans].classList.add('correct');
+    fb.className='quiz-feedback wrong';
+    fb.textContent='❌ Not right. '+q.explain;
+    quizAnswered.push(false);
+  }
+  fb.classList.remove('hidden');
+  document.getElementById('quizNextBtn').style.display='inline-flex';
+  opts.querySelectorAll('.quiz-option').forEach(o=>o.style.pointerEvents='none');
+}
+function nextQuizQuestion(){
+  quizIdx++;
+  const opts=document.getElementById('quizOptions');
+  delete opts.dataset.answered;
+  showQuizQuestion();
+}
+function showQuizResults(){
+  document.getElementById('quizCard').classList.add('hidden');
+  const res=document.getElementById('quizResults');
+  res.classList.remove('hidden');
+  const pct=Math.round((quizScore/QUIZ.length)*100);
+  document.getElementById('quizScore').textContent=quizScore+'/'+QUIZ.length+' ('+pct+'%)';
+  let title,msg;
+  if(pct===100){title='🎉 Perfect Score!';msg='Mathias, you got every single answer right! You truly understand trees now.';awardBadge('quiz100');awardBadge('quiz80')}
+  else if(pct>=80){title='🏅 Great Job!';msg='Mathias, you did very well! You understand most of the concepts.';awardBadge('quiz80')}
+  else if(pct>=60){title='👍 Good Effort!';msg='Mathias, you are getting there. Review the sections you missed and try again.'}
+  else{title='📚 Keep Studying';msg='Mathias, go back through the sections and try the quiz again. You can do it!'}
+  document.getElementById('quizResultTitle').textContent=title;
+  document.getElementById('quizResultMsg').textContent=msg;
+  // Show completion
+  if(pct>=60){
+    document.getElementById('completionSection').classList.remove('hidden');
+    awardBadge('s5');
+  }
+  STATE.quizScore=quizScore;saveState();
+}
+function restartQuiz(){
+  document.getElementById('quizCard').classList.remove('hidden');
+  document.getElementById('quizResults').classList.add('hidden');
+  buildQuiz();
+}
+
+// ===== INIT ON LOAD =====
+document.addEventListener('DOMContentLoaded',()=>{
+  init();
+  setupDrag();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Data Structures — Mathias's Learning App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  --green-dark:#1a5c2a;--green-main:#2E7D32;--green-light:#4CAF50;--green-pale:#E8F5E9;
+  --gold:#F9A825;--gold-light:#FFF8E1;--earth-brown:#5D4037;--earth-light:#8D6E63;
+  --cream:#FAFAF5;--white:#FFFFFF;--dark:#1a1a2e;--text:#2c2c2c;--text-light:#666;--text-muted:#999;
+  --success:#2E7D32;--error:#EF5350;--error-dark:#C62828;--error-bg:#FFEBEE;
+  --info-bg:#F3E5F5;--info-text:#4A148C;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.06);
+  --shadow:0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg:0 12px 48px rgba(0,0,0,0.12);
+  --shadow-glow:0 0 40px rgba(76,175,80,0.15);
+  --radius:16px;--radius-sm:10px;--radius-xs:8px;--radius-full:50px;
+  --page-bg:#0f0f1a;--surface:#1a1a2e;--surface-raised:#222240;--surface-recessed:#12121f;
+  --border-c:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);
+  --heading-color:#e8e8e8;--body-color:#d4d4d4;--muted-color:#888;--faint-color:#555;
+  --green-accent:#66BB6A;--green-bg:rgba(76,175,80,0.08);--green-border:rgba(76,175,80,0.2);
+  --gold-accent:#FFB300;--gold-bg:rgba(249,168,37,0.06);--gold-border:rgba(249,168,37,0.2);
+  --error-accent:#ef9a9a;--error-bg-d:rgba(239,83,80,0.08);
+  --info-accent:#CE93D8;--info-bg-d:rgba(206,147,216,0.06);
+  --code-bg:#0d0d1a;
+  --transition-fast:0.15s ease;--transition:0.25s ease;--transition-slow:0.4s ease;
+}
+
+body.light-mode {
+  --page-bg:#FAFAF5;--surface:#FFFFFF;--surface-raised:#FFFFFF;--surface-recessed:#f5f5f0;
+  --border-c:rgba(0,0,0,0.06);--border-hover:rgba(0,0,0,0.12);
+  --heading-color:#1a1a2e;--body-color:#2c2c2c;--muted-color:#666;--faint-color:#aaa;
+  --green-accent:#2E7D32;--green-bg:#E8F5E9;--green-border:rgba(46,125,50,0.2);
+  --gold-accent:#F57F17;--gold-bg:#FFF8E1;--gold-border:rgba(249,168,37,0.25);
+  --error-accent:#C62828;--error-bg-d:#FFEBEE;
+  --info-accent:#4A148C;--info-bg-d:#F3E5F5;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.05);
+  --shadow:0 4px 24px rgba(0,0,0,0.07);
+  --shadow-lg:0 12px 48px rgba(0,0,0,0.1);
+  --shadow-glow:0 0 40px rgba(76,175,80,0.08);
+  --code-bg:#1a1a2e;
+}
+
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--page-bg);color:var(--body-color);line-height:1.7;font-size:16px;transition:background var(--transition),color var(--transition);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+::selection{background:rgba(76,175,80,0.3);color:#fff}
+:focus-visible{outline:2px solid var(--green-accent);outline-offset:2px;border-radius:4px}
+
+/* ═══════ SCROLLBAR ═══════ */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+body.light-mode ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15)}
+
+/* ═══════ PROGRESS BAR ═══════ */
+#progressBar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--green-main),var(--gold),var(--green-light));z-index:10001;transition:width 0.4s cubic-bezier(0.4,0,0.2,1);width:0;border-radius:0 2px 2px 0;box-shadow:0 0 12px rgba(76,175,80,0.4)}
+
+/* ═══════ NAVIGATION ═══════ */
+nav{position:fixed;top:3px;left:0;right:0;z-index:9999;padding:0 24px;transition:all var(--transition);display:flex;align-items:center;justify-content:space-between;height:60px}
+nav.scrolled{background:rgba(15,15,26,0.82);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--border-c);box-shadow:0 4px 30px rgba(0,0,0,0.2)}
+body.light-mode nav.scrolled{background:rgba(255,255,255,0.85);box-shadow:0 4px 30px rgba(0,0,0,0.06)}
+.nav-inner{max-width:1100px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-weight:800;font-size:1.05rem;color:var(--green-accent);display:flex;align-items:center;gap:10px;letter-spacing:-0.3px}
+.nav-logo span{opacity:0.5;font-weight:500;font-size:0.85rem}
+.nav-links{display:flex;gap:8px;list-style:none;align-items:center}
+.nav-links a{text-decoration:none;color:var(--muted-color);font-size:0.82rem;font-weight:500;padding:6px 14px;border-radius:var(--radius-full);transition:all var(--transition-fast);cursor:pointer;white-space:nowrap}
+.nav-links a:hover{color:var(--green-accent);background:var(--green-bg)}
+.nav-links a.active{color:var(--green-accent);background:var(--green-bg)}
+
+/* ═══════ HERO ═══════ */
+.hero{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(46,125,50,0.12) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 60%,rgba(249,168,37,0.06) 0%,transparent 60%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+body.light-mode .hero-grid{background-image:linear-gradient(rgba(0,0,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.03) 1px,transparent 1px)}
+.hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,0.08) 0%,transparent 70%);top:20%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:heroGlow 8s ease-in-out infinite alternate}
+@keyframes heroGlow{0%{transform:translate(-50%,-50%) scale(1);opacity:0.6}100%{transform:translate(-50%,-50%) scale(1.3);opacity:1}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:var(--radius-full);background:var(--green-bg);color:var(--green-accent);font-size:0.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:32px;border:1px solid var(--green-border);backdrop-filter:blur(8px)}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green-accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.hero h1{font-size:clamp(2.8rem,7vw,4.5rem);font-weight:900;color:var(--heading-color);max-width:750px;line-height:1.08;margin-bottom:20px;letter-spacing:-1.5px}
+.hero h1 .accent{background:linear-gradient(135deg,var(--gold) 0%,#FFD54F 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--muted-color);font-size:clamp(1rem,2.5vw,1.2rem);max-width:480px;margin-bottom:44px;line-height:1.6}
+.hero-btn{padding:16px 40px;border-radius:var(--radius-full);background:linear-gradient(135deg,var(--gold),#FFB300);color:#1a1a2e;font-weight:700;font-size:1.05rem;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(249,168,37,0.25),0 0 60px rgba(249,168,37,0.1);transition:all var(--transition);position:relative;overflow:hidden;letter-spacing:-0.2px}
+.hero-btn:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(249,168,37,0.35),0 0 80px rgba(249,168,37,0.15)}
+.hero-btn:active{transform:translateY(-1px) scale(0.98)}
+.hero-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,0.2) 50%,transparent 70%);transform:translateX(-100%);transition:transform 0.6s}
+.hero-btn:hover::after{transform:translateX(100%)}
+.scroll-hint{position:absolute;bottom:40px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--faint-color);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;animation:scrollBounce 2.5s ease infinite}
+.scroll-arrow{width:20px;height:20px;border-right:2px solid var(--faint-color);border-bottom:2px solid var(--faint-color);transform:rotate(45deg);opacity:0.5}
+@keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:0.6}50%{transform:translateY(10px);opacity:1}}
+
+/* ═══════ LAYOUT ═══════ */
+.container{max-width:820px;margin:0 auto;width:100%}
+.section{padding:100px 24px;position:relative}
+.section .container{opacity:0;transform:translateY(40px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+.section.visible .container{opacity:1;transform:translateY(0)}
+.section.locked{pointer-events:none}
+.section.locked .container{opacity:0.15 !important;filter:blur(4px)}
+
+/* ═══════ SECTION HEADERS ═══════ */
+.section-label{display:inline-flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:2.5px;font-size:0.75rem;font-weight:700;color:var(--green-accent);margin-bottom:16px}
+.section-label::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green-accent);flex-shrink:0}
+.section h2{font-size:clamp(2rem,4.5vw,2.8rem);font-weight:800;margin-bottom:12px;line-height:1.15;color:var(--heading-color);letter-spacing:-0.8px}
+.section h2 .gr{color:var(--green-accent)}
+.section h2 .gd{color:var(--gold-accent)}
+.section-intro{color:var(--muted-color);font-size:1.05rem;margin-bottom:40px;max-width:600px;line-height:1.65}
+
+/* ═══════ CARDS ═══════ */
+.card{background:var(--surface);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow-sm);border:1px solid var(--border-c);margin-bottom:24px;transition:all var(--transition);position:relative;overflow:hidden}
+.card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent)}
+body.light-mode .card::before{background:linear-gradient(90deg,transparent,rgba(0,0,0,0.04),transparent)}
+.card h3{font-size:1.3rem;font-weight:700;margin-bottom:16px;color:var(--heading-color);letter-spacing:-0.3px}
+.card h4{font-size:1.1rem;font-weight:700;margin-bottom:10px;color:var(--heading-color)}
+.card p{color:var(--body-color);line-height:1.7}
+.card ul{margin:12px 0 0 20px;color:var(--body-color)}
+.card ul li{margin-bottom:6px}
+.card-highlight{border-color:var(--green-border);box-shadow:var(--shadow),var(--shadow-glow)}
+
+/* ═══════ ANALOGY BOXES ═══════ */
+.farm-box{background:var(--green-bg);border-left:3px solid var(--green-accent);padding:20px 24px;border-radius:0 var(--radius-xs) var(--radius-xs) 0;margin:20px 0;color:var(--green-accent);font-size:0.95rem;line-height:1.65;position:relative}
+.farm-box::before{content:'🌾';position:absolute;top:16px;right:16px;font-size:1.2rem;opacity:0.4}
+.farm-box strong{color:var(--green-accent)}
+body.light-mode .farm-box{color:var(--green-dark)}
+body.light-mode .farm-box strong{color:var(--green-dark)}
+
+.football-box{background:var(--gold-bg);border-left:3px solid var(--gold-accent);padding:20px 24px;border-radius:0 var(--radius-xs) var(--radius-xs) 0;margin:20px 0;color:var(--gold-accent);font-size:0.95rem;line-height:1.65;position:relative}
+.football-box::before{content:'⚽';position:absolute;top:16px;right:16px;font-size:1.2rem;opacity:0.4}
+.football-box strong{color:var(--gold-accent)}
+body.light-mode .football-box{color:var(--earth-brown)}
+body.light-mode .football-box strong{color:var(--earth-brown)}
+
+.info-box{background:var(--info-bg-d);padding:18px 22px;border-radius:var(--radius-sm);margin:20px 0;display:flex;gap:14px;align-items:flex-start;color:var(--info-accent);font-size:0.95rem;border:1px solid rgba(206,147,216,0.1)}
+body.light-mode .info-box{border-color:rgba(74,20,140,0.08)}
+.info-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+
+/* ═══════ BUTTONS ═══════ */
+.btn{padding:10px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:0.9rem;border:none;cursor:pointer;transition:all var(--transition-fast);display:inline-flex;align-items:center;gap:8px;font-family:inherit;letter-spacing:-0.1px;position:relative;overflow:hidden}
+.btn:active{transform:scale(0.97)}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none !important}
+.btn-green{background:var(--green-main);color:#fff;box-shadow:0 2px 8px rgba(46,125,50,0.25)}
+.btn-green:hover:not(:disabled){background:#388E3C;box-shadow:0 4px 16px rgba(46,125,50,0.3);transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#1a1a2e;box-shadow:0 2px 8px rgba(249,168,37,0.2)}
+.btn-gold:hover:not(:disabled){background:#F57F17;transform:translateY(-1px)}
+.btn-red{background:rgba(239,83,80,0.15);color:var(--error-accent);border:1px solid rgba(239,83,80,0.2)}
+.btn-red:hover:not(:disabled){background:rgba(239,83,80,0.25)}
+body.light-mode .btn-red{background:rgba(239,83,80,0.08);color:var(--error-dark)}
+.btn-outline{background:transparent;border:1.5px solid var(--green-border);color:var(--green-accent)}
+.btn-outline:hover:not(:disabled){background:var(--green-bg);border-color:var(--green-accent)}
+.btn-sm{padding:7px 16px;font-size:0.82rem;border-radius:var(--radius-xs)}
+.btn-icon{width:40px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-xs)}
+
+/* ═══════ INPUTS ═══════ */
+input[type="text"],input[type="number"],select{padding:10px 16px;border:1.5px solid var(--border-c);border-radius:var(--radius-sm);font-family:inherit;font-size:0.95rem;width:100%;transition:all var(--transition-fast);background:var(--surface-recessed);color:var(--body-color);-webkit-appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--green-accent);box-shadow:0 0 0 3px var(--green-bg)}
+input::placeholder{color:var(--faint-color)}
+body.light-mode input,body.light-mode select{background:#fff;border-color:#e0e0e0}
+body.light-mode input:focus,body.light-mode select:focus{border-color:var(--green-main);box-shadow:0 0 0 3px rgba(46,125,50,0.08)}
+
+/* ═══════ TABLES ═══════ */
+.table-wrap{overflow-x:auto;margin:20px 0;border-radius:var(--radius-sm);border:1px solid var(--border-c)}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{background:var(--surface-recessed);color:var(--heading-color);padding:12px 18px;font-weight:600;text-align:left;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border-c)}
+td{padding:12px 18px;border-bottom:1px solid var(--border-c);color:var(--body-color)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--green-bg)}
+body.light-mode th{background:#f8f8f4}
+
+/* ═══════ CODE BLOCKS ═══════ */
+.code-block{background:var(--code-bg);border-radius:var(--radius-sm);padding:24px 28px;overflow-x:auto;margin:20px 0;position:relative;border:1px solid rgba(255,255,255,0.04)}
+.code-block::before{content:'CODE';position:absolute;top:10px;right:14px;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.15);font-family:'JetBrains Mono',monospace}
+.code-block code{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#e0e0e0;line-height:1.7;white-space:pre;display:block}
+.kw{color:#C792EA}.str{color:#C3E88D}.typ{color:#FFCB6B}.mth{color:#82AAFF}.cmt{color:#546E7A;font-style:italic}.num{color:#F78C6C}.punc{color:#89DDFF}
+
+/* ═══════ QUIZ OPTIONS ═══════ */
+.quiz-option{border:1.5px solid var(--border-c);border-radius:12px;padding:14px 20px;margin:10px 0;cursor:pointer;display:flex;align-items:center;gap:16px;transition:all var(--transition-fast);background:var(--surface);position:relative;overflow:hidden;font-size:0.95rem}
+.quiz-option:hover{border-color:var(--green-border);background:var(--green-bg)}
+.quiz-option.selected{border-color:var(--green-accent);background:var(--green-bg)}
+.quiz-option.correct{border-color:var(--green-accent);background:var(--green-bg);animation:correctPulse 0.5s ease}
+.quiz-option.wrong{border-color:var(--error-accent);background:var(--error-bg-d);animation:shake 0.4s ease}
+.quiz-option.correct .quiz-letter{background:var(--green-accent);color:#fff}
+.quiz-option.wrong .quiz-letter{background:var(--error);color:#fff}
+.quiz-letter{width:34px;height:34px;border-radius:10px;background:var(--surface-recessed);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--muted-color);flex-shrink:0;transition:all var(--transition-fast);border:1px solid var(--border-c)}
+.quiz-feedback{padding:18px 22px;border-radius:12px;margin-top:16px;font-size:0.92rem;line-height:1.6;display:none}
+.quiz-feedback.show{display:block;animation:fadeSlideIn 0.3s ease}
+.quiz-feedback.correct{background:var(--green-bg);color:var(--green-accent);border:1px solid var(--green-border)}
+.quiz-feedback.wrong{background:var(--error-bg-d);color:var(--error-accent);border:1px solid rgba(239,83,80,0.15)}
+
+@keyframes correctPulse{0%{box-shadow:0 0 0 0 rgba(76,175,80,0.4)}100%{box-shadow:0 0 0 14px rgba(76,175,80,0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes fadeSlideIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:translateY(0)}}
+
+/* ═══════ ARRAY VISUAL ═══════ */
+.array-container{display:flex;flex-direction:column;gap:4px;margin:24px 0}
+.array-indices{display:flex;gap:3px}
+.array-cells{display:flex;gap:3px}
+.array-cell{width:64px;height:56px;border:1.5px solid var(--green-border);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;background:var(--surface);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);position:relative;flex-shrink:0}
+.array-idx{width:64px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:var(--faint-color);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.array-cell .val{font-weight:700;font-size:1.05rem;color:var(--green-accent);font-family:'JetBrains Mono',monospace}
+.array-cell.highlight{background:rgba(249,168,37,0.12);border-color:var(--gold-accent);transform:scale(1.08);box-shadow:0 0 20px rgba(249,168,37,0.15)}
+.array-cell.found{background:var(--green-bg);border-color:var(--green-accent);transform:scale(1.08);box-shadow:0 0 20px rgba(76,175,80,0.2)}
+.array-cell.empty{border-style:dashed;opacity:0.35}
+.array-cell.inserting{animation:cellInsert 0.4s ease}
+@keyframes cellInsert{0%{transform:scale(0.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+
+/* ═══════ CONTROLS BAR ═══════ */
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}
+.controls input,.controls select{width:auto;max-width:150px;flex-shrink:0}
+.controls-stack{display:flex;flex-direction:column;gap:10px}
+
+/* ═══════ ACTION LOG ═══════ */
+.log{background:var(--surface-recessed);border:1px solid var(--border-c);border-radius:var(--radius-sm);padding:16px 20px;max-height:180px;overflow-y:auto;font-size:0.85rem;margin-top:16px;font-family:'JetBrains Mono',monospace}
+.log-entry{padding:5px 0;border-bottom:1px solid var(--border-c);color:var(--muted-color);display:flex;align-items:center;gap:8px}
+.log-entry:last-child{border:none;color:var(--body-color)}
+.log-entry::before{content:'→';color:var(--green-accent);font-weight:700;flex-shrink:0}
+.log-empty{color:var(--faint-color);font-style:italic;font-family:'Inter',sans-serif}
+
+/* ═══════ DRAG & DROP ═══════ */
+.drag-zone{min-height:72px;border:2px dashed var(--border-c);border-radius:var(--radius-sm);padding:12px;display:flex;flex-wrap:wrap;gap:8px;transition:all var(--transition);align-items:center;align-content:center}
+.drag-zone.over{border-color:var(--green-accent);background:var(--green-bg);border-style:solid}
+.drag-zone-label{font-size:0.78rem;color:var(--faint-color);width:100%;text-align:center}
+.drag-item{padding:8px 18px;border-radius:var(--radius-full);font-weight:600;font-size:0.85rem;cursor:grab;transition:all var(--transition-fast);user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;gap:6px;border:none}
+.drag-item:active{cursor:grabbing}
+.drag-item.green-di{background:var(--green-main);color:#fff}
+.drag-item.gold-di{background:var(--gold);color:#1a1a2e}
+.drag-item.brown-di{background:var(--earth-light);color:#fff}
+.drag-item.purple-di{background:#7C4DFF;color:#fff}
+.drag-item:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.drag-item.dragging{opacity:0.5;transform:scale(1.08)}
+.drag-item.placed{cursor:default;opacity:0.7;transform:none}
+
+/* ═══════ GATE ═══════ */
+.gate{background:var(--surface);border:1.5px solid var(--border-c);border-radius:var(--radius);padding:36px;margin-top:40px;position:relative;overflow:hidden}
+.gate::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green-accent),var(--gold-accent))}
+.gate h4{text-align:center;margin-bottom:20px;font-size:1.1rem;color:var(--heading-color)}
+.gate.passed{border-color:var(--green-border);background:var(--green-bg)}
+.gate.passed::before{background:var(--green-accent)}
+.gate-icon{text-align:center;font-size:2rem;margin-bottom:16px}
+
+/* ═══════ MISSION CARD ═══════ */
+.mission-card{border:1.5px solid var(--gold-border);border-radius:var(--radius);padding:32px;background:var(--gold-bg);margin:32px 0;position:relative;overflow:hidden}
+.mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold-accent),var(--green-accent))}
+.mission-card h3{color:var(--gold-accent)}
+.stars{font-size:1.6rem;margin:8px 0;letter-spacing:4px}
+
+/* ═══════ COMPARISON / DARK SECTION ═══════ */
+.dark-section{background:linear-gradient(135deg,#0a1f10 0%,#0d2818 40%,#1a1510 100%);padding:80px 24px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.04);position:relative;overflow:hidden}
+body.light-mode .dark-section{background:linear-gradient(135deg,#1a5c2a 0%,#2E7D32 40%,#5D4037 100%)}
+.dark-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(76,175,80,0.08) 0%,transparent 60%);pointer-events:none}
+.glass-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:28px;color:#e8e8e8;transition:all var(--transition)}
+.glass-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+.glass-card h4{color:var(--gold);margin-bottom:10px;font-size:1rem}
+.glass-card p{font-size:0.88rem;color:rgba(255,255,255,0.6);line-height:1.6}
+
+/* ═══════ GRIDS ═══════ */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+
+/* ═══════ 2D ARRAY GRID ═══════ */
+.grid-2d{display:inline-grid;gap:3px;margin:20px 0}
+.grid-2d-cell{width:60px;height:52px;border:1.5px solid var(--border-c);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;background:var(--surface);cursor:pointer;transition:all var(--transition-fast);font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--green-accent);font-size:0.95rem}
+.grid-2d-cell:hover{border-color:var(--green-accent);background:var(--green-bg)}
+.grid-2d-cell.active{border-color:var(--gold-accent);background:rgba(249,168,37,0.12);transform:scale(1.05);box-shadow:0 0 16px rgba(249,168,37,0.15)}
+
+/* ═══════ QUIZ FINAL ═══════ */
+.quiz-progress{display:flex;gap:6px;justify-content:center;margin-bottom:28px;flex-wrap:wrap}
+.quiz-dot{width:10px;height:10px;border-radius:50%;background:var(--border-c);transition:all var(--transition-fast)}
+.quiz-dot.active{background:var(--green-accent);transform:scale(1.4);box-shadow:0 0 8px rgba(76,175,80,0.3)}
+.quiz-dot.answered{background:var(--green-light)}
+.quiz-dot.wrong-dot{background:var(--error)}
+.score-display{text-align:center;padding:48px 24px}
+.big-score{font-size:clamp(3rem,10vw,5rem);font-weight:900;background:linear-gradient(135deg,var(--green-accent),var(--gold-accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px}
+
+/* ═══════ BADGE SYSTEM ═══════ */
+.badge-float{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:9998;display:flex;flex-direction:column;gap:8px;align-items:center}
+.badge-trigger{width:48px;height:48px;border-radius:14px;background:var(--surface);border:1px solid var(--border-c);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);transition:all var(--transition);position:relative;color:var(--gold-accent);font-weight:900;font-size:1rem}
+.badge-trigger:hover{transform:scale(1.08);border-color:var(--gold-border);box-shadow:var(--shadow),0 0 20px rgba(249,168,37,0.1)}
+.badge-trigger .count{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1a1a2e;font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.badge-popup{position:fixed;right:80px;top:50%;transform:translateY(-50%);background:var(--surface);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-lg);z-index:9999;width:300px;max-height:450px;overflow-y:auto;border:1px solid var(--border-c);display:none}
+.badge-popup.show{display:block;animation:fadeSlideIn 0.25s ease}
+.badge-popup h4{margin-bottom:20px;color:var(--heading-color);font-size:1.05rem}
+.badge-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border-c)}
+.badge-item:last-child{border:none}
+.badge-item .b-icon{font-size:1.6rem;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--surface-recessed);flex-shrink:0}
+.badge-item .b-info{flex:1;min-width:0}
+.badge-item .b-name{font-weight:700;font-size:0.88rem;color:var(--heading-color)}
+.badge-item .b-desc{font-size:0.78rem;color:var(--muted-color);margin-top:2px}
+.badge-item.locked{opacity:0.25}
+.badge-item.earned .b-icon{background:var(--gold-bg);box-shadow:0 0 12px rgba(249,168,37,0.1)}
+@keyframes badgeUnlock{0%{transform:scale(0) rotate(-10deg)}60%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
+.badge-notify{position:fixed;bottom:80px;right:20px;background:var(--surface);border:1px solid var(--gold-border);border-radius:var(--radius-sm);padding:16px 22px;box-shadow:var(--shadow-lg);z-index:100001;display:flex;align-items:center;gap:14px;animation:slideUpIn 0.4s ease,slideUpOut 0.4s ease 2.6s forwards;max-width:300px}
+@keyframes slideUpIn{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes slideUpOut{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(20px)}}
+
+/* ═══════ DARK/LIGHT TOGGLE ═══════ */
+.theme-toggle{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:14px;border:1px solid var(--border-c);font-size:1.25rem;cursor:pointer;z-index:99999;background:var(--surface);box-shadow:var(--shadow);transition:all var(--transition);display:flex;align-items:center;justify-content:center;color:var(--body-color)}
+.theme-toggle:hover{transform:scale(1.08);border-color:var(--border-hover);box-shadow:var(--shadow),0 0 20px rgba(255,255,255,0.05)}
+
+/* ═══════ GLOSSARY ═══════ */
+.glossary-trigger{position:fixed;bottom:24px;left:24px;padding:10px 20px;border-radius:var(--radius-full);border:1px solid var(--border-c);background:var(--surface);box-shadow:var(--shadow);cursor:pointer;font-size:0.88rem;font-weight:600;z-index:99999;transition:all var(--transition);color:var(--body-color);font-family:inherit;display:flex;align-items:center;gap:8px}
+.glossary-trigger:hover{transform:scale(1.05);border-color:var(--border-hover)}
+.glossary-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100000;display:none;animation:fadeIn 0.2s ease}
+.glossary-overlay.open{display:block}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+.glossary-panel{position:fixed;left:0;top:0;bottom:0;width:380px;max-width:100vw;background:var(--surface);box-shadow:var(--shadow-lg);z-index:100001;padding:32px;overflow-y:auto;transform:translateX(-100%);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);border-right:1px solid var(--border-c)}
+.glossary-panel.open{transform:translateX(0)}
+.glossary-panel h3{margin-bottom:20px;color:var(--heading-color);font-size:1.2rem}
+.glossary-panel input{margin-bottom:20px}
+.gloss-item{padding:16px 0;border-bottom:1px solid var(--border-c);cursor:pointer;transition:all var(--transition-fast)}
+.gloss-item:hover{padding-left:8px}
+.gloss-item:last-child{border:none}
+.gloss-term{font-weight:700;color:var(--green-accent);font-size:0.92rem;margin-bottom:4px}
+.gloss-def{font-size:0.85rem;color:var(--muted-color);line-height:1.5}
+.gloss-analogy{font-size:0.82rem;color:var(--faint-color);font-style:italic;margin-top:4px}
+.gloss-close{position:absolute;top:24px;right:24px;width:36px;height:36px;border-radius:10px;border:1px solid var(--border-c);background:var(--surface-recessed);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--muted-color);transition:all var(--transition-fast)}
+.gloss-close:hover{background:var(--error-bg-d);color:var(--error-accent);border-color:rgba(239,83,80,0.2)}
+
+/* ═══════ PROGRESS TRACKER (SIDE) ═══════ */
+.progress-rail{position:fixed;left:24px;top:50%;transform:translateY(-50%);z-index:9998;display:flex;flex-direction:column;gap:8px;align-items:center}
+.pt-dot{width:10px;height:10px;border-radius:50%;background:var(--faint-color);cursor:pointer;transition:all var(--transition);border:2px solid transparent;opacity:0.4}
+.pt-dot.done{background:var(--green-accent);border-color:var(--green-accent);opacity:1}
+.pt-dot.current{background:var(--gold-accent);border-color:var(--gold-accent);opacity:1;animation:dotPulse 2s infinite}
+.pt-dot:hover{transform:scale(1.5)}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(249,168,37,0.4)}50%{box-shadow:0 0 0 6px rgba(249,168,37,0)}}
+
+/* ═══════ FOOTER ═══════ */
+footer{background:var(--surface-recessed);border-top:1px solid var(--border-c);color:var(--muted-color);text-align:center;padding:48px 24px;font-size:0.85rem;line-height:1.8}
+footer a{color:var(--gold-accent);text-decoration:none;transition:color var(--transition-fast)}
+footer a:hover{color:var(--green-accent)}
+footer .footer-inner{max-width:600px;margin:0 auto}
+
+/* ═══════ UTILITIES ═══════ */
+.hidden{display:none !important}
+.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}.mb-24{margin-bottom:24px}.mb-32{margin-bottom:32px}.mb-40{margin-bottom:40px}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}.mt-24{margin-top:24px}.mt-32{margin-top:32px}
+.text-center{text-align:center}
+.text-sm{font-size:0.88rem}
+.text-xs{font-size:0.78rem}
+.text-muted{color:var(--muted-color)}
+.text-faint{color:var(--faint-color)}
+.fw-700{font-weight:700}
+.inline-code{background:var(--surface-recessed);padding:2px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.88em;border:1px solid var(--border-c)}
+.divider{height:1px;background:var(--border-c);margin:32px 0}
+.tag{display:inline-flex;padding:4px 14px;border-radius:var(--radius-full);background:var(--green-bg);color:var(--green-accent);font-size:0.78rem;font-weight:600;border:1px solid var(--green-border)}
+
+/* ═══════ RESPONSIVE ═══════ */
+@media(max-width:768px){
+  .nav-links{display:none !important}
+  .section{padding:60px 16px}
+  .card{padding:24px 20px}
+  .hero{padding:60px 20px 40px}
+  .hero h1{letter-spacing:-1px}
+  .grid-2{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  .controls{flex-direction:column;align-items:stretch}
+  .controls input,.controls select{max-width:100% !important;width:100% !important}
+  .controls .btn{justify-content:center}
+  .progress-rail{display:none}
+  .badge-float{right:12px}
+  .theme-toggle{bottom:16px;right:16px;width:46px;height:46px}
+  .glossary-trigger{bottom:16px;left:16px;padding:8px 16px;font-size:0.82rem}
+  .glossary-panel{width:100%;border-right:none}
+  .badge-popup{right:12px;left:12px;width:auto;top:auto;bottom:80px;transform:none;max-height:60vh}
+  .array-container{overflow-x:auto;padding-bottom:8px}
+  .farm-box,.football-box,.info-box{padding:16px 18px}
+  .farm-box::before,.football-box::before{display:none}
+  .gate{padding:24px 20px}
+  .mission-card{padding:24px 20px}
+  .dark-section{padding:48px 20px;margin:0 -16px;border-radius:0}
+  .code-block{padding:20px;font-size:0.8rem}
+  .hero-btn{padding:14px 32px;font-size:0.95rem}
+  .table-wrap{margin:16px -20px;border-radius:0;border-left:none;border-right:none}
+}
+@media(max-width:400px){
+  .array-cell{width:50px;height:46px}
+  .array-idx{width:50px}
+  .grid-2d-cell{width:48px;height:44px;font-size:0.82rem}
+}
+</style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+<div class="nav-inner">
+<div class="nav-logo">📊 DataStructures <span>for Mathias</span></div>
+<ul class="nav-links" id="navLinks"></ul>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+<div class="hero-grid"></div>
+<div class="hero-glow"></div>
+<div class="hero-badge"><span class="dot"></span> MODULE ONE — COMPUTER SCIENCE</div>
+<h1>Learn <span class="accent">Data Structures</span> Step by Step</h1>
+<p class="hero-sub">How computers store and organize things — explained with yam farming and football.</p>
+<button class="hero-btn" onclick="startLearning()">Start Learning →</button>
+<div class="scroll-hint"><div class="scroll-arrow"></div>Scroll to begin</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 1: DATA TYPES ═══════════════════════ -->
+<section class="section" id="sec1" data-title="Data Types" data-idx="1">
+<div class="container">
+<div class="section-label">Section 1</div>
+<h2>What Is a <span class="gr">Data Type</span>?</h2>
+<p class="section-intro">Before a computer can work with any information, it needs to know what kind of thing it is dealing with.</p>
+
+<div class="card">
+<h3>🌾 Think About Your Farm</h3>
+<div class="farm-box">
+On your farm, you have different kinds of things: yams, maize, cassava. You do not store them the same way. Yams go in a barn. Maize hangs to dry. Cassava goes in sacks. <strong>Each kind of thing needs its own way of storing.</strong>
+</div>
+<p class="mt-20">A computer works the same way. It stores numbers, letters, and yes/no answers. Each kind is called a <strong>data type</strong>.</p>
+<p class="mt-12">A <strong>data type</strong> tells the computer two things:</p>
+<ul>
+<li><strong>What values are allowed</strong> — like whole numbers, or letters, or true/false</li>
+<li><strong>What you can do with it</strong> — like add numbers or join words</li>
+</ul>
+<div class="football-box mt-20">
+Think about a player's jersey. The number on the back (like 10) is one kind — a <strong>number</strong>. The name ("Musa") is another kind — <strong>text</strong>. You cannot add two names like numbers. Each kind follows different rules.
+</div>
+</div>
+
+<div class="card">
+<h3>The 4 Simple Data Types</h3>
+<p class="mb-20">These are the basic building blocks. Every computer program uses them.</p>
+<div class="grid-2">
+<div style="padding:22px;background:var(--green-bg);border-radius:var(--radius-sm);border:1px solid var(--green-border)">
+<div style="font-size:1.5rem;margin-bottom:8px">🔤</div>
+<h4 style="color:var(--green-accent);margin-bottom:6px">Character</h4>
+<p class="text-sm">A single letter, digit, or symbol.</p>
+<p class="text-xs text-muted mt-8">Examples: <span class="inline-code">'A'</span> <span class="inline-code">'5'</span> <span class="inline-code">'@'</span></p>
+<div class="farm-box" style="margin-top:12px;font-size:.85rem;padding:12px 16px">Like one seed in your hand.</div>
+</div>
+<div style="padding:22px;background:var(--gold-bg);border-radius:var(--radius-sm);border:1px solid var(--gold-border)">
+<div style="font-size:1.5rem;margin-bottom:8px">🔢</div>
+<h4 style="color:var(--gold-accent);margin-bottom:6px">Integer</h4>
+<p class="text-sm">A whole number — no decimal point.</p>
+<p class="text-xs text-muted mt-8">Examples: <span class="inline-code">7</span> <span class="inline-code">-3</span> <span class="inline-code">100</span></p>
+<div class="football-box" style="margin-top:12px;font-size:.85rem;padding:12px 16px">A jersey number: 10, not 10.5</div>
+</div>
+<div style="padding:22px;background:var(--green-bg);border-radius:var(--radius-sm);border:1px solid var(--green-border)">
+<div style="font-size:1.5rem;margin-bottom:8px">📐</div>
+<h4 style="color:var(--green-accent);margin-bottom:6px">Real (Float)</h4>
+<p class="text-sm">A number with a decimal point.</p>
+<p class="text-xs text-muted mt-8">Examples: <span class="inline-code">3.14</span> <span class="inline-code">-0.5</span></p>
+<div class="farm-box" style="margin-top:12px;font-size:.85rem;padding:12px 16px">Measuring 2.5 kg of yams on a scale.</div>
+</div>
+<div style="padding:22px;background:var(--gold-bg);border-radius:var(--radius-sm);border:1px solid var(--gold-border)">
+<div style="font-size:1.5rem;margin-bottom:8px">✅</div>
+<h4 style="color:var(--gold-accent);margin-bottom:6px">Boolean</h4>
+<p class="text-sm">Only two values: <span class="inline-code">true</span> or <span class="inline-code">false</span>.</p>
+<p class="text-xs text-muted mt-8">Like a yes/no answer.</p>
+<div class="football-box" style="margin-top:12px;font-size:.85rem;padding:12px 16px">"Was it a goal?" — Yes or No.</div>
+</div>
+</div>
+</div>
+
+<!-- INTERACTIVE: Sort Data Types -->
+<div class="card card-highlight">
+<h3>🎯 Your Turn — Sort These Items</h3>
+<p class="mb-20">Drag each item into the correct data type box below.</p>
+<div class="controls" id="dragSource1" style="justify-content:center;gap:10px">
+<div class="drag-item green-di" draggable="true" data-type="integer" data-game="sort1">42</div>
+<div class="drag-item gold-di" draggable="true" data-type="boolean" data-game="sort1">true</div>
+<div class="drag-item brown-di" draggable="true" data-type="character" data-game="sort1">'M'</div>
+<div class="drag-item purple-di" draggable="true" data-type="real" data-game="sort1">3.14</div>
+<div class="drag-item green-di" draggable="true" data-type="integer" data-game="sort1">-7</div>
+<div class="drag-item gold-di" draggable="true" data-type="boolean" data-game="sort1">false</div>
+</div>
+<div class="grid-2 mt-24">
+<div><p class="text-xs fw-700 mb-8" style="color:var(--green-accent)">INTEGER (whole number)</p><div class="drag-zone" data-accept="integer"><span class="drag-zone-label">Drop here</span></div></div>
+<div><p class="text-xs fw-700 mb-8" style="color:var(--gold-accent)">CHARACTER (letter/symbol)</p><div class="drag-zone" data-accept="character"><span class="drag-zone-label">Drop here</span></div></div>
+<div><p class="text-xs fw-700 mb-8" style="color:var(--green-accent)">REAL (decimal number)</p><div class="drag-zone" data-accept="real"><span class="drag-zone-label">Drop here</span></div></div>
+<div><p class="text-xs fw-700 mb-8" style="color:var(--gold-accent)">BOOLEAN (true/false)</p><div class="drag-zone" data-accept="boolean"><span class="drag-zone-label">Drop here</span></div></div>
+</div>
+<div id="sortFeedback1" class="mt-20 text-center fw-700"></div>
+</div>
+
+<!-- GATE 1 -->
+<div class="gate" id="gate1">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check — Ready for the next section?</h4>
+<p class="text-center text-muted mb-20">What data type is the number <strong style="color:var(--heading-color)">25</strong>?</p>
+<div style="max-width:400px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(1,'A',this)"><span class="quiz-letter">A</span>Character</div>
+<div class="quiz-option" onclick="checkGate(1,'B',this)"><span class="quiz-letter">B</span>Integer</div>
+<div class="quiz-option" onclick="checkGate(1,'C',this)"><span class="quiz-letter">C</span>Boolean</div>
+<div class="quiz-option" onclick="checkGate(1,'D',this)"><span class="quiz-letter">D</span>Real</div>
+</div>
+<div id="gateFb1" class="quiz-feedback" style="max-width:400px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 2: ADT ═══════════════════════ -->
+<section class="section" id="sec2" data-title="Abstract Data Types" data-idx="2">
+<div class="container">
+<div class="section-label">Section 2</div>
+<h2>Abstract <span class="gr">Data Types</span></h2>
+<p class="section-intro">A plan for how to store and use data — before you build anything.</p>
+
+<div class="card">
+<h3>🏗️ The Blueprint Idea</h3>
+<div class="farm-box">
+<strong>Before you build a yam barn,</strong> you have a plan in your head: "It will hold yams. I can add yams, take yams out, and count how many I have." This plan is not the barn itself — it is the <em>idea</em> of the barn.
+</div>
+<p class="mt-20">An <strong>Abstract Data Type (ADT)</strong> is like that plan. It describes:</p>
+<ul>
+<li><strong>What kind of data</strong> it holds</li>
+<li><strong>What actions</strong> you can do with that data</li>
+</ul>
+<p class="mt-16">It does NOT say HOW to build it. Just WHAT it should do.</p>
+<div class="football-box mt-20">
+A "team lineup" is an abstract idea. It says: "11 players, each in a position." But HOW you write it — on paper, on a whiteboard, on a phone — those are different ways to build the same idea.
+</div>
+<div class="info-box mt-20">
+<span class="info-icon">💡</span>
+<div>Common ADTs: <strong>Arrays, Lists, Queues, Stacks, Trees</strong>. You will learn about these soon!</div>
+</div>
+</div>
+
+<div class="gate" id="gate2">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check</h4>
+<p class="text-center text-muted mb-20">An Abstract Data Type (ADT) is like a _____ for how data should work.</p>
+<div style="max-width:400px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(2,'A',this)"><span class="quiz-letter">A</span>Finished product</div>
+<div class="quiz-option" onclick="checkGate(2,'B',this)"><span class="quiz-letter">B</span>Plan or blueprint</div>
+<div class="quiz-option" onclick="checkGate(2,'C',this)"><span class="quiz-letter">C</span>Random guess</div>
+</div>
+<div id="gateFb2" class="quiz-feedback" style="max-width:400px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 3: TERMINOLOGY ═══════════════════════ -->
+<section class="section" id="sec3" data-title="Key Terms" data-idx="3">
+<div class="container">
+<div class="section-label">Section 3</div>
+<h2>Key <span class="gr">Terms</span> You Must Know</h2>
+<p class="section-intro">Learn the words computer people use to talk about organized data.</p>
+
+<div class="card">
+<h3>📦 What Is a Data Structure?</h3>
+<p>A <strong>data structure</strong> is a way to store and organize data so you can find, add, or remove things quickly.</p>
+<div class="farm-box">
+You have different ways to organize yams: in a pile (stack), in a line at the market (queue), or in numbered rows of mounds (array). Each way has its own rules. Each is a data structure.
+</div>
+<p class="mt-20">An <strong>algorithm</strong> is a set of step-by-step instructions to solve a problem. Like a recipe for cooking.</p>
+<div class="football-box">
+Your coach says: "Pass to the defender, then to the midfielder, then shoot." Those steps in order are an algorithm for scoring a goal.
+</div>
+</div>
+
+<div class="card">
+<h3>📝 Word List</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Term</th><th>Meaning</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><strong>Data</strong></td><td>Any value or piece of info</td><td>A farmer's name, number of yams</td></tr>
+<tr><td><strong>Data Item</strong></td><td>One single value</td><td>The name "Mathias"</td></tr>
+<tr><td><strong>Group Item</strong></td><td>Made of smaller parts</td><td>Full name = first + middle + last</td></tr>
+<tr><td><strong>Elementary Item</strong></td><td>Cannot be broken down more</td><td>A jersey number: just one number</td></tr>
+<tr><td><strong>Entity</strong></td><td>A category of thing</td><td>"Farmer" or "Player"</td></tr>
+<tr><td><strong>Attribute</strong></td><td>A property of an entity</td><td>A farmer's name, age, farm size</td></tr>
+<tr><td><strong>Field</strong></td><td>One piece of info about one entity</td><td>The "name" box on a form</td></tr>
+<tr><td><strong>Record</strong></td><td>All info about one entity together</td><td>One farmer's full registration card</td></tr>
+<tr><td><strong>File</strong></td><td>All records of the same type</td><td>A notebook with all farmers' records</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- BUILD A RECORD -->
+<div class="card card-highlight">
+<h3>🎯 Your Turn — Build a Player Record</h3>
+<p class="mb-20">Fill in each field. See how data types and records work together.</p>
+<div class="grid-2">
+<div><label class="text-xs fw-700 mb-8" style="display:block;color:var(--green-accent)">NAME (Character)</label><input type="text" id="recName" placeholder="e.g. Musa" maxlength="30"></div>
+<div><label class="text-xs fw-700 mb-8" style="display:block;color:var(--gold-accent)">JERSEY # (Integer)</label><input type="number" id="recNum" placeholder="e.g. 10" min="1" max="99"></div>
+<div><label class="text-xs fw-700 mb-8" style="display:block;color:var(--green-accent)">HEIGHT IN METERS (Real)</label><input type="text" id="recHeight" placeholder="e.g. 1.75" maxlength="5"></div>
+<div><label class="text-xs fw-700 mb-8" style="display:block;color:var(--gold-accent)">IS CAPTAIN? (Boolean)</label><select id="recCaptain"><option value="">Pick one</option><option value="true">True</option><option value="false">False</option></select></div>
+</div>
+<button class="btn btn-green mt-20" onclick="buildRecord()">Build Record →</button>
+<div id="recordResult" class="mt-20"></div>
+</div>
+
+<!-- SPACED RECALL -->
+<div class="card" style="border-color:var(--gold-border);background:var(--gold-bg)">
+<p class="text-xs fw-700 mb-12" style="color:var(--gold-accent);letter-spacing:1px">🔄 QUICK RECALL — FROM SECTION 1</p>
+<p class="mb-16" style="color:var(--heading-color)">What are the 4 simple data types?</p>
+<div style="max-width:440px">
+<div class="quiz-option" onclick="checkRecall(this,true)"><span class="quiz-letter">A</span>Character, Integer, Real, Boolean</div>
+<div class="quiz-option" onclick="checkRecall(this,false)"><span class="quiz-letter">B</span>Name, Number, Letter, Word</div>
+<div class="quiz-option" onclick="checkRecall(this,false)"><span class="quiz-letter">C</span>Add, Remove, Search, Sort</div>
+</div>
+<div id="recallFb1" class="mt-12"></div>
+</div>
+
+<div class="gate" id="gate3">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check</h4>
+<p class="text-center text-muted mb-20">A <strong style="color:var(--heading-color)">record</strong> is best described as:</p>
+<div style="max-width:440px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(3,'A',this)"><span class="quiz-letter">A</span>One single number</div>
+<div class="quiz-option" onclick="checkGate(3,'B',this)"><span class="quiz-letter">B</span>All info about one thing, collected together</div>
+<div class="quiz-option" onclick="checkGate(3,'C',this)"><span class="quiz-letter">C</span>A computer program</div>
+</div>
+<div id="gateFb3" class="quiz-feedback" style="max-width:440px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 4: CLASSIFICATION ═══════════════════════ -->
+<section class="section" id="sec4" data-title="Classification" data-idx="4">
+<div class="container">
+<div class="section-label">Section 4</div>
+<h2>How Data Structures Are <span class="gr">Grouped</span></h2>
+<p class="section-intro">Data structures come in families. Here is the family tree.</p>
+
+<div class="card">
+<h3>Two Big Families</h3>
+<div class="grid-2">
+<div style="padding:24px;background:var(--green-bg);border-radius:var(--radius-sm);border:1px solid var(--green-border)">
+<h4 style="color:var(--green-accent)">1. Primitive (Simple)</h4>
+<p class="text-sm mt-8">Built into every computer. Cannot be broken into smaller parts.</p>
+<p class="text-sm mt-8"><strong>Integer, Float, Character, Boolean</strong></p>
+<div class="farm-box" style="font-size:.85rem;padding:12px 16px;margin-top:12px">Like raw seeds — the most basic unit before planting.</div>
+</div>
+<div style="padding:24px;background:var(--gold-bg);border-radius:var(--radius-sm);border:1px solid var(--gold-border)">
+<h4 style="color:var(--gold-accent)">2. Non-Primitive (Complex)</h4>
+<p class="text-sm mt-8">Built from simple types. Organized in special ways.</p>
+<p class="text-sm mt-8"><strong>Arrays, Lists, Stacks, Queues, Trees, Graphs</strong></p>
+<div class="football-box" style="font-size:.85rem;padding:12px 16px;margin-top:12px">Like a full team — built from individual players.</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h3>Linear vs Non-Linear</h3>
+<div class="grid-2">
+<div style="padding:24px;border:1.5px solid var(--green-border);border-radius:var(--radius-sm)">
+<h4 style="color:var(--green-accent)">Linear (in a line)</h4>
+<p class="text-sm mt-8">Data is one after another, like a chain.</p>
+<p class="text-sm text-muted mt-8">Array, Linked List, Stack, Queue</p>
+<div class="farm-box" style="font-size:.85rem;padding:12px 16px;margin-top:12px">Yam mounds in a straight row.</div>
+</div>
+<div style="padding:24px;border:1.5px solid var(--gold-border);border-radius:var(--radius-sm)">
+<h4 style="color:var(--gold-accent)">Non-Linear (branching)</h4>
+<p class="text-sm mt-8">Data branches out like a tree.</p>
+<p class="text-sm text-muted mt-8">Tree, Graph</p>
+<div class="football-box" style="font-size:.85rem;padding:12px 16px;margin-top:12px">A tournament bracket — branching paths.</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h3>Static vs Dynamic</h3>
+<p><strong>Static</strong> = size is fixed. Once set, it cannot grow or shrink.</p>
+<div class="farm-box">A barn with exactly 20 shelves. You cannot add a 21st shelf.</div>
+<p class="mt-20"><strong>Dynamic</strong> = size can change while the program runs.</p>
+<div class="football-box">A bench of substitutes — players can join or leave during the match.</div>
+</div>
+
+<div class="gate" id="gate4">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check</h4>
+<p class="text-center text-muted mb-20">An Array has a fixed size, so it is a _____ data structure.</p>
+<div style="max-width:400px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(4,'A',this)"><span class="quiz-letter">A</span>Dynamic</div>
+<div class="quiz-option" onclick="checkGate(4,'B',this)"><span class="quiz-letter">B</span>Static</div>
+<div class="quiz-option" onclick="checkGate(4,'C',this)"><span class="quiz-letter">C</span>Non-linear</div>
+</div>
+<div id="gateFb4" class="quiz-feedback" style="max-width:400px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 5: ARRAYS ═══════════════════════ -->
+<section class="section" id="sec5" data-title="Arrays" data-idx="5">
+<div class="container">
+<div class="section-label">Section 5</div>
+<h2>Meet the <span class="gr">Array</span></h2>
+<p class="section-intro">The most common way to store a list of items in a computer.</p>
+
+<div class="card">
+<h3>🌾 A Row of Numbered Yam Mounds</h3>
+<div class="farm-box">
+<strong>Mathias, picture this:</strong> You make a straight row of 10 yam mounds. You number each mound: 0, 1, 2, 3... up to 9. Each mound holds exactly one yam. If you want the yam in mound 5, you go straight there — no need to check 0, 1, 2, 3, 4 first.
+</div>
+<p class="mt-20">An <strong>array</strong> works like this row. Key facts:</p>
+<ul>
+<li>Each item has a position number called an <strong>index</strong></li>
+<li>The index starts at <strong>0</strong>, not 1</li>
+<li>All items must be the <strong>same type</strong></li>
+<li>The array has a <strong>fixed size</strong></li>
+</ul>
+<div class="football-box mt-20">
+A team lineup card with 11 slots. Slot 0 is the goalkeeper, slot 1 the first defender, and so on. Each slot holds one player name. That card is an array!
+</div>
+</div>
+
+<div class="card">
+<h3>Creating an Array in Code</h3>
+<div class="code-block"><code><span class="cmt">// Say you want an array of whole numbers</span>
+<span class="typ">int</span><span class="punc">[]</span> myArray<span class="punc">;</span>
+
+<span class="cmt">// Set the size to 10 spaces</span>
+myArray <span class="punc">=</span> <span class="kw">new</span> <span class="typ">int</span><span class="punc">[</span><span class="num">10</span><span class="punc">];</span>
+
+<span class="cmt">// Or create with values directly:</span>
+<span class="typ">int</span><span class="punc">[]</span> ages <span class="punc">=</span> <span class="punc">{</span><span class="num">18</span><span class="punc">,</span> <span class="num">20</span><span class="punc">,</span> <span class="num">22</span><span class="punc">,</span> <span class="num">19</span><span class="punc">,</span> <span class="num">21</span><span class="punc">,</span> <span class="num">23</span><span class="punc">};</span>
+
+<span class="cmt">// Get value at position 2:</span>
+<span class="typ">int</span> x <span class="punc">=</span> ages<span class="punc">[</span><span class="num">2</span><span class="punc">];</span>  <span class="cmt">// x is now 22</span>
+
+<span class="cmt">// Find how many items:</span>
+<span class="typ">int</span> len <span class="punc">=</span> ages<span class="punc">.</span><span class="mth">length</span><span class="punc">;</span>  <span class="cmt">// len is 6</span></code></div>
+<div class="info-box"><span class="info-icon">☝️</span><div>The first item is at index <strong>0</strong>. In an array of 6 items, the last index is <strong>5</strong>.</div></div>
+</div>
+
+<!-- ARRAY SANDBOX -->
+<div class="card card-highlight">
+<h3>🧪 Array Sandbox — Try It Yourself</h3>
+<p class="mb-16">This is your own array. Add, search, and remove items!</p>
+<div class="array-container"><div class="array-indices" id="sbIdx"></div><div class="array-cells" id="sbCells"></div></div>
+<div class="controls mt-20">
+<input type="text" id="sbInput" placeholder="Type a value..." maxlength="6" style="max-width:150px">
+<button class="btn btn-green" onclick="sbAdd()">Add</button>
+<button class="btn btn-gold" onclick="sbSearch()">Search</button>
+<button class="btn btn-red" onclick="sbRemove()">Remove Last</button>
+<button class="btn btn-outline" onclick="sbClear()">Clear</button>
+</div>
+<div id="sbMsg" class="mt-12 text-sm" style="min-height:24px"></div>
+<div class="log mt-16" id="sbLog"><span class="log-empty">Your actions will show here...</span></div>
+</div>
+
+<div class="gate" id="gate5">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check</h4>
+<p class="text-center text-muted mb-20">In an array of 8 items, what is the index of the <strong style="color:var(--heading-color)">first</strong> item?</p>
+<div style="max-width:400px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(5,'A',this)"><span class="quiz-letter">A</span>1</div>
+<div class="quiz-option" onclick="checkGate(5,'B',this)"><span class="quiz-letter">B</span>0</div>
+<div class="quiz-option" onclick="checkGate(5,'C',this)"><span class="quiz-letter">C</span>8</div>
+</div>
+<div id="gateFb5" class="quiz-feedback" style="max-width:400px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 6: ARRAY OPERATIONS ═══════════════════════ -->
+<section class="section" id="sec6" data-title="Operations" data-idx="6">
+<div class="container">
+<div class="section-label">Section 6</div>
+<h2>Array <span class="gr">Operations</span></h2>
+<p class="section-intro">The 6 things you can do with any array.</p>
+
+<div class="card">
+<h3>The 6 Operations</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Operation</th><th>What It Does</th><th>Farm Analogy</th></tr></thead>
+<tbody>
+<tr><td><strong>Traverse</strong></td><td>Visit every item, one by one</td><td>Walking along, checking each mound</td></tr>
+<tr><td><strong>Insert</strong></td><td>Add a new item</td><td>Planting a new yam in a mound</td></tr>
+<tr><td><strong>Delete</strong></td><td>Remove an item</td><td>Harvesting a yam from a mound</td></tr>
+<tr><td><strong>Search</strong></td><td>Find where a value is</td><td>Looking for the biggest yam</td></tr>
+<tr><td><strong>Update</strong></td><td>Change a value at a position</td><td>Replacing a bad yam with a good one</td></tr>
+<tr><td><strong>Display</strong></td><td>Show all items</td><td>Counting all yams out loud</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- OPS DEMO -->
+<div class="card card-highlight">
+<h3>🎮 Operations Demo</h3>
+<p class="mb-16">Use the buttons to perform each operation on this array.</p>
+<div class="array-container"><div class="array-indices" id="opsIdx"></div><div class="array-cells" id="opsCells"></div></div>
+<div class="controls mt-20">
+<select id="opsAction" style="max-width:180px">
+<option value="traverse">Traverse (visit all)</option>
+<option value="insert">Insert (add)</option>
+<option value="delete">Delete (remove)</option>
+<option value="search">Search (find)</option>
+<option value="update">Update (change)</option>
+<option value="display">Display (show all)</option>
+</select>
+<input type="text" id="opsVal" placeholder="Value" maxlength="6" style="max-width:100px">
+<input type="number" id="opsIdx2" placeholder="Index" min="0" max="9" style="max-width:90px">
+<button class="btn btn-green" onclick="doOp()">Go</button>
+<button class="btn btn-outline btn-sm" onclick="resetOps()">Reset</button>
+</div>
+<div id="opsMsg" class="mt-12 text-sm" style="min-height:24px"></div>
+</div>
+
+<!-- CODE PLAYGROUND -->
+<div class="card">
+<h3>💻 Code Playground</h3>
+<p class="mb-16">This code calculates the average age. Enter your own ages to run it!</p>
+<div class="code-block"><code><span class="typ">int</span><span class="punc">[]</span> ages <span class="punc">=</span> <span class="punc">{</span><span class="num">18</span>, <span class="num">20</span>, <span class="num">22</span>, <span class="num">19</span>, <span class="num">21</span>, <span class="num">23</span><span class="punc">};</span>
+<span class="typ">int</span> sum <span class="punc">=</span> <span class="num">0</span><span class="punc">;</span>
+<span class="kw">for</span> <span class="punc">(</span><span class="typ">int</span> i <span class="punc">=</span> <span class="num">0</span><span class="punc">;</span> i <span class="punc">&lt;</span> ages<span class="punc">.</span><span class="mth">length</span><span class="punc">;</span> i<span class="punc">++)</span> <span class="punc">{</span>
+    sum <span class="punc">+=</span> ages<span class="punc">[</span>i<span class="punc">];</span>  <span class="cmt">// add each age to sum</span>
+<span class="punc">}</span>
+<span class="typ">double</span> average <span class="punc">=</span> sum <span class="punc">/</span> ages<span class="punc">.</span><span class="mth">length</span><span class="punc">;</span>
+System<span class="punc">.</span>out<span class="punc">.</span><span class="mth">println</span><span class="punc">(</span><span class="str">"Average: "</span> <span class="punc">+</span> average<span class="punc">);</span></code></div>
+<div class="controls">
+<input type="text" id="codeIn" placeholder="Enter ages: 18,20,22,19,21,23" style="max-width:280px">
+<button class="btn btn-green" onclick="runCode()">▶ Run Code</button>
+</div>
+<div id="codeOut" class="mt-16" style="display:none;padding:20px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius-sm)"></div>
+</div>
+
+<!-- MISSION -->
+<div class="mission-card">
+<h3>🏆 Mission: Harvest Day</h3>
+<p class="mt-12">Mathias, you have 6 yam mounds: <strong style="color:var(--heading-color)">[5, 12, 8, 3, 15, 7]</strong></p>
+<div class="mt-24">
+<p class="fw-700">1. What yam is at index 3?</p>
+<div class="controls mt-8"><input type="text" id="m1" placeholder="Answer..." style="max-width:120px"><button class="btn btn-green btn-sm" onclick="chkMission(1)">Check</button></div>
+<div id="mFb1" class="mt-8 text-sm"></div>
+</div>
+<div class="mt-20">
+<p class="fw-700">2. Replacing the yam at index 0 with 20 — what operation is that?</p>
+<div class="controls mt-8"><input type="text" id="m2" placeholder="Answer..." style="max-width:160px"><button class="btn btn-green btn-sm" onclick="chkMission(2)">Check</button></div>
+<div id="mFb2" class="mt-8 text-sm"></div>
+</div>
+<div class="mt-20">
+<p class="fw-700">3. Finding which mound holds 15 — what operation?</p>
+<div class="controls mt-8"><input type="text" id="m3" placeholder="Answer..." style="max-width:160px"><button class="btn btn-green btn-sm" onclick="chkMission(3)">Check</button></div>
+<div id="mFb3" class="mt-8 text-sm"></div>
+</div>
+<div class="stars mt-16" id="mStars"></div>
+</div>
+
+<div class="gate" id="gate6">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check</h4>
+<p class="text-center text-muted mb-20">Which operation visits every item one by one?</p>
+<div style="max-width:400px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(6,'A',this)"><span class="quiz-letter">A</span>Search</div>
+<div class="quiz-option" onclick="checkGate(6,'B',this)"><span class="quiz-letter">B</span>Traverse</div>
+<div class="quiz-option" onclick="checkGate(6,'C',this)"><span class="quiz-letter">C</span>Update</div>
+</div>
+<div id="gateFb6" class="quiz-feedback" style="max-width:400px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ SECTION 7: 2D ARRAYS ═══════════════════════ -->
+<section class="section" id="sec7" data-title="2D Arrays" data-idx="7">
+<div class="container">
+<div class="section-label">Section 7</div>
+<h2>Multi-Dimensional <span class="gr">Arrays</span></h2>
+<p class="section-intro">Arrays inside arrays — like a table with rows and columns.</p>
+
+<div class="card">
+<h3>From a Row to a Grid</h3>
+<div class="farm-box">
+<strong>Picture your farm field:</strong> You have 3 rows of mounds, each row with 4 mounds. That is a grid — 3 rows × 4 columns = 12 mounds. To find one, you say: "Row 1, Column 2."
+</div>
+<p class="mt-20">A <strong>2D array</strong> works the same way. You need two numbers to find an item: the <strong>row</strong> and the <strong>column</strong>.</p>
+<div class="code-block"><code><span class="cmt">// Java: a 3×4 grid</span>
+<span class="typ">int</span><span class="punc">[][]</span> grid <span class="punc">=</span> <span class="kw">new</span> <span class="typ">int</span><span class="punc">[</span><span class="num">3</span><span class="punc">][</span><span class="num">4</span><span class="punc">];</span>
+
+<span class="cmt">// Python: a 3×3 grid with values</span>
+grid <span class="punc">=</span> <span class="punc">[[</span><span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span><span class="punc">],</span> <span class="punc">[</span><span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span><span class="punc">],</span> <span class="punc">[</span><span class="num">7</span>,<span class="num">8</span>,<span class="num">9</span><span class="punc">]]</span>
+
+<span class="cmt">// Get value at row 0, column 1:</span>
+grid<span class="punc">[</span><span class="num">0</span><span class="punc">][</span><span class="num">1</span><span class="punc">]</span>  <span class="cmt">// gives 2</span></code></div>
+<div class="football-box mt-20">
+A league table: each row is a team, each column is a stat (wins, draws, losses). To find Team 2's wins: <span class="inline-code">table[2][0]</span>.
+</div>
+</div>
+
+<!-- Interactive 2D -->
+<div class="card card-highlight">
+<h3>🎯 Click Any Cell</h3>
+<p class="mb-16">Click a cell to see its row and column index.</p>
+<div class="grid-2d" id="grid2d" style="grid-template-columns:repeat(4,1fr)"></div>
+<div id="gridMsg" class="mt-16 text-sm fw-700" style="min-height:24px"></div>
+</div>
+
+<div class="card">
+<h3>Uses of Arrays</h3>
+<ul>
+<li><strong>Storing large data</strong> — images, sounds, measurements</li>
+<li><strong>Building other structures</strong> — hash tables, heaps, queues</li>
+<li><strong>Math work</strong> — tables, grids, charts</li>
+<li><strong>Screen displays</strong> — lists of items users see</li>
+</ul>
+</div>
+
+<div class="gate" id="gate7">
+<div class="gate-icon">🔓</div>
+<h4>Quick Check</h4>
+<p class="text-center text-muted mb-20">In a 2D array, how many index numbers do you need?</p>
+<div style="max-width:400px;margin:0 auto">
+<div class="quiz-option" onclick="checkGate(7,'A',this)"><span class="quiz-letter">A</span>One</div>
+<div class="quiz-option" onclick="checkGate(7,'B',this)"><span class="quiz-letter">B</span>Two</div>
+<div class="quiz-option" onclick="checkGate(7,'C',this)"><span class="quiz-letter">C</span>Three</div>
+</div>
+<div id="gateFb7" class="quiz-feedback" style="max-width:400px;margin:16px auto 0"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ COMPARISON ═══════════════════════ -->
+<section class="section" id="sec8" data-title="Review" data-idx="8">
+<div class="container">
+<div class="dark-section">
+<div class="section-label" style="color:var(--gold-accent)">Review</div>
+<h2 style="color:#fff">Everything <span style="color:var(--gold)">Together</span></h2>
+<p style="color:rgba(255,255,255,0.5);margin-bottom:32px">All the big ideas, side by side.</p>
+<div class="grid-3">
+<div class="glass-card"><h4>Data Types</h4><p>Integer, Real, Character, Boolean — the 4 simple building blocks.</p></div>
+<div class="glass-card"><h4>ADT</h4><p>A blueprint for how data should be stored and used — before coding.</p></div>
+<div class="glass-card"><h4>Data Structure</h4><p>The actual way data is organized in memory.</p></div>
+<div class="glass-card"><h4>Primitive</h4><p>Simple built-in types that cannot be broken down.</p></div>
+<div class="glass-card"><h4>Non-Primitive</h4><p>Complex structures: Arrays, Lists, Stacks, Queues, Trees.</p></div>
+<div class="glass-card"><h4>Array</h4><p>A numbered row of same-type items. Fixed size. Index starts at 0.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ FINAL QUIZ ═══════════════════════ -->
+<section class="section" id="secQuiz" data-title="Final Quiz" data-idx="9">
+<div class="container">
+<div class="section-label">Final Challenge</div>
+<h2>Mathias's <span class="gr">Final Quiz</span></h2>
+<p class="section-intro">Test everything you learned. You got this!</p>
+
+<div class="card" id="quizCard">
+<div class="quiz-progress" id="qProg"></div>
+<div id="qQuestion"></div>
+<div id="qOptions" class="mt-20"></div>
+<div id="qFeedback" class="quiz-feedback mt-16"></div>
+<div class="mt-24 text-center"><button class="btn btn-green hidden" id="qNext" onclick="qNext()">Next Question →</button></div>
+</div>
+
+<div class="card hidden" id="quizResult">
+<div class="score-display">
+<div class="big-score" id="fScore"></div>
+<p id="fMsg" class="mt-12" style="font-size:1.05rem;max-width:400px;margin-left:auto;margin-right:auto"></p>
+<div class="stars mt-16" id="fStars"></div>
+<button class="btn btn-green mt-32" onclick="retryQuiz()">Try Again</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════ COMPLETION ═══════════════════════ -->
+<section class="section hidden" id="secDone">
+<div class="container">
+<div class="card text-center" style="padding:60px 36px">
+<div style="font-size:4rem;margin-bottom:20px">🎉</div>
+<h2>Well Done, <span class="gr">Mathias</span>!</h2>
+<p class="mt-16" style="font-size:1.05rem;max-width:500px;margin:16px auto 0;color:var(--muted-color)">You learned about data types, abstract data types, data structure terms, classification, arrays, array operations, and multi-dimensional arrays.</p>
+<p class="mt-12 text-sm text-muted">These are real skills used by computer scientists every day. Keep going!</p>
+<div id="doneBadges" class="mt-32"></div>
+<div class="divider"></div>
+<button class="btn btn-outline btn-sm mt-16" onclick="resetAll()">Reset All Progress</button>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<p>Source: Module One — Basic Concepts Data Structure (Units 1, 2 & 3)</p>
+<p class="mt-8">Built with care for Mathias · <a href="#" onclick="resetAll();return false">Reset Progress</a></p>
+</div>
+</footer>
+
+<!-- ═══ FLOATING UI ═══ -->
+<button class="glossary-trigger" onclick="toggleGlossary()">📖 Terms</button>
+<div class="glossary-overlay" id="glossOverlay" onclick="toggleGlossary()"></div>
+<div class="glossary-panel" id="glossPanel">
+<button class="gloss-close" onclick="toggleGlossary()">✕</button>
+<h3>📖 Glossary</h3>
+<input type="text" id="glossSearch" placeholder="Search terms..." oninput="filterGloss()">
+<div id="glossList"></div>
+</div>
+
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">☀️</button>
+
+<div class="badge-float">
+<div class="badge-trigger" id="badgeTrigger" onclick="toggleBadges()">🏅<span class="count" id="badgeCount">0</span></div>
+</div>
+<div class="badge-popup" id="badgePopup"><h4>🏅 Your Badges</h4><div id="badgeList" class="mt-16"></div></div>
+
+<div class="progress-rail" id="progressRail"></div>
+
+<script>
+// ════════════════ STATE ════════════════
+const LS_KEY='ds_mathias_';
+const load=k=>{try{return JSON.parse(localStorage.getItem(LS_KEY+k))}catch(e){return null}};
+const save=(k,v)=>localStorage.setItem(LS_KEY+k,JSON.stringify(v));
+
+const S={
+  unlocked:load('unlocked')||[1],
+  badges:load('badges')||[],
+  dark:load('dark')!==false, // default dark
+  qDone:load('qDone')||false,
+  gatesPassed:load('gates')||[]
+};
+
+// ════════════════ GLOSSARY DATA ════════════════
+const GLOSS=[
+{t:'Data Type',d:'A kind of data that tells the computer what values are allowed and what you can do.',a:'Like the type of crop — each is stored differently.'},
+{t:'Character',d:'A single letter, digit, or symbol.',a:'One seed in your hand.'},
+{t:'Integer',d:'A whole number with no decimal point.',a:'A jersey number: 10, not 10.5'},
+{t:'Real / Float',d:'A number with a decimal point.',a:'2.5 kg of yams on a scale.'},
+{t:'Boolean',d:'Either true or false. Nothing else.',a:'Was it a goal? Yes or No.'},
+{t:'Abstract Data Type',d:'A plan for how data should work — before you build it.',a:'The idea of a yam barn before building.'},
+{t:'Data Structure',d:'The actual organized way data is stored.',a:'The built barn itself.'},
+{t:'Algorithm',d:'Step-by-step instructions to solve a problem.',a:'Coach says: pass, then shoot.'},
+{t:'Data',d:'Any value or piece of information.',a:'A farmer\'s name, yam count.'},
+{t:'Record',d:'All info about one entity together.',a:'One farmer\'s registration card.'},
+{t:'Field',d:'One piece of info about an entity.',a:'The "name" box on a form.'},
+{t:'File',d:'A collection of records of the same type.',a:'Notebook with all farmers\' records.'},
+{t:'Primitive',d:'Basic built-in types: Integer, Float, Character, Boolean.',a:'Raw seeds — the most basic unit.'},
+{t:'Non-Primitive',d:'Complex structures built from simple types.',a:'A full team from individual players.'},
+{t:'Linear',d:'Data arranged one after another in a line.',a:'Yam mounds in a straight row.'},
+{t:'Static',d:'Fixed size — cannot grow after creation.',a:'Barn with exactly 20 shelves.'},
+{t:'Dynamic',d:'Size can change during the program.',a:'Adding shelves as you harvest more.'},
+{t:'Array',d:'A numbered list of same-type items stored side by side.',a:'A row of numbered yam mounds.'},
+{t:'Index',d:'Position number of an item. Starts at 0.',a:'Number painted on each mound.'},
+{t:'Traverse',d:'Visit every item one by one.',a:'Walking along, checking each mound.'},
+{t:'Insert',d:'Add a new item.',a:'Planting a new yam.'},
+{t:'Delete',d:'Remove an item.',a:'Harvesting a yam.'},
+{t:'Search',d:'Find where a specific value is.',a:'Looking for the biggest yam.'},
+{t:'Update',d:'Change a value at a position.',a:'Replacing a bad yam with a good one.'},
+{t:'Display',d:'Show all items.',a:'Counting all yams out loud.'},
+{t:'2D Array',d:'An array of arrays — a grid with rows and columns.',a:'Your farm: 3 rows of 4 mounds each.'},
+];
+
+// ════════════════ QUIZ DATA ════════════════
+const QUIZ=[
+{q:'A data type tells the computer two things. What are they?',o:['The color and shape','What values are allowed and what actions you can do','The size and speed','The name and age'],c:1,f:'A data type defines allowed values (like whole numbers) and operations (like addition).'},
+{q:'Which data type is 3.14?',o:['Integer','Boolean','Character','Real (Float)'],c:3,f:'3.14 has a decimal point, so it is Real. Integers have no decimal.'},
+{q:'What is an Abstract Data Type?',o:['A finished program','A plan for how data should work, before coding','A type of computer','A fast algorithm'],c:1,f:'An ADT is like a blueprint — WHAT it does, not HOW.'},
+{q:'Which is a primitive (simple) data structure?',o:['Array','Stack','Boolean','Queue'],c:2,f:'Boolean is primitive. Arrays, Stacks, and Queues are non-primitive.'},
+{q:'A row of numbered yam mounds is most like which structure?',o:['Stack','Queue','Array','Tree'],c:2,f:'An array is a numbered row — like numbered yam mounds!'},
+{q:'In an array with 5 items, what is the last index?',o:['5','4','0','1'],c:1,f:'Index starts at 0. So 5 items → indexes 0,1,2,3,4. Last = 4.'},
+{q:'Which operation changes the value at a position?',o:['Delete','Search','Update','Traverse'],c:2,f:'Update = replacing the old value with a new one.'},
+{q:'A collection of records of the same type is called a:',o:['Field','Record','File','Data Item'],c:2,f:'A File = collection of records. Like a notebook with all cards.'},
+{q:'How many index numbers for a 2D array item?',o:['One','Two (row and column)','Three','Zero'],c:1,f:'2D array needs row + column. Two indexes.'},
+{q:'What does "static" mean for an array?',o:['It moves around','Its size is fixed','It only holds numbers','It is very fast'],c:1,f:'Static = fixed size. 10 spaces created = always 10 spaces.'},
+];
+
+const GATES={1:'B',2:'B',3:'B',4:'B',5:'B',6:'B',7:'B'};
+
+const BADGES=[
+{id:'s1',n:'First Step',d:'Completed Section 1',i:'🌱'},
+{id:'s2',n:'ADT Explorer',d:'Completed Section 2',i:'🧭'},
+{id:'s3',n:'Term Master',d:'Completed Section 3',i:'📝'},
+{id:'s4',n:'Classifier',d:'Completed Section 4',i:'🗂️'},
+{id:'s5',n:'Array Builder',d:'Completed Section 5',i:'🧱'},
+{id:'s6',n:'Operator',d:'Completed Section 6',i:'⚙️'},
+{id:'s7',n:'Grid Master',d:'Completed Section 7',i:'📊'},
+{id:'sort',n:'Type Sorter',d:'Sorted all data types',i:'🎯'},
+{id:'rec',n:'Record Keeper',d:'Built a player record',i:'📋'},
+{id:'code',n:'Code Runner',d:'Ran the code playground',i:'💻'},
+{id:'msn',n:'Mission Complete',d:'3/3 on Harvest Day',i:'🏆'},
+{id:'quiz',n:'Quiz Champion',d:'Passed the final quiz',i:'🎓'},
+{id:'perf',n:'Perfect Score',d:'100% on the quiz',i:'👑'},
+];
+
+// ════════════════ INIT ════════════════
+function init(){
+  if(S.dark)document.body.classList.remove('light-mode');
+  else document.body.classList.add('light-mode');
+  updateThemeBtn();
+  buildGloss();
+  buildBadgeList();
+  buildRail();
+  buildNav();
+  restoreState();
+  initSandbox();
+  initOps();
+  init2D();
+  initDrag();
+  initObserver();
+  initNavScroll();
+  updateProgress();
+  startQuiz();
+}
+
+// ════════════════ THEME ════════════════
+function toggleTheme(){S.dark=!S.dark;document.body.classList.toggle('light-mode',!S.dark);save('dark',S.dark);updateThemeBtn()}
+function updateThemeBtn(){document.getElementById('themeToggle').textContent=S.dark?'☀️':'🌙'}
+
+// ════════════════ GLOSSARY ════════════════
+function buildGloss(){
+  document.getElementById('glossList').innerHTML=GLOSS.map(g=>`<div class="gloss-item"><div class="gloss-term">${g.t}</div><div class="gloss-def">${g.d}</div><div class="gloss-analogy">🌾 ${g.a}</div></div>`).join('');
+}
+function toggleGlossary(){
+  document.getElementById('glossPanel').classList.toggle('open');
+  document.getElementById('glossOverlay').classList.toggle('open');
+}
+function filterGloss(){
+  const q=document.getElementById('glossSearch').value.toLowerCase();
+  document.querySelectorAll('.gloss-item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
+}
+
+// ════════════════ PROGRESS BAR ════════════════
+function updateProgress(){
+  const total=9;
+  const pct=Math.min(100,(S.unlocked.length/total)*100);
+  document.getElementById('progressBar').style.width=pct+'%';
+  buildRail();
+}
+
+// ════════════════ SIDE RAIL ════════════════
+function buildRail(){
+  const rail=document.getElementById('progressRail');
+  const max=Math.max(...S.unlocked);
+  let h='';
+  for(let i=1;i<=9;i++){
+    const done=S.unlocked.includes(i)&&i<max;
+    const cur=i===max;
+    const cls=done?'done':cur?'current':'';
+    const secId=i<=8?'sec'+i:i===9?'secQuiz':'';
+    h+=`<div class="pt-dot ${cls}" onclick="document.getElementById('${secId}')?.scrollIntoView({behavior:'smooth'})" title="Section ${i}"></div>`;
+  }
+  rail.innerHTML=h;
+}
+
+// ════════════════ NAV ════════════════
+function buildNav(){
+  const nl=document.getElementById('navLinks');
+  document.querySelectorAll('.section[data-title]').forEach(s=>{
+    const a=document.createElement('a');
+    a.textContent=s.dataset.title;
+    a.onclick=()=>s.scrollIntoView({behavior:'smooth'});
+    nl.appendChild(a);
+  });
+}
+function initNavScroll(){
+  let t=false;
+  window.addEventListener('scroll',()=>{if(!t){requestAnimationFrame(()=>{
+    document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>80);
+    t=false;
+  });t=true;}},{passive:true});
+}
+
+// ════════════════ SCROLL OBSERVER ════════════════
+function initObserver(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+}
+
+// ════════════════ STATE RESTORE ════════════════
+function restoreState(){
+  S.unlocked.forEach(n=>{
+    const sec=n<=8?document.getElementById('sec'+n):n===9?document.getElementById('secQuiz'):null;
+    if(sec)sec.classList.remove('locked');
+  });
+  S.gatesPassed.forEach(g=>{
+    const gate=document.getElementById('gate'+g);
+    if(gate)gate.classList.add('passed');
+  });
+  if(S.qDone)document.getElementById('secDone')?.classList.remove('hidden');
+}
+
+// ════════════════ UNLOCK ════════════════
+function unlock(n){
+  if(!S.unlocked.includes(n)){S.unlocked.push(n);save('unlocked',S.unlocked)}
+  const sec=n<=8?document.getElementById('sec'+n):n===9?document.getElementById('secQuiz'):null;
+  if(sec){
+    sec.classList.remove('locked');
+    setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'start'}),350);
+  }
+  updateProgress();
+  // badge for previous section
+  const bId='s'+(n-1);
+  if(BADGES.find(b=>b.id===bId))awardBadge(bId);
+}
+
+// ════════════════ GATES ════════════════
+function checkGate(num,ans,el){
+  const gate=document.getElementById('gate'+num);
+  if(gate.classList.contains('passed'))return;
+  const fb=document.getElementById('gateFb'+num);
+  const correct=ans===GATES[num];
+  const opts=gate.querySelectorAll('.quiz-option');
+  
+  if(correct){
+    opts.forEach(o=>o.style.pointerEvents='none');
+    el.classList.add('correct');
+    fb.className='quiz-feedback correct show';
+    fb.textContent='✅ Correct! Next section unlocked.';
+    gate.classList.add('passed');
+    S.gatesPassed.push(num);save('gates',S.gatesPassed);
+    unlock(num+1);
+  }else{
+    el.classList.add('wrong');
+    fb.className='quiz-feedback wrong show';
+    fb.textContent='❌ Not quite. Try again!';
+    setTimeout(()=>{el.classList.remove('wrong');fb.className='quiz-feedback';opts.forEach(o=>o.style.pointerEvents='')},1600);
+  }
+}
+
+// ════════════════ RECALL ════════════════
+function checkRecall(el,correct){
+  const fb=document.getElementById('recallFb1');
+  el.parentElement.querySelectorAll('.quiz-option').forEach(o=>o.style.pointerEvents='none');
+  if(correct){el.classList.add('correct');fb.innerHTML='<div class="quiz-feedback correct show">✅ Great memory! Character, Integer, Real, Boolean.</div>'}
+  else{el.classList.add('wrong');fb.innerHTML='<div class="quiz-feedback wrong show">❌ The 4 types: Character, Integer, Real, Boolean.</div>';setTimeout(()=>{el.classList.remove('wrong');el.parentElement.querySelectorAll('.quiz-option').forEach(o=>o.style.pointerEvents='')},2000)}
+}
+
+// ════════════════ DRAG & DROP ════════════════
+let dragged=null;
+function initDrag(){
+  document.querySelectorAll('.drag-item[draggable]').forEach(item=>{
+    item.addEventListener('dragstart',e=>{dragged=item;item.classList.add('dragging');e.dataTransfer.effectAllowed='move'});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragged=null});
+    let touchClone=null;
+    item.addEventListener('touchstart',e=>{dragged=item;item.classList.add('dragging')},{passive:true});
+    item.addEventListener('touchmove',e=>{e.preventDefault()},{passive:false});
+    item.addEventListener('touchend',e=>{
+      item.classList.remove('dragging');
+      const touch=e.changedTouches[0];
+      const target=document.elementFromPoint(touch.clientX,touch.clientY);
+      const zone=target?.closest('.drag-zone');
+      if(zone)handleDrop(zone);
+      dragged=null;
+    });
+  });
+  document.querySelectorAll('.drag-zone').forEach(zone=>{
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('over')});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('over'));
+    zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('over');handleDrop(zone)});
+  });
+}
+function handleDrop(zone){
+  if(!dragged)return;
+  const accept=zone.dataset.accept;
+  const type=dragged.dataset.type;
+  if(type===accept){
+    const label=zone.querySelector('.drag-zone-label');
+    if(label)label.remove();
+    zone.appendChild(dragged);
+    dragged.draggable=false;
+    dragged.classList.remove('dragging');
+    dragged.classList.add('placed');
+    checkSortComplete();
+  }else{
+    dragged.style.animation='shake 0.4s';
+    setTimeout(()=>dragged.style.animation='',450);
+  }
+}
+function checkSortComplete(){
+  const remaining=document.querySelectorAll('#dragSource1 .drag-item');
+  if(remaining.length===0){
+    document.getElementById('sortFeedback1').innerHTML='<span style="color:var(--green-accent)">🎉 All correct! You know your data types!</span>';
+    awardBadge('sort');
+  }
+}
+
+// ════════════════ BUILD RECORD ════════════════
+function buildRecord(){
+  const n=document.getElementById('recName').value.trim();
+  const num=document.getElementById('recNum').value;
+  const h=document.getElementById('recHeight').value.trim();
+  const c=document.getElementById('recCaptain').value;
+  const out=document.getElementById('recordResult');
+  if(!n||!num||!h||!c){out.innerHTML='<div class="quiz-feedback wrong show">Please fill in all 4 fields.</div>';return}
+  out.innerHTML=`<div style="padding:24px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius-sm)">
+  <p class="fw-700 mb-12" style="color:var(--green-accent)">✅ Player Record Created!</p>
+  <div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th><th>Data Type</th></tr></thead><tbody>
+  <tr><td>Name</td><td>${n}</td><td><span class="tag">Character</span></td></tr>
+  <tr><td>Jersey</td><td>${num}</td><td><span class="tag">Integer</span></td></tr>
+  <tr><td>Height</td><td>${h}m</td><td><span class="tag">Real</span></td></tr>
+  <tr><td>Captain?</td><td>${c}</td><td><span class="tag">Boolean</span></td></tr>
+  </tbody></table></div>
+  <p class="text-sm text-muted mt-12">Each row is a <strong>field</strong>. All together = one <strong>record</strong>. The player is the <strong>entity</strong>.</p></div>`;
+  awardBadge('rec');
+}
+
+// ════════════════ SANDBOX ════════════════
+let sbData=[];
+const SB_MAX=8;
+function initSandbox(){sbData=[];renderSB()}
+function renderSB(){
+  let idx='',cells='';
+  for(let i=0;i<SB_MAX;i++){
+    idx+=`<div class="array-idx">${i}</div>`;
+    const has=i<sbData.length;
+    cells+=`<div class="array-cell${has?'':' empty'}${has?' inserting':''}"><span class="val">${has?sbData[i]:''}</span></div>`;
+  }
+  document.getElementById('sbIdx').innerHTML=idx;
+  document.getElementById('sbCells').innerHTML=cells;
+}
+function sbAdd(){
+  const inp=document.getElementById('sbInput');
+  const v=inp.value.trim()||'?';
+  if(sbData.length>=SB_MAX){sbMsg('⚠️ Array is full! Max '+SB_MAX+' items.','var(--error-accent)');return}
+  sbData.push(v);inp.value='';renderSB();
+  sbMsg(`✅ Added "${v}" at index ${sbData.length-1}. Array has ${sbData.length} items.`,'var(--green-accent)');
+  sbLog(`Added "${v}" at index ${sbData.length-1}`);
+  hlCell('sbCells',sbData.length-1,'highlight');
+}
+function sbSearch(){
+  const v=document.getElementById('sbInput').value.trim();
+  if(!v){sbMsg('Type a value to search for.','var(--muted-color)');return}
+  const i=sbData.indexOf(v);
+  if(i>-1){sbMsg(`🔍 Found "${v}" at index ${i}!`,'var(--green-accent)');hlCell('sbCells',i,'found');sbLog(`Searched "${v}" → index ${i}`)}
+  else{sbMsg(`🔍 "${v}" not found.`,'var(--error-accent)');sbLog(`Searched "${v}" → not found`)}
+}
+function sbRemove(){
+  if(!sbData.length){sbMsg('⚠️ Already empty!','var(--error-accent)');return}
+  const r=sbData.pop();renderSB();sbMsg(`🗑️ Removed "${r}". ${sbData.length} items left.`,'var(--body-color)');sbLog(`Removed "${r}"`);
+}
+function sbClear(){sbData=[];renderSB();sbMsg('🧹 Cleared.','var(--muted-color)');sbLog('Cleared all')}
+function sbMsg(m,c){const el=document.getElementById('sbMsg');el.innerHTML=m;el.style.color=c}
+function sbLog(m){
+  const log=document.getElementById('sbLog');
+  if(log.querySelector('.log-empty'))log.innerHTML='';
+  const d=document.createElement('div');d.className='log-entry';d.textContent=m;
+  log.appendChild(d);log.scrollTop=log.scrollHeight;
+}
+function hlCell(containerId,idx,cls){
+  const cells=document.getElementById(containerId).children;
+  if(cells[idx]){cells[idx].classList.add(cls);setTimeout(()=>cells[idx]?.classList.remove(cls),1500)}
+}
+
+// ════════════════ OPS DEMO ════════════════
+let opsData=[5,12,8,3,15,7];
+function initOps(){renderOps()}
+function renderOps(){
+  let idx='',cells='';
+  opsData.forEach((v,i)=>{
+    idx+=`<div class="array-idx">${i}</div>`;
+    cells+=`<div class="array-cell"><span class="val">${v}</span></div>`;
+  });
+  document.getElementById('opsIdx').innerHTML=idx;
+  document.getElementById('opsCells').innerHTML=cells;
+}
+function resetOps(){opsData=[5,12,8,3,15,7];renderOps();opsMsg('Reset to original.')}
+function opsMsg(m,c){const el=document.getElementById('opsMsg');el.innerHTML=m;if(c)el.style.color=c}
+function doOp(){
+  const act=document.getElementById('opsAction').value;
+  const val=document.getElementById('opsVal').value.trim();
+  const idx=parseInt(document.getElementById('opsIdx2').value);
+  const cells=()=>document.getElementById('opsCells').children;
+
+  if(act==='traverse'){
+    let i=0;opsMsg('Traversing...');
+    const t=setInterval(()=>{
+      Array.from(cells()).forEach(c=>c.classList.remove('highlight'));
+      if(i<opsData.length){cells()[i].classList.add('highlight');opsMsg(`Visiting index ${i}: value = ${opsData[i]}`,'var(--gold-accent)');i++}
+      else{clearInterval(t);opsMsg(`✅ Traversed all ${opsData.length} items.`,'var(--green-accent)')}
+    },500);
+  }
+  else if(act==='insert'){
+    if(!val){opsMsg('Enter a value first.','var(--error-accent)');return}
+    if(opsData.length>=10){opsMsg('⚠️ Full!','var(--error-accent)');return}
+    opsData.push(parseInt(val)||0);renderOps();opsMsg(`✅ Inserted ${val} at index ${opsData.length-1}.`,'var(--green-accent)');
+  }
+  else if(act==='delete'){
+    if(isNaN(idx)||idx<0||idx>=opsData.length){opsMsg('Enter a valid index.','var(--error-accent)');return}
+    const rm=opsData.splice(idx,1)[0];renderOps();opsMsg(`🗑️ Deleted ${rm} from index ${idx}.`,'var(--body-color)');
+  }
+  else if(act==='search'){
+    if(!val){opsMsg('Enter a value to search.','var(--error-accent)');return}
+    const fi=opsData.indexOf(parseInt(val));
+    if(fi>-1){renderOps();opsMsg(`🔍 Found ${val} at index ${fi}!`,'var(--green-accent)');setTimeout(()=>hlCell('opsCells',fi,'found'),50)}
+    else opsMsg(`🔍 ${val} not found.`,'var(--error-accent)');
+  }
+  else if(act==='update'){
+    if(!val||isNaN(idx)||idx<0||idx>=opsData.length){opsMsg('Enter valid index and value.','var(--error-accent)');return}
+    const old=opsData[idx];opsData[idx]=parseInt(val)||0;renderOps();opsMsg(`✏️ Updated index ${idx}: ${old} → ${val}`,'var(--green-accent)');
+  }
+  else if(act==='display'){
+    opsMsg(`📋 [${opsData.join(', ')}] — ${opsData.length} items.`,'var(--body-color)');
+    Array.from(cells()).forEach((c,i)=>{setTimeout(()=>{c.classList.add('highlight');setTimeout(()=>c.classList.remove('highlight'),350)},i*150)});
+  }
+}
+
+// ════════════════ CODE PLAYGROUND ════════════════
+function runCode(){
+  const inp=document.getElementById('codeIn').value.trim();
+  const out=document.getElementById('codeOut');
+  out.style.display='block';
+  const defNums=[18,20,22,19,21,23];
+  let nums;
+  try{
+    nums=inp?inp.split(',').map(n=>{const p=parseFloat(n.trim());if(isNaN(p))throw 0;return p}):defNums;
+    if(!nums.length)throw 0;
+    const sum=nums.reduce((a,b)=>a+b,0);
+    const avg=(sum/nums.length).toFixed(2);
+    out.innerHTML=`<p class="fw-700" style="color:var(--green-accent)">▶ Output</p><p class="mt-8">Average: <strong>${avg}</strong></p><p class="text-sm text-muted mt-8">Sum = ${sum} ÷ ${nums.length} items = ${avg}</p>`;
+    awardBadge('code');
+  }catch(e){
+    out.innerHTML=`<p style="color:var(--error-accent)">⚠️ Enter numbers separated by commas. Example: 18,20,22</p>`;
+  }
+}
+
+// ════════════════ 2D GRID ════════════════
+function init2D(){
+  const g=document.getElementById('grid2d');
+  const data=[[1,2,3,4],[5,6,7,8],[9,10,11,12]];
+  g.innerHTML='';
+  for(let r=0;r<3;r++)for(let c=0;c<4;c++){
+    const cell=document.createElement('div');
+    cell.className='grid-2d-cell';
+    cell.textContent=data[r][c];
+    cell.onclick=()=>{
+      g.querySelectorAll('.grid-2d-cell').forEach(x=>x.classList.remove('active'));
+      cell.classList.add('active');
+      document.getElementById('gridMsg').innerHTML=`<span style="color:var(--gold-accent)">Row ${r}, Column ${c}</span> → <span class="inline-code">grid[${r}][${c}]</span> = <strong>${data[r][c]}</strong>`;
+    };
+    g.appendChild(cell);
+  }
+}
+
+// ════════════════ MISSIONS ════════════════
+let mScore=0;
+function chkMission(n){
+  const v=document.getElementById('m'+n).value.trim().toLowerCase();
+  const fb=document.getElementById('mFb'+n);
+  let ok=false;
+  if(n===1&&v==='3'){ok=true;fb.innerHTML='<span style="color:var(--green-accent)">✅ Correct! Index 3 = 3.</span>'}
+  else if(n===1){fb.innerHTML='<span style="color:var(--error-accent)">❌ Array: [5,12,8,<strong>3</strong>,15,7]. Index 3 = ?</span>'}
+  if(n===2&&v.includes('update')){ok=true;fb.innerHTML='<span style="color:var(--green-accent)">✅ Correct! Replacing = Update.</span>'}
+  else if(n===2&&!v.includes('update')){fb.innerHTML='<span style="color:var(--error-accent)">❌ Hint: changing a value = ______</span>'}
+  if(n===3&&v.includes('search')){ok=true;fb.innerHTML='<span style="color:var(--green-accent)">✅ Correct! Finding = Search.</span>'}
+  else if(n===3&&!v.includes('search')){fb.innerHTML='<span style="color:var(--error-accent)">❌ Hint: looking for something = ______</span>'}
+  if(ok)mScore++;
+  document.getElementById('mStars').textContent='⭐'.repeat(Math.min(mScore,3))+'☆'.repeat(Math.max(0,3-mScore));
+  if(mScore>=3)awardBadge('msn');
+}
+
+// ════════════════ BADGES ════════════════
+function buildBadgeList(){
+  document.getElementById('badgeList').innerHTML=BADGES.map(b=>{
+    const e=S.badges.includes(b.id);
+    return`<div class="badge-item ${e?'earned':'locked'}"><div class="b-icon">${b.i}</div><div class="b-info"><div class="b-name">${b.n}</div><div class="b-desc">${b.d}</div></div></div>`;
+  }).join('');
+  document.getElementById('badgeCount').textContent=S.badges.length;
+}
+function awardBadge(id){
+  if(S.badges.includes(id))return;
+  S.badges.push(id);save('badges',S.badges);buildBadgeList();
+  // Notification
+  const b=BADGES.find(x=>x.id===id);
+  if(b){
+    const n=document.createElement('div');n.className='badge-notify';
+    n.innerHTML=`<span style="font-size:1.6rem;animation:badgeUnlock 0.5s">${b.i}</span><div><div class="fw-700 text-sm">${b.n}</div><div class="text-xs text-muted">${b.d}</div></div>`;
+    document.body.appendChild(n);setTimeout(()=>n.remove(),3200);
+  }
+}
+function toggleBadges(){document.getElementById('badgePopup').classList.toggle('show')}
+
+// ════════════════ FINAL QUIZ ════════════════
+let qIdx=0,qScore=0,qAnswered=false;
+function startQuiz(){qIdx=0;qScore=0;renderQ()}
+function renderQ(){
+  if(qIdx>=QUIZ.length){showResult();return}
+  qAnswered=false;
+  const q=QUIZ[qIdx];
+  document.getElementById('qProg').innerHTML=QUIZ.map((_,i)=>`<div class="quiz-dot${i===qIdx?' active':''}${i<qIdx?' answered':''}"></div>`).join('');
+  document.getElementById('qQuestion').innerHTML=`<h4 style="font-size:0.82rem;color:var(--muted-color);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px">Question ${qIdx+1} of ${QUIZ.length}</h4><p class="fw-700" style="font-size:1.05rem;color:var(--heading-color)">${q.q}</p>`;
+  document.getElementById('qOptions').innerHTML=q.o.map((o,i)=>`<div class="quiz-option" onclick="ansQ(${i},this)"><span class="quiz-letter">${'ABCD'[i]}</span>${o}</div>`).join('');
+  document.getElementById('qFeedback').className='quiz-feedback';
+  document.getElementById('qNext').classList.add('hidden');
+}
+function ansQ(i,el){
+  if(qAnswered)return;qAnswered=true;
+  const q=QUIZ[qIdx];const fb=document.getElementById('qFeedback');
+  const opts=document.querySelectorAll('#qOptions .quiz-option');
+  opts.forEach(o=>o.style.pointerEvents='none');
+  if(i===q.c){el.classList.add('correct');fb.className='quiz-feedback correct show';fb.innerHTML='✅ '+q.f;qScore++}
+  else{el.classList.add('wrong');opts[q.c].classList.add('correct');fb.className='quiz-feedback wrong show';fb.innerHTML='❌ '+q.f}
+  document.getElementById('qNext').classList.remove('hidden');
+}
+function qNext(){qIdx++;renderQ()}
+function showResult(){
+  document.getElementById('quizCard').classList.add('hidden');
+  const r=document.getElementById('quizResult');r.classList.remove('hidden');
+  const pct=Math.round(qScore/QUIZ.length*100);
+  document.getElementById('fScore').textContent=qScore+'/'+QUIZ.length;
+  let msg='';
+  if(pct===100){msg='PERFECT, Mathias! 🎉 You truly understand data structures!';awardBadge('perf')}
+  else if(pct>=80){msg='Excellent, Mathias! 💪 You have strong understanding!'}
+  else if(pct>=60){msg='Good effort, Mathias! Review what you missed and try again. 📖'}
+  else{msg='Keep learning, Mathias. Go back through the sections. You will get it! 🌱'}
+  document.getElementById('fMsg').textContent=msg;
+  document.getElementById('fStars').textContent=pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐☆':'⭐☆☆';
+  if(pct>=60){awardBadge('quiz');S.qDone=true;save('qDone',true);document.getElementById('secDone')?.classList.remove('hidden')}
+}
+function retryQuiz(){
+  document.getElementById('quizCard').classList.remove('hidden');
+  document.getElementById('quizResult').classList.add('hidden');
+  startQuiz();
+}
+
+// ════════════════ START / RESET ════════════════
+function startLearning(){document.getElementById('sec1').scrollIntoView({behavior:'smooth'})}
+function resetAll(){
+  if(!confirm('Erase all progress?'))return;
+  Object.keys(localStorage).forEach(k=>{if(k.startsWith(LS_KEY))localStorage.removeItem(k)});
+  location.reload();
+}
+
+// ════════════════ BOOT ════════════════
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

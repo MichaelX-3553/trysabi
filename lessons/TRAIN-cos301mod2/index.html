@@ -1,0 +1,2664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures - Mathias Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --green-dark: #1a5c2a;
+            --green-main: #2E7D32;
+            --green-light: #4CAF50;
+            --green-pale: #E8F5E9;
+            --earth-brown: #5D4037;
+            --earth-light: #8D6E63;
+            --gold: #F9A825;
+            --gold-light: #FFF8E1;
+            --cream: #FAFAF5;
+            --white: #FFFFFF;
+            --dark: #1a1a2e;
+            --text: #2c2c2c;
+            --text-light: #666;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* PROGRESS BAR */
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--green-main), var(--gold), var(--green-light));
+            z-index: 10000;
+            transition: width 0.2s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* NAVIGATION */
+        .nav {
+            position: fixed;
+            top: 4px;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo span { font-size: 1.4rem; }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--green-dark);
+            background: var(--green-pale);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            background: linear-gradient(135deg, var(--green-dark) 0%, #1b4332 40%, var(--earth-brown) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.15;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--gold), #FFD54F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gold);
+            color: var(--dark);
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 16px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(249,168,37,0.4);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(249,168,37,0.5);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* SECTIONS */
+        .section {
+            padding: 100px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-wide {
+            max-width: 1100px;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--green-main);
+            margin-bottom: 12px;
+        }
+
+        .section-label .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green-main);
+        }
+
+        .section h2 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section h2 .accent { color: var(--green-main); }
+
+        .section-intro {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 48px;
+            max-width: 700px;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h3 .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .icon-green { background: var(--green-pale); }
+        .icon-gold { background: var(--gold-light); }
+        .icon-brown { background: #EFEBE9; }
+
+        .card p { color: var(--text-light); margin-bottom: 16px; }
+
+        /* VISUAL ARRAY */
+        .array-visual {
+            display: flex;
+            gap: 4px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .array-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .array-cell:hover { transform: scale(1.1); }
+
+        .array-cell .index {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--green-main);
+            margin-bottom: 4px;
+        }
+
+        .array-cell .value {
+            width: 56px;
+            height: 56px;
+            background: var(--green-pale);
+            border: 2px solid var(--green-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--green-dark);
+            transition: all 0.3s ease;
+        }
+
+        .array-cell.active .value {
+            background: var(--green-main);
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 4px 16px rgba(46,125,50,0.4);
+        }
+
+        .array-message {
+            text-align: center;
+            margin-top: 12px;
+            font-weight: 600;
+            color: var(--green-dark);
+            min-height: 28px;
+            font-size: 0.95rem;
+        }
+
+        /* ACCESS COMPARISON */
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 32px 0;
+        }
+
+        .access-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--green-main);
+            transition: all 0.3s ease;
+        }
+
+        .access-card:nth-child(2) { border-left-color: var(--gold); }
+        .access-card:nth-child(3) { border-left-color: var(--earth-light); }
+
+        .access-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .access-card p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .ops-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .op-tag {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--green-pale);
+            color: var(--green-dark);
+        }
+
+        /* INTERACTIVE DEMOS */
+        .demo-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin: 32px 0;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .demo-header h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:active { transform: scale(0.96); }
+
+        .btn-green {
+            background: var(--green-main);
+            color: white;
+        }
+
+        .btn-green:hover { background: var(--green-dark); }
+
+        .btn-red {
+            background: #EF5350;
+            color: white;
+        }
+
+        .btn-red:hover { background: #D32F2F; }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .btn-gold:hover { background: #F57F17; }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-light);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--green-main);
+            color: var(--green-main);
+        }
+
+        /* STACK VISUAL */
+        .stack-area {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 48px;
+            min-height: 320px;
+            padding: 20px;
+        }
+
+        .stack-container {
+            position: relative;
+            width: 180px;
+            min-height: 280px;
+            border-left: 4px solid var(--earth-brown);
+            border-right: 4px solid var(--earth-brown);
+            border-bottom: 4px solid var(--earth-brown);
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 8px;
+            gap: 6px;
+            background: #FAFAFA;
+        }
+
+        .stack-item {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--green-main), var(--green-light));
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            animation: stackIn 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        @keyframes stackIn {
+            from { transform: translateY(-40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes stackOut {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-40px); opacity: 0; }
+        }
+
+        .stack-pointer {
+            position: absolute;
+            right: -80px;
+            top: 0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: top 0.3s ease;
+        }
+
+        .stack-pointer::before {
+            content: '←';
+            font-size: 1.1rem;
+        }
+
+        .stack-label {
+            text-align: center;
+            font-weight: 700;
+            color: var(--earth-brown);
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stack-info {
+            text-align: center;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .stack-info .info-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-top: 16px;
+            min-height: 50px;
+        }
+
+        .stack-count {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--green-main);
+        }
+
+        .stack-count-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* QUEUE VISUAL */
+        .queue-area {
+            min-height: 200px;
+            padding: 20px 0;
+        }
+
+        .queue-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 0 20px;
+        }
+
+        .queue-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .queue-track {
+            display: flex;
+            gap: 8px;
+            padding: 20px;
+            min-height: 80px;
+            background: #FAFAFA;
+            border-radius: 12px;
+            border: 2px dashed #e0e0e0;
+            align-items: center;
+            overflow-x: auto;
+            transition: all 0.3s ease;
+        }
+
+        .queue-item {
+            min-width: 90px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, var(--gold), #FFB300);
+            color: var(--dark);
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            animation: queueIn 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        @keyframes queueIn {
+            from { transform: translateX(40px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .queue-empty {
+            color: var(--text-light);
+            font-style: italic;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* LINKED LIST VISUAL */
+        .ll-area {
+            padding: 20px 0;
+            overflow-x: auto;
+        }
+
+        .ll-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 20px;
+            min-height: 100px;
+        }
+
+        .ll-node {
+            display: flex;
+            align-items: center;
+            animation: nodeIn 0.3s ease;
+        }
+
+        @keyframes nodeIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .ll-node-box {
+            display: flex;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .ll-data {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, var(--earth-brown), var(--earth-light));
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .ll-pointer {
+            padding: 16px 12px;
+            background: rgba(93,64,55,0.15);
+            color: var(--earth-brown);
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .ll-arrow {
+            font-size: 1.5rem;
+            color: var(--earth-light);
+            margin: 0 8px;
+            font-weight: 700;
+        }
+
+        .ll-null {
+            padding: 16px 20px;
+            background: #FFEBEE;
+            color: #C62828;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .ll-head {
+            padding: 8px 16px;
+            background: var(--green-main);
+            color: white;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            margin-right: 8px;
+        }
+
+        /* CODE BLOCKS */
+        .code-block {
+            background: #1a1a2e;
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .code-block .keyword { color: #C792EA; }
+        .code-block .string { color: #C3E88D; }
+        .code-block .type { color: #FFCB6B; }
+        .code-block .method { color: #82AAFF; }
+        .code-block .comment { color: #546E7A; }
+        .code-block .number { color: #F78C6C; }
+
+        .code-label {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ANALOGY BOX */
+        .analogy {
+            background: linear-gradient(135deg, var(--green-pale), #F1F8E9);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin: 24px 0;
+            border-left: 4px solid var(--green-main);
+            position: relative;
+        }
+
+        .analogy .tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--green-main);
+            margin-bottom: 8px;
+        }
+
+        .analogy p {
+            color: var(--green-dark);
+            font-weight: 500;
+        }
+
+        .analogy-football {
+            background: linear-gradient(135deg, var(--gold-light), #FFF3E0);
+            border-left-color: var(--gold);
+        }
+
+        .analogy-football .tag { color: #E65100; }
+        .analogy-football p { color: #BF360C; }
+
+        /* OPERATIONS TABLE */
+        .ops-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 24px 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .ops-table th {
+            background: var(--green-dark);
+            color: white;
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .ops-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.92rem;
+        }
+
+        .ops-table tr:last-child td { border-bottom: none; }
+
+        .ops-table tr:nth-child(even) { background: #FAFAFA; }
+        .ops-table tr:hover { background: var(--green-pale); }
+
+        /* COMPARISON SECTION */
+        .compare-bg {
+            background: linear-gradient(135deg, var(--green-dark) 0%, #1b4332 100%);
+            padding: 100px 24px;
+            margin: 0;
+        }
+
+        .compare-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .compare-bg .section-label { color: var(--gold); }
+        .compare-bg .section-label .dot { background: var(--gold); }
+        .compare-bg h2 { color: white; }
+        .compare-bg .section-intro { color: rgba(255,255,255,0.7); }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .compare-card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .compare-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-4px);
+        }
+
+        .compare-card .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .compare-card h4 {
+            color: white;
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        .compare-card .rule {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin-bottom: 12px;
+        }
+
+        .compare-card p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        /* QUIZ */
+        .quiz-section {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 48px;
+            box-shadow: var(--shadow-lg);
+            margin: 32px 0;
+        }
+
+        .quiz-progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 32px;
+        }
+
+        .quiz-dot {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+
+        .quiz-dot.done { background: var(--green-main); }
+        .quiz-dot.current { background: var(--gold); }
+
+        .quiz-question {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 24px;
+        }
+
+        .quiz-question .q-num {
+            color: var(--green-main);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .quiz-option {
+            padding: 16px 24px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--green-main);
+            background: var(--green-pale);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--green-main);
+            background: var(--green-pale);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--green-main);
+            background: var(--green-pale);
+        }
+
+        .quiz-option.wrong {
+            border-color: #EF5350;
+            background: #FFEBEE;
+        }
+
+        .quiz-option .letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.selected .letter { background: var(--green-main); color: white; }
+        .quiz-option.correct .letter { background: var(--green-main); color: white; }
+        .quiz-option.wrong .letter { background: #EF5350; color: white; }
+
+        .quiz-feedback {
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: var(--green-pale); color: var(--green-dark); }
+        .quiz-feedback.wrong { background: #FFEBEE; color: #C62828; }
+
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .quiz-score {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--green-main);
+        }
+
+        .quiz-result-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 60px 24px;
+            background: var(--dark);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.88rem;
+        }
+
+        .footer strong { color: rgba(255,255,255,0.8); }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            padding: 4px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-light);
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .tab.active {
+            background: var(--white);
+            color: var(--green-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* INPUT */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus { border-color: var(--green-main); }
+
+        /* FADE IN ANIMATION */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .section { padding: 60px 16px; }
+            .card, .demo-container, .quiz-section { padding: 24px; }
+            .stack-area { flex-direction: column; align-items: center; }
+            .hero { padding: 100px 16px 60px; }
+            .compare-bg { padding: 60px 16px; }
+            .ops-table { font-size: 0.82rem; }
+            .ops-table th, .ops-table td { padding: 10px 12px; }
+        }
+
+        /* DIVIDER */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+            margin: 60px 0;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* TOOLTIP STYLE INFO */
+        .info-box {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            background: #F3E5F5;
+            border-radius: var(--radius-sm);
+            margin: 16px 0;
+            align-items: flex-start;
+        }
+
+        .info-box .info-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .info-box p { color: #4A148C; font-size: 0.92rem; margin: 0; font-weight: 500; }
+
+/* ========================
+   DARK MODE TOGGLE BUTTON
+   ======================== */
+.dark-toggle {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 99999;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    color: #FFD54F;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+}
+
+.dark-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+}
+
+body.dark-mode .dark-toggle {
+    background: var(--gold);
+    color: #1a1a2e;
+    box-shadow: 0 4px 20px rgba(249,168,37,0.4);
+}
+
+/* ========================
+   DARK MODE OVERRIDES
+   ======================== */
+body.dark-mode {
+    background: #0f0f1a;
+    color: #d4d4d4;
+}
+
+/* NAV */
+body.dark-mode .nav.scrolled {
+    background: rgba(15,15,26,0.95);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .nav-logo {
+    color: #a5d6a7;
+}
+
+body.dark-mode .nav-links a {
+    color: #888;
+}
+
+body.dark-mode .nav-links a:hover,
+body.dark-mode .nav-links a.active {
+    color: #a5d6a7;
+    background: rgba(76,175,80,0.12);
+}
+
+/* HERO stays dark already, no changes needed */
+
+/* SECTION TEXT */
+body.dark-mode .section h2 {
+    color: #e8e8e8;
+}
+
+body.dark-mode .section h2 .accent {
+    color: #66BB6A;
+}
+
+body.dark-mode .section-intro {
+    color: #999;
+}
+
+body.dark-mode .section-label {
+    color: #66BB6A;
+}
+
+body.dark-mode .section-label .dot {
+    background: #66BB6A;
+}
+
+/* CARDS */
+body.dark-mode .card {
+    background: #1a1a2e;
+    border-color: rgba(255,255,255,0.06);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .card:hover {
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .card h3 {
+    color: #e8e8e8;
+}
+
+body.dark-mode .card p {
+    color: #aaa;
+}
+
+/* ICON BACKGROUNDS */
+body.dark-mode .icon-green {
+    background: rgba(76,175,80,0.15);
+}
+
+body.dark-mode .icon-gold {
+    background: rgba(249,168,37,0.15);
+}
+
+body.dark-mode .icon-brown {
+    background: rgba(141,110,99,0.2);
+}
+
+/* ANALOGY BOXES */
+body.dark-mode .analogy {
+    background: rgba(76,175,80,0.08);
+    border-left-color: #388E3C;
+}
+
+body.dark-mode .analogy .tag {
+    color: #66BB6A;
+}
+
+body.dark-mode .analogy p {
+    color: #a5d6a7;
+}
+
+body.dark-mode .analogy-football {
+    background: rgba(249,168,37,0.08);
+    border-left-color: #F9A825;
+}
+
+body.dark-mode .analogy-football .tag {
+    color: #FFB300;
+}
+
+body.dark-mode .analogy-football p {
+    color: #FFD54F;
+}
+
+/* ACCESS CARDS */
+body.dark-mode .access-card {
+    background: #1a1a2e;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .access-card h4 {
+    color: #e8e8e8;
+}
+
+body.dark-mode .access-card p {
+    color: #aaa;
+}
+
+/* OP TAGS */
+body.dark-mode .op-tag {
+    background: rgba(76,175,80,0.15);
+    color: #81C784;
+}
+
+/* ARRAY CELLS */
+body.dark-mode .array-cell .index {
+    color: #66BB6A;
+}
+
+body.dark-mode .array-cell .value {
+    background: rgba(76,175,80,0.1);
+    border-color: rgba(76,175,80,0.3);
+    color: #a5d6a7;
+}
+
+body.dark-mode .array-cell.active .value {
+    background: #2E7D32;
+    color: white;
+    border-color: #2E7D32;
+    box-shadow: 0 4px 16px rgba(46,125,50,0.5);
+}
+
+body.dark-mode .array-message {
+    color: #81C784;
+}
+
+/* DEMO CONTAINERS */
+body.dark-mode .demo-container {
+    background: #1a1a2e;
+    border-color: rgba(255,255,255,0.06);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .demo-header h4 {
+    color: #e8e8e8;
+}
+
+/* BUTTONS */
+body.dark-mode .btn-outline {
+    border-color: #333;
+    color: #999;
+}
+
+body.dark-mode .btn-outline:hover {
+    border-color: #66BB6A;
+    color: #66BB6A;
+}
+
+/* INPUTS */
+body.dark-mode .input-group input {
+    background: #12121f;
+    border-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode .input-group input:focus {
+    border-color: #66BB6A;
+}
+
+body.dark-mode .input-group input::placeholder {
+    color: #555;
+}
+
+/* STACK */
+body.dark-mode .stack-container {
+    background: #12121f;
+    border-color: #5D4037;
+}
+
+body.dark-mode .stack-label {
+    color: #8D6E63;
+}
+
+body.dark-mode .stack-count {
+    color: #66BB6A;
+}
+
+body.dark-mode .stack-count-label {
+    color: #888;
+}
+
+body.dark-mode .info-text {
+    color: #999;
+}
+
+body.dark-mode .empty-state {
+    color: #555;
+}
+
+/* QUEUE */
+body.dark-mode .queue-track {
+    background: #12121f;
+    border-color: #333;
+}
+
+body.dark-mode .queue-label {
+    color: #81C784;
+}
+
+body.dark-mode .queue-empty {
+    color: #555;
+}
+
+/* LINKED LIST */
+body.dark-mode .ll-null {
+    background: rgba(198,40,40,0.15);
+    color: #EF5350;
+}
+
+/* TABLES */
+body.dark-mode .ops-table {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .ops-table th {
+    background: #0d3b18;
+}
+
+body.dark-mode .ops-table td {
+    border-bottom-color: #222;
+    color: #ccc;
+    background: #1a1a2e;
+}
+
+body.dark-mode .ops-table tr:nth-child(even) td {
+    background: #151525;
+}
+
+body.dark-mode .ops-table tr:hover td {
+    background: rgba(76,175,80,0.08);
+}
+
+/* CODE BLOCKS (already dark, just tweak slightly) */
+body.dark-mode .code-block {
+    background: #0a0a15;
+    border: 1px solid #222;
+}
+
+/* INFO BOX */
+body.dark-mode .info-box {
+    background: rgba(156,39,176,0.1);
+}
+
+body.dark-mode .info-box p {
+    color: #CE93D8;
+}
+
+/* COMPARE SECTION (already dark bg, slight tweaks) */
+body.dark-mode .compare-bg {
+    background: linear-gradient(135deg, #0a1f12 0%, #0f1a0f 100%);
+}
+
+body.dark-mode .compare-card {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.06);
+}
+
+body.dark-mode .compare-card:hover {
+    background: rgba(255,255,255,0.07);
+}
+
+body.dark-mode .compare-bg .ops-table td {
+    background: #111;
+}
+
+body.dark-mode .compare-bg .ops-table tr:nth-child(even) td {
+    background: #0d0d0d;
+}
+
+body.dark-mode .compare-bg .ops-table tr:hover td {
+    background: rgba(76,175,80,0.1);
+}
+
+/* QUIZ */
+body.dark-mode .quiz-section {
+    background: #1a1a2e;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .quiz-dot {
+    background: #333;
+}
+
+body.dark-mode .quiz-question {
+    color: #e8e8e8;
+}
+
+body.dark-mode .quiz-option {
+    border-color: #2a2a3e;
+    background: #12121f;
+    color: #d0d0d0;
+}
+
+body.dark-mode .quiz-option:hover {
+    border-color: #388E3C;
+    background: rgba(76,175,80,0.08);
+}
+
+body.dark-mode .quiz-option.selected {
+    border-color: #388E3C;
+    background: rgba(76,175,80,0.1);
+}
+
+body.dark-mode .quiz-option.correct {
+    border-color: #388E3C;
+    background: rgba(76,175,80,0.12);
+}
+
+body.dark-mode .quiz-option.wrong {
+    border-color: #C62828;
+    background: rgba(198,40,40,0.12);
+}
+
+body.dark-mode .quiz-option .letter {
+    background: #2a2a3e;
+    color: #aaa;
+}
+
+body.dark-mode .quiz-option.selected .letter {
+    background: #2E7D32;
+    color: white;
+}
+
+body.dark-mode .quiz-option.correct .letter {
+    background: #2E7D32;
+    color: white;
+}
+
+body.dark-mode .quiz-option.wrong .letter {
+    background: #C62828;
+    color: white;
+}
+
+body.dark-mode .quiz-feedback.correct {
+    background: rgba(76,175,80,0.1);
+    color: #81C784;
+}
+
+body.dark-mode .quiz-feedback.wrong {
+    background: rgba(198,40,40,0.1);
+    color: #EF5350;
+}
+
+body.dark-mode .quiz-score {
+    color: #66BB6A;
+}
+
+body.dark-mode .quiz-result-text {
+    color: #e0e0e0;
+}
+
+/* FOOTER */
+body.dark-mode .footer {
+    background: #080810;
+}
+
+/* DIVIDER */
+body.dark-mode .divider {
+    background: linear-gradient(90deg, transparent, #2a2a3e, transparent);
+}
+
+/* PROGRESS BAR */
+body.dark-mode #progressBar {
+    background: linear-gradient(90deg, #2E7D32, #F9A825, #66BB6A);
+}
+
+/* SCROLLBAR */
+body.dark-mode::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.dark-mode::-webkit-scrollbar-track {
+    background: #0f0f1a;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 5px;
+}
+
+body.dark-mode::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+    </style>
+</head>
+<body>
+<button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Toggle Dark Mode">🌙</button>
+
+<div id="progressBar"></div>
+
+<!-- NAVIGATION -->
+<nav class="nav" id="navbar">
+    <div class="nav-inner">
+        <div class="nav-logo">
+            <span>🌱</span> DataStructures
+        </div>
+        <div class="nav-links">
+            <a href="#arrays">Arrays</a>
+            <a href="#access">Access</a>
+            <a href="#stack">Stack</a>
+            <a href="#queue">Queue</a>
+            <a href="#linkedlist">Linked List</a>
+            <a href="#compare">Compare</a>
+            <a href="#quiz">Quiz</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">CSC 301 — Lecture 2</div>
+        <h1>Data Structures &<br><span class="highlight">Access Methods</span></h1>
+        <p>How computers organize information — explained with farming and football. Built for Mathias to become a genius in this topic.</p>
+        <a href="#arrays" class="hero-btn">Start Learning ↓</a>
+    </div>
+    <div class="scroll-hint">Scroll down to begin</div>
+</section>
+
+<!-- SECTION 1: ARRAYS -->
+<section class="section" id="arrays">
+    <div class="fade-in">
+        <div class="section-label"><div class="dot"></div> Section 1</div>
+        <h2>Arrays: <span class="accent">Numbered Boxes in a Row</span></h2>
+        <p class="section-intro">Think of your yam farm. You make heaps in a straight line. Each heap has a position. That is exactly what an array is for a computer.</p>
+    </div>
+
+    <div class="card fade-in">
+        <h3><span class="icon icon-green">🌾</span> What Is an Array?</h3>
+        <p>An array is a straight line of boxes. Each box has a number (called <strong>index</strong>). Each box holds one piece of data. Computer counts from <strong>zero</strong>, not one.</p>
+
+        <div class="analogy">
+            <div class="tag">🌾 Farming Analogy</div>
+            <p>Your farm has 9 yam heaps in a row. Heap 0, Heap 1, Heap 2... all the way to Heap 8. Each heap has yams inside. You can walk to any heap and check how many yams are there.</p>
+        </div>
+
+        <p style="text-align:center; font-weight:600; margin-bottom:8px;">Click on any heap to see its value:</p>
+
+        <div class="array-visual" id="arrayVisual"></div>
+        <div class="array-message" id="arrayMessage">Click a heap above</div>
+    </div>
+
+    <div class="card fade-in">
+        <h3><span class="icon icon-green">💻</span> How to Write It in Code</h3>
+        <p>In Java programming language, this is how you create and use arrays:</p>
+
+        <div class="code-block">
+            <div class="code-label">Java</div>
+            <code>
+<span class="comment">// Create 10 empty boxes</span>
+<span class="type">int</span>[] heaps;
+heaps = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">10</span>];
+
+<span class="comment">// Create boxes and put values inside</span>
+<span class="type">int</span>[] values = {<span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">11</span>, <span class="number">3</span>, <span class="number">23</span>, <span class="number">33</span>, <span class="number">12</span>};
+
+<span class="comment">// Get the item at position 5</span>
+<span class="type">int</span> item = values[<span class="number">5</span>]; <span class="comment">// gives you 3</span>
+
+<span class="comment">// Get total number of boxes</span>
+<span class="type">int</span> size = values.<span class="method">length</span>; <span class="comment">// gives you 9</span>
+            </code>
+        </div>
+
+        <div class="info-box">
+            <div class="info-icon">💡</div>
+            <p><code>int[]</code> means "a row of numbers." <code>new int[10]</code> means "make 10 boxes." <code>values[5]</code> means "give me what is inside box number 5."</p>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 2: ACCESS METHODS -->
+<section class="section" id="access">
+    <div class="fade-in">
+        <div class="section-label"><div class="dot"></div> Section 2</div>
+        <h2>Access Methods: <span class="accent">How Do You Reach Your Stuff?</span></h2>
+        <p class="section-intro">Access method means: how does the computer get to its data? Can it jump to any position, or must it go one by one? There are different ways.</p>
+    </div>
+
+    <div class="access-grid fade-in">
+        <div class="access-card">
+            <h4>🎯 Random Access</h4>
+            <p>Jump directly to any position. The location does not slow you down. Position 1 and position 1000 are equally fast to reach.</p>
+            <div class="analogy" style="margin:0; padding:16px;">
+                <p style="font-size:0.9rem;">On your farm, you can walk directly to any heap. Heap 3 or Heap 50 — you just go there. No need to pass through every heap before it.</p>
+            </div>
+            <div class="ops-list" style="margin-top:12px;">
+                <span class="op-tag">Read</span>
+                <span class="op-tag">Write</span>
+                <span class="op-tag">Jump</span>
+            </div>
+            <p style="font-size:0.82rem; margin-top:12px; margin-bottom:0;"><strong>Examples:</strong> Hard disk, RAM, CD-ROM</p>
+        </div>
+
+        <div class="access-card">
+            <h4>🚶 Sequential Access</h4>
+            <p>You must go one by one, in order. You cannot skip. To reach item 50, you pass through items 1 to 49 first.</p>
+            <div class="analogy-football analogy" style="margin:0; padding:16px;">
+                <p style="font-size:0.9rem;">Like passing ball from goalkeeper → defender → midfielder → striker. The ball cannot jump from goalkeeper straight to striker. It passes through each person.</p>
+            </div>
+            <div class="ops-list" style="margin-top:12px;">
+                <span class="op-tag">Read</span>
+                <span class="op-tag">Write</span>
+                <span class="op-tag">Rewind</span>
+            </div>
+            <p style="font-size:0.82rem; margin-top:12px; margin-bottom:0;"><strong>Examples:</strong> Tape drives</p>
+        </div>
+
+        <div class="access-card">
+            <h4>📄 Text Files</h4>
+            <p>A text file is words written down, stored on disk. Even though disk supports random access, text is usually read line by line.</p>
+            <div class="analogy" style="margin:0; padding:16px;">
+                <p style="font-size:0.9rem;">Like reading your farm records in a notebook. To find Heap 50, you read from the first line, page by page, until you get there.</p>
+            </div>
+            <div class="ops-list" style="margin-top:12px;">
+                <span class="op-tag">Read line</span>
+                <span class="op-tag">Search</span>
+            </div>
+            <p style="font-size:0.82rem; margin-top:12px; margin-bottom:0;"><strong>Example:</strong> Searching a name in a file</p>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3: STACK (LIFO) -->
+<section class="section section-wide" id="stack">
+    <div class="fade-in">
+        <div class="section-label"><div class="dot"></div> Section 3</div>
+        <h2>Stack (LIFO): <span class="accent">Last In, First Out</span></h2>
+        <p class="section-intro">The last thing you put in is the first thing that comes out. Like stacking yams in a basket — the top yam comes out first.</p>
+    </div>
+
+    <div class="card fade-in">
+        <h3><span class="icon icon-green">🧺</span> What Is a Stack?</h3>
+        <p>A stack is like a basket where you pile things on top of each other. You can only add to the top and remove from the top. You cannot reach the bottom without removing everything above it.</p>
+
+        <div class="analogy">
+            <div class="tag">🌾 Farming Analogy</div>
+            <p>After harvest, you stack yams in a basket. The last yam you put on top is the first yam you take out. You cannot take the bottom yam without removing all the ones above it first.</p>
+        </div>
+
+        <div class="analogy-football analogy">
+            <div class="tag">⚽ Football Analogy</div>
+            <p>After training, players throw jerseys into one pile. The captain throws his last, so his jersey is on top. When collecting, captain picks first (top jersey). Coach's jersey at the bottom comes out last.</p>
+        </div>
+    </div>
+
+    <!-- STACK OPERATIONS TABLE -->
+    <div class="card fade-in">
+        <h3><span class="icon icon-gold">⚡</span> Stack Operations</h3>
+        <table class="ops-table">
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>What It Means</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Push</strong></td>
+                    <td>Put something on top of the stack</td>
+                    <td>Place a yam on top of the basket</td>
+                </tr>
+                <tr>
+                    <td><strong>Pop</strong></td>
+                    <td>Remove the top item from the stack</td>
+                    <td>Take the top yam from the basket</td>
+                </tr>
+                <tr>
+                    <td><strong>Peek</strong></td>
+                    <td>Look at the top item, but do not remove it</td>
+                    <td>Check which yam is on top without touching it</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- INTERACTIVE STACK DEMO -->
+    <div class="demo-container fade-in">
+        <div class="demo-header">
+            <h4>🧺 Try It: Interactive Stack</h4>
+        </div>
+        <div class="input-group">
+            <input type="text" id="stackInput" placeholder="Type something (e.g. Yam 1)" maxlength="20">
+            <button class="btn btn-green" onclick="stackPush()">⬇ Push</button>
+            <button class="btn btn-red" onclick="stackPop()">⬆ Pop</button>
+            <button class="btn btn-gold" onclick="stackPeek()">👁 Peek</button>
+            <button class="btn btn-outline" onclick="stackClear()">Clear All</button>
+        </div>
+        <div class="stack-area">
+            <div style="text-align:center;">
+                <div class="stack-container" id="stackContainer">
+                    <div class="empty-state" id="stackEmpty">Empty basket<br>Push something!</div>
+                </div>
+                <div class="stack-label">🧺 Basket (Stack)</div>
+            </div>
+            <div class="stack-info">
+                <div class="stack-count" id="stackCount">0</div>
+                <div class="stack-count-label">Items in Stack</div>
+                <div class="info-text" id="stackFeedback">Push items to add them to the top of the stack</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STACK CODE -->
+    <div class="card fade-in">
+        <h3><span class="icon icon-green">💻</span> Stack in Java Code</h3>
+        <div class="code-block">
+            <div class="code-label">Java</div>
+            <code>
+<span class="keyword">import</span> java.util.Stack;
+
+<span class="keyword">public class</span> <span class="type">StackExample</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        Stack&lt;String&gt; myStack = <span class="keyword">new</span> Stack&lt;&gt;();
+
+        <span class="comment">// PUSH: Put yams on top</span>
+        myStack.<span class="method">push</span>(<span class="string">"Yam 1"</span>);
+        myStack.<span class="method">push</span>(<span class="string">"Yam 2"</span>);
+        myStack.<span class="method">push</span>(<span class="string">"Yam 3"</span>);
+
+        System.out.<span class="method">println</span>(<span class="string">"Size: "</span> + myStack.<span class="method">size</span>());
+
+        <span class="comment">// POP: Remove from top, one by one</span>
+        <span class="keyword">while</span> (!myStack.<span class="method">isEmpty</span>()) {
+            System.out.<span class="method">println</span>(myStack.<span class="method">pop</span>());
+        }
+        <span class="comment">// Output: Yam 3, Yam 2, Yam 1 (last in, first out)</span>
+    }
+}
+            </code>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4: QUEUE (FIFO) -->
+<section class="section section-wide" id="queue">
+    <div class="fade-in">
+        <div class="section-label"><div class="dot"></div> Section 4</div>
+        <h2>Queue (FIFO): <span class="accent">First In, First Out</span></h2>
+        <p class="section-intro">The first person to join the line is the first person served. Fair and orderly — like lining up for penalty kicks.</p>
+    </div>
+
+    <div class="card fade-in">
+        <h3><span class="icon icon-gold">⚽</span> What Is a Queue?</h3>
+        <p>A queue is a line. People join at the back and leave from the front. The first person who joined is the first person who leaves. Nobody cuts the line.</p>
+
+        <div class="analogy-football analogy">
+            <div class="tag">⚽ Football Analogy</div>
+            <p>Penalty shootout. Five players line up. Player 1 is at the front. He kicks first. Player 2 kicks second. Player 5 kicks last. The first person in line is the first to kick — fair and square.</p>
+        </div>
+
+        <div class="analogy">
+            <div class="tag">🌾 Farming Analogy</div>
+            <p>At the grinding machine, farmers line up with their maize. First farmer there, first farmer to grind. Second farmer waits. Nobody jumps the line. Everybody takes their turn.</p>
+        </div>
+    </div>
+
+    <!-- QUEUE OPERATIONS TABLE -->
+    <div class="card fade-in">
+        <h3><span class="icon icon-gold">⚡</span> Queue Operations</h3>
+        <table class="ops-table">
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>What It Means</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Enqueue</strong></td>
+                    <td>Join the back of the line</td>
+                    <td>New player joins penalty line at the back</td>
+                </tr>
+                <tr>
+                    <td><strong>Dequeue</strong></td>
+                    <td>Leave from the front of the line</td>
+                    <td>First player kicks and leaves</td>
+                </tr>
+                <tr>
+                    <td><strong>Peek</strong></td>
+                    <td>Look at who is at the front, but do not remove them</td>
+                    <td>Check who will kick next without them kicking</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- INTERACTIVE QUEUE DEMO -->
+    <div class="demo-container fade-in">
+        <div class="demo-header">
+            <h4>⚽ Try It: Interactive Queue</h4>
+        </div>
+        <div class="input-group">
+            <input type="text" id="queueInput" placeholder="Type a name (e.g. Player 1)" maxlength="20">
+            <button class="btn btn-gold" onclick="queueEnqueue()">→ Enqueue</button>
+            <button class="btn btn-red" onclick="queueDequeue()">← Dequeue</button>
+            <button class="btn btn-green" onclick="queuePeek()">👁 Peek</button>
+            <button class="btn btn-outline" onclick="queueClear()">Clear All</button>
+        </div>
+        <div class="queue-area">
+            <div class="queue-labels">
+                <div class="queue-label">← Front (exits here)</div>
+                <div class="queue-label">Back (joins here) →</div>
+            </div>
+            <div class="queue-track" id="queueContainer">
+                <div class="queue-empty" id="queueEmpty">Empty queue — enqueue someone!</div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:16px;">
+            <div class="stack-count" id="queueCount">0</div>
+            <div class="stack-count-label">In the Queue</div>
+            <div class="info-text" id="queueFeedback">Add people to the queue. First person in is first person out.</div>
+        </div>
+    </div>
+
+    <!-- QUEUE CODE -->
+    <div class="card fade-in">
+        <h3><span class="icon icon-gold">💻</span> Queue in Java Code</h3>
+        <div class="code-block">
+            <div class="code-label">Java</div>
+            <code>
+<span class="keyword">import</span> java.util.LinkedList;
+<span class="keyword">import</span> java.util.Queue;
+
+<span class="keyword">public class</span> <span class="type">QueueExample</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        Queue&lt;String&gt; penaltyLine = <span class="keyword">new</span> LinkedList&lt;&gt;();
+
+        <span class="comment">// ENQUEUE: Players join the line</span>
+        penaltyLine.<span class="method">add</span>(<span class="string">"Player 1"</span>);
+        penaltyLine.<span class="method">add</span>(<span class="string">"Player 2"</span>);
+        penaltyLine.<span class="method">add</span>(<span class="string">"Player 3"</span>);
+
+        System.out.<span class="method">println</span>(<span class="string">"Waiting: "</span> + penaltyLine.<span class="method">size</span>());
+
+        <span class="comment">// DEQUEUE: Players leave from the front</span>
+        <span class="keyword">while</span> (!penaltyLine.<span class="method">isEmpty</span>()) {
+            System.out.<span class="method">println</span>(penaltyLine.<span class="method">poll</span>() + <span class="string">" kicks!"</span>);
+        }
+        <span class="comment">// Output: Player 1, Player 2, Player 3 (first in, first out)</span>
+    }
+}
+            </code>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 5: LINKED LIST -->
+<section class="section section-wide" id="linkedlist">
+    <div class="fade-in">
+        <div class="section-label"><div class="dot"></div> Section 5</div>
+        <h2>Linked List: <span class="accent">A Chain of Connected Items</span></h2>
+        <p class="section-intro">Each item knows where the next item is. Like players passing the ball — each player knows who to pass to next.</p>
+    </div>
+
+    <div class="card fade-in">
+        <h3><span class="icon icon-brown">⛓️</span> What Is a Linked List?</h3>
+        <p>A linked list is a chain of items called <strong>nodes</strong>. Each node holds two things: the <strong>data</strong> (the information) and a <strong>pointer</strong> (an arrow telling you where the next node is). The last node points to nothing — we call that <strong>null</strong>, meaning "the end."</p>
+
+        <div class="analogy-football analogy">
+            <div class="tag">⚽ Football Analogy</div>
+            <p>In a match, players pass the ball in sequence. Goalkeeper has the ball and knows to pass to defender. Defender knows to pass to midfielder. Midfielder knows to pass to striker. Striker has nobody to pass to — he shoots. Each player is a node. The ball is the data. Knowing who to pass to next is the pointer.</p>
+        </div>
+
+        <div class="analogy">
+            <div class="tag">🌾 Farming Analogy</div>
+            <p>During planting season, you pass yam seedlings to your neighbor. Your neighbor plants his share and passes the rest to the next farmer. That farmer plants his and passes to the next. The last farmer plants his. Nobody left to pass to. End. Each farmer is a node. The seedlings are the data. Knowing which farmer is next is the pointer.</p>
+        </div>
+    </div>
+
+    <!-- LINKED LIST OPERATIONS TABLE -->
+    <div class="card fade-in">
+        <h3><span class="icon icon-brown">⚡</span> Linked List Operations</h3>
+        <table class="ops-table">
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>What It Means</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Insertion</strong></td>
+                    <td>Add a new node to the chain</td>
+                    <td>A new player joins the passing sequence</td>
+                </tr>
+                <tr>
+                    <td><strong>Deletion</strong></td>
+                    <td>Remove a node from the chain</td>
+                    <td>A player leaves — the one before him now passes to the one after him</td>
+                </tr>
+                <tr>
+                    <td><strong>Traversal</strong></td>
+                    <td>Go through every node, one by one</td>
+                    <td>Follow the ball from goalkeeper all the way to striker</td>
+                </tr>
+                <tr>
+                    <td><strong>Search</strong></td>
+                    <td>Find a specific node in the chain</td>
+                    <td>Find which player currently has the ball</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- INTERACTIVE LINKED LIST DEMO -->
+    <div class="demo-container fade-in">
+        <div class="demo-header">
+            <h4>⛓️ Try It: Interactive Linked List</h4>
+        </div>
+        <div class="input-group">
+            <input type="text" id="llInput" placeholder="Type a name (e.g. Goalkeeper)" maxlength="15">
+            <button class="btn btn-green" onclick="llAdd()">+ Add Node</button>
+            <button class="btn btn-red" onclick="llRemoveFirst()">− Remove First</button>
+            <button class="btn btn-outline" onclick="llClear()">Clear All</button>
+        </div>
+        <div class="ll-area">
+            <div class="ll-track" id="llContainer">
+                <div class="empty-state" id="llEmpty" style="width:100%">Empty chain — add some nodes!</div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:16px;">
+            <div class="stack-count" id="llCount">0</div>
+            <div class="stack-count-label">Nodes in the Chain</div>
+            <div class="info-text" id="llFeedback">Add nodes to build your linked list chain</div>
+        </div>
+    </div>
+
+    <!-- LINKED LIST CODE -->
+    <div class="card fade-in">
+        <h3><span class="icon icon-brown">💻</span> Linked List in Java Code</h3>
+        <div class="code-block">
+            <div class="code-label">Java</div>
+            <code>
+<span class="keyword">import</span> java.util.LinkedList;
+
+<span class="keyword">public class</span> <span class="type">LinkedListExample</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        LinkedList&lt;String&gt; players = <span class="keyword">new</span> LinkedList&lt;&gt;();
+
+        players.<span class="method">add</span>(<span class="string">"Goalkeeper"</span>);
+        players.<span class="method">add</span>(<span class="string">"Defender"</span>);
+        players.<span class="method">add</span>(<span class="string">"Striker"</span>);
+
+        System.out.<span class="method">println</span>(<span class="string">"Total: "</span> + players.<span class="method">size</span>());
+        System.out.<span class="method">println</span>(<span class="string">"First: "</span> + players.<span class="method">getFirst</span>());
+        System.out.<span class="method">println</span>(<span class="string">"Last: "</span> + players.<span class="method">getLast</span>());
+        System.out.<span class="method">println</span>(<span class="string">"Removed: "</span> + players.<span class="method">removeFirst</span>());
+
+        <span class="keyword">for</span> (String player : players) {
+            System.out.<span class="method">println</span>(player);
+        }
+    }
+}
+            </code>
+        </div>
+    </div>
+</section>
+
+<!-- COMPARISON SECTION -->
+<section class="compare-bg" id="compare">
+    <div class="compare-inner fade-in">
+        <div class="section-label"><div class="dot"></div> Summary</div>
+        <h2>Comparing All Four Structures</h2>
+        <p class="section-intro">Here is everything side by side. Each structure has its own rule and best use case.</p>
+
+        <div class="compare-grid">
+            <div class="compare-card">
+                <div class="emoji">📦</div>
+                <h4>Array</h4>
+                <div class="rule">Numbered boxes in a row</div>
+                <p>Jump directly to any box using its number. Like yam heaps on your farm — walk to any heap you want.</p>
+            </div>
+            <div class="compare-card">
+                <div class="emoji">🧺</div>
+                <h4>Stack (LIFO)</h4>
+                <div class="rule">Last In, First Out</div>
+                <p>Add and remove only from the top. Like stacking yams in a basket — top yam comes out first.</p>
+            </div>
+            <div class="compare-card">
+                <div class="emoji">🚶</div>
+                <h4>Queue (FIFO)</h4>
+                <div class="rule">First In, First Out</div>
+                <p>Join at the back, leave from the front. Like the penalty kick line — first player kicks first.</p>
+            </div>
+            <div class="compare-card">
+                <div class="emoji">⛓️</div>
+                <h4>Linked List</h4>
+                <div class="rule">Follow the chain</div>
+                <p>Each item points to the next. Like passing ball from goalkeeper to defender to midfielder to striker.</p>
+            </div>
+        </div>
+
+        <div style="margin-top:48px;">
+            <table class="ops-table" style="background:rgba(255,255,255,0.95);">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Simple Meaning</th>
+                        <th>Farming/Football Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Array</strong></td><td>Numbered boxes</td><td>Yam heaps on your farm</td></tr>
+                    <tr><td><strong>Random Access</strong></td><td>Jump to any position</td><td>Walk to any heap directly</td></tr>
+                    <tr><td><strong>Sequential Access</strong></td><td>Go one by one</td><td>Ball passing through each player</td></tr>
+                    <tr><td><strong>Push</strong></td><td>Put on top</td><td>Add yam to top of basket</td></tr>
+                    <tr><td><strong>Pop</strong></td><td>Take from top</td><td>Remove top yam</td></tr>
+                    <tr><td><strong>Enqueue</strong></td><td>Join back of line</td><td>New player joins penalty line</td></tr>
+                    <tr><td><strong>Dequeue</strong></td><td>Leave from front</td><td>First player kicks and leaves</td></tr>
+                    <tr><td><strong>Node</strong></td><td>One item in the chain</td><td>One player in passing chain</td></tr>
+                    <tr><td><strong>Pointer</strong></td><td>Arrow to next item</td><td>Knowing who to pass to</td></tr>
+                    <tr><td><strong>Null</strong></td><td>The end</td><td>Striker — nobody left to pass to</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ SECTION -->
+<section class="section" id="quiz">
+    <div class="fade-in">
+        <div class="section-label"><div class="dot"></div> Test Yourself</div>
+        <h2>Quiz: <span class="accent">Are You a Genius Now?</span></h2>
+        <p class="section-intro">Answer these questions to prove you understand everything. Take your time, Mathias.</p>
+    </div>
+
+    <div class="quiz-section fade-in" id="quizContainer">
+        <div class="quiz-progress" id="quizProgress"></div>
+        <div id="quizContent"></div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <p><strong>CSC 301 — Data Structures</strong> | Lecture 2: Data Structures & Access Methods</p>
+    <p style="margin-top:8px;">Lecturer: Mrs Aisha I. Galadima | Federal University of Lafia | 2025/2026 Session</p>
+    <p style="margin-top:16px; font-size:0.8rem;">References: Liang, Y.D. (2020). Introduction to Java Programming, 12th ed. | Cormen et al. (2009). Introduction to Algorithms, 3rd ed.</p>
+</footer>
+
+<script>
+    // ========================
+    // PROGRESS BAR
+    // ========================
+    window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+
+        // Nav scroll effect
+        const nav = document.getElementById('navbar');
+        if (scrollTop > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    // ========================
+    // FADE IN ON SCROLL
+    // ========================
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ========================
+    // ARRAY INTERACTIVE
+    // ========================
+    const arrayValues = [2, 4, 5, 8, 11, 3, 23, 33, 12];
+    const arrayVisual = document.getElementById('arrayVisual');
+    const arrayMessage = document.getElementById('arrayMessage');
+
+    arrayValues.forEach((val, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'array-cell';
+        cell.innerHTML = `<div class="index">Heap ${i}</div><div class="value">${val}</div>`;
+        cell.addEventListener('click', () => {
+            document.querySelectorAll('.array-cell').forEach(c => c.classList.remove('active'));
+            cell.classList.add('active');
+            arrayMessage.textContent = `Heap ${i} contains ${val} yams. In code: values[${i}] = ${val}`;
+        });
+        arrayVisual.appendChild(cell);
+    });
+
+    // ========================
+    // STACK INTERACTIVE
+    // ========================
+    let stackData = [];
+    let stackCounter = 0;
+
+    function updateStack() {
+        const container = document.getElementById('stackContainer');
+        const empty = document.getElementById('stackEmpty');
+        const count = document.getElementById('stackCount');
+
+        container.innerHTML = '';
+        if (stackData.length === 0) {
+            container.innerHTML = '<div class="empty-state">Empty basket<br>Push something!</div>';
+        } else {
+            stackData.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = 'stack-item';
+                div.textContent = item;
+                if (i === stackData.length - 1) {
+                    div.style.background = 'linear-gradient(135deg, #1B5E20, #388E3C)';
+                }
+                container.appendChild(div);
+            });
+        }
+        count.textContent = stackData.length;
+    }
+
+    function stackPush() {
+        const input = document.getElementById('stackInput');
+        let val = input.value.trim();
+        if (!val) {
+            stackCounter++;
+            val = 'Yam ' + stackCounter;
+        }
+        if (stackData.length >= 8) {
+            document.getElementById('stackFeedback').textContent = '⚠️ Basket is full! Pop some items first.';
+            return;
+        }
+        stackData.push(val);
+        input.value = '';
+        updateStack();
+        document.getElementById('stackFeedback').textContent = `✅ Pushed "${val}" on top. It will come out first if you pop.`;
+    }
+
+    function stackPop() {
+        if (stackData.length === 0) {
+            document.getElementById('stackFeedback').textContent = '⚠️ Nothing to pop! Basket is empty.';
+            return;
+        }
+        const removed = stackData.pop();
+        updateStack();
+        document.getElementById('stackFeedback').textContent = `🔴 Popped "${removed}" from top. Last in, first out!`;
+    }
+
+    function stackPeek() {
+        if (stackData.length === 0) {
+            document.getElementById('stackFeedback').textContent = '⚠️ Nothing to peek at. Basket is empty.';
+            return;
+        }
+        const top = stackData[stackData.length - 1];
+        document.getElementById('stackFeedback').textContent = `👁 Top item is "${top}". It stays in the stack.`;
+    }
+
+    function stackClear() {
+        stackData = [];
+        stackCounter = 0;
+        updateStack();
+        document.getElementById('stackFeedback').textContent = 'Basket cleared. Start fresh!';
+    }
+
+    document.getElementById('stackInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') stackPush();
+    });
+
+    // ========================
+    // QUEUE INTERACTIVE
+    // ========================
+    let queueData = [];
+    let queueCounter = 0;
+
+    function updateQueue() {
+        const container = document.getElementById('queueContainer');
+        const count = document.getElementById('queueCount');
+
+        container.innerHTML = '';
+        if (queueData.length === 0) {
+            container.innerHTML = '<div class="queue-empty">Empty queue — enqueue someone!</div>';
+        } else {
+            queueData.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = 'queue-item';
+                if (i === 0) {
+                    div.style.background = 'linear-gradient(135deg, #E65100, #FF8F00)';
+                    div.style.color = 'white';
+                }
+                div.textContent = item;
+                container.appendChild(div);
+            });
+        }
+        count.textContent = queueData.length;
+    }
+
+    function queueEnqueue() {
+        const input = document.getElementById('queueInput');
+        let val = input.value.trim();
+        if (!val) {
+            queueCounter++;
+            val = 'Player ' + queueCounter;
+        }
+        if (queueData.length >= 10) {
+            document.getElementById('queueFeedback').textContent = '⚠️ Queue is full!';
+            return;
+        }
+        queueData.push(val);
+        input.value = '';
+        updateQueue();
+        document.getElementById('queueFeedback').textContent = `✅ "${val}" joined at the back of the queue.`;
+    }
+
+    function queueDequeue() {
+        if (queueData.length === 0) {
+            document.getElementById('queueFeedback').textContent = '⚠️ Nobody in the queue!';
+            return;
+        }
+        const removed = queueData.shift();
+        updateQueue();
+        document.getElementById('queueFeedback').textContent = `🔴 "${removed}" left from the front. First in, first out!`;
+    }
+
+    function queuePeek() {
+        if (queueData.length === 0) {
+            document.getElementById('queueFeedback').textContent = '⚠️ Queue is empty. Nobody to peek at.';
+            return;
+        }
+        document.getElementById('queueFeedback').textContent = `👁 Front of the queue: "${queueData[0]}". They stay in line.`;
+    }
+
+    function queueClear() {
+        queueData = [];
+        queueCounter = 0;
+        updateQueue();
+        document.getElementById('queueFeedback').textContent = 'Queue cleared. Start fresh!';
+    }
+
+    document.getElementById('queueInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') queueEnqueue();
+    });
+
+    // ========================
+    // LINKED LIST INTERACTIVE
+    // ========================
+    let llData = [];
+    let llCounter = 0;
+
+    function updateLL() {
+        const container = document.getElementById('llContainer');
+        const count = document.getElementById('llCount');
+
+        container.innerHTML = '';
+        if (llData.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="width:100%">Empty chain — add some nodes!</div>';
+        } else {
+            // HEAD label
+            const head = document.createElement('span');
+            head.className = 'll-head';
+            head.textContent = 'HEAD';
+            container.appendChild(head);
+
+            const arrow0 = document.createElement('span');
+            arrow0.className = 'll-arrow';
+            arrow0.textContent = '→';
+            container.appendChild(arrow0);
+
+            llData.forEach((item, i) => {
+                const node = document.createElement('div');
+                node.className = 'll-node';
+
+                const box = document.createElement('div');
+                box.className = 'll-node-box';
+
+                const data = document.createElement('div');
+                data.className = 'll-data';
+                data.textContent = item;
+
+                const pointer = document.createElement('div');
+                pointer.className = 'll-pointer';
+                pointer.textContent = i < llData.length - 1 ? 'Next' : 'Next';
+
+                box.appendChild(data);
+                box.appendChild(pointer);
+                node.appendChild(box);
+
+                container.appendChild(node);
+
+                // Arrow or NULL
+                if (i < llData.length - 1) {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'll-arrow';
+                    arrow.textContent = '→';
+                    container.appendChild(arrow);
+                } else {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'll-arrow';
+                    arrow.textContent = '→';
+                    container.appendChild(arrow);
+
+                    const nullEl = document.createElement('span');
+                    nullEl.className = 'll-null';
+                    nullEl.textContent = 'NULL';
+                    container.appendChild(nullEl);
+                }
+            });
+        }
+        count.textContent = llData.length;
+    }
+
+    function llAdd() {
+        const input = document.getElementById('llInput');
+        let val = input.value.trim();
+        if (!val) {
+            const positions = ['GK', 'DEF', 'MID', 'STR', 'SUB'];
+            val = positions[llCounter % positions.length] + ' ' + (Math.floor(llCounter / positions.length) + 1);
+            llCounter++;
+        }
+        if (llData.length >= 6) {
+            document.getElementById('llFeedback').textContent = '⚠️ Chain is long enough! Remove some first.';
+            return;
+        }
+        llData.push(val);
+        input.value = '';
+        updateLL();
+        document.getElementById('llFeedback').textContent = `✅ Added "${val}" to the chain. It points to NULL (the end).`;
+    }
+
+    function llRemoveFirst() {
+        if (llData.length === 0) {
+            document.getElementById('llFeedback').textContent = '⚠️ Chain is empty!';
+            return;
+        }
+        const removed = llData.shift();
+        updateLL();
+        document.getElementById('llFeedback').textContent = `🔴 Removed "${removed}" from the front. HEAD now points to "${llData.length > 0 ? llData[0] : 'nothing (empty)'}"`;
+    }
+
+    function llClear() {
+        llData = [];
+        llCounter = 0;
+        updateLL();
+        document.getElementById('llFeedback').textContent = 'Chain cleared. Start fresh!';
+    }
+
+    document.getElementById('llInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') llAdd();
+    });
+
+    // ========================
+    // QUIZ
+    // ========================
+    const questions = [
+        {
+            q: "You have 3 yams stacked in a basket. Yam A at the bottom, Yam B in the middle, Yam C on top. Which yam do you remove first?",
+            options: ["Yam A (bottom)", "Yam B (middle)", "Yam C (top)", "Any of them"],
+            correct: 2,
+            explanation: "Stack uses LIFO — Last In, First Out. Yam C was placed last (on top), so it comes out first. Just like removing the top yam from a basket."
+        },
+        {
+            q: "Five players line up for penalty kicks. Player 1 arrived first, Player 5 arrived last. Who kicks first?",
+            options: ["Player 5 (arrived last)", "Player 3 (middle)", "Player 1 (arrived first)", "The captain"],
+            correct: 2,
+            explanation: "Queue uses FIFO — First In, First Out. Player 1 arrived first, so Player 1 kicks first. Fair and orderly, like a proper queue."
+        },
+        {
+            q: "In an array with values [2, 4, 5, 8, 11], what is at position 0?",
+            options: ["4", "2", "5", "Nothing — arrays start at 1"],
+            correct: 1,
+            explanation: "Arrays start counting from 0, not 1. So position 0 holds the first value, which is 2. Like Heap 0 on your farm."
+        },
+        {
+            q: "What does 'Push' mean in a stack?",
+            options: ["Remove the top item", "Look at the top item", "Put a new item on top", "Clear the whole stack"],
+            correct: 2,
+            explanation: "Push means adding a new item on top of the stack. Like placing another yam on top of the basket. Pop removes from top. Peek just looks."
+        },
+        {
+            q: "In a linked list, what does 'NULL' at the end mean?",
+            options: ["The list is broken", "There is an error", "There are no more nodes — it is the end", "The data is missing"],
+            correct: 2,
+            explanation: "NULL means 'the end — nothing comes after this.' Like the striker in a passing chain — nobody left to pass to. He shoots instead."
+        },
+        {
+            q: "You can jump directly to any position without going through the others. What access method is this?",
+            options: ["Sequential Access", "Random Access", "Text File Access", "Stack Access"],
+            correct: 1,
+            explanation: "Random Access lets you jump to any position directly. Like walking straight to Heap 7 on your farm without passing through Heaps 1 to 6."
+        },
+        {
+            q: "What does 'Dequeue' mean?",
+            options: ["Add to the back of the queue", "Remove from the front of the queue", "Look at the front of the queue", "Remove from the back"],
+            correct: 1,
+            explanation: "Dequeue means removing the person at the front of the queue. The first person who joined leaves first. Like the first player in the penalty line kicks and goes."
+        },
+        {
+            q: "A node in a linked list has two parts. What are they?",
+            options: ["Push and Pop", "Front and Back", "Data and Pointer (to next node)", "Key and Value"],
+            correct: 2,
+            explanation: "Every node holds Data (the actual information) and a Pointer (arrow showing where the next node is). Like a player holding the ball (data) and knowing who to pass to next (pointer)."
+        },
+        {
+            q: "Which data structure uses FIFO?",
+            options: ["Stack", "Array", "Queue", "Linked List"],
+            correct: 2,
+            explanation: "Queue uses FIFO — First In, First Out. Stack uses LIFO. Array uses random access. Linked list uses sequential traversal."
+        },
+        {
+            q: "Tape drives read data one item after another without skipping. What access method is this?",
+            options: ["Random Access", "Direct Access", "Sequential Access", "Array Access"],
+            correct: 2,
+            explanation: "Sequential Access means going one by one, in order, without skipping. Like passing the ball from goalkeeper → defender → midfielder → striker. No jumping ahead."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = false;
+
+    function renderQuiz() {
+        const progress = document.getElementById('quizProgress');
+        const content = document.getElementById('quizContent');
+
+        // Progress dots
+        progress.innerHTML = '';
+        questions.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'quiz-dot';
+            if (i < currentQuestion) dot.classList.add('done');
+            if (i === currentQuestion) dot.classList.add('current');
+            progress.appendChild(dot);
+        });
+
+        if (currentQuestion >= questions.length) {
+            // Show results
+            const percentage = Math.round((score / questions.length) * 100);
+            let message = '';
+            let emoji = '';
+            if (percentage === 100) { message = 'PERFECT SCORE! You are a Data Structures genius, Mathias!'; emoji = '🏆'; }
+            else if (percentage >= 80) { message = 'Excellent! You understand this very well.'; emoji = '🌟'; }
+            else if (percentage >= 60) { message = 'Good job! Read through the sections again for the ones you missed.'; emoji = '👍'; }
+            else { message = 'Keep studying! Go through each section again slowly. You will get it.'; emoji = '💪'; }
+
+            content.innerHTML = `
+                <div class="quiz-result">
+                    <div style="font-size:4rem; margin-bottom:16px;">${emoji}</div>
+                    <div class="quiz-score">${score}/${questions.length}</div>
+                    <div class="quiz-result-text">${percentage}% Correct</div>
+                    <p style="color:var(--text-light); margin-bottom:32px;">${message}</p>
+                    <button class="btn btn-green" onclick="resetQuiz()" style="margin:0 auto;">🔄 Try Again</button>
+                </div>
+            `;
+            return;
+        }
+
+        const q = questions[currentQuestion];
+        answered = false;
+
+        let optionsHTML = '';
+        const letters = ['A', 'B', 'C', 'D'];
+        q.options.forEach((opt, i) => {
+            optionsHTML += `
+                <div class="quiz-option" id="opt${i}" onclick="selectAnswer(${i})">
+                    <span class="letter">${letters[i]}</span>
+                    <span>${opt}</span>
+                </div>
+            `;
+        });
+
+        content.innerHTML = `
+            <div class="quiz-question"><span class="q-num">Question ${currentQuestion + 1} of ${questions.length}:</span><br>${q.q}</div>
+            <div class="quiz-options">${optionsHTML}</div>
+            <div class="quiz-feedback" id="quizFeedback"></div>
+            <div style="text-align:right;">
+                <button class="btn btn-green" id="nextBtn" onclick="nextQuestion()" style="display:none;">Next Question →</button>
+            </div>
+        `;
+    }
+
+    function selectAnswer(idx) {
+        if (answered) return;
+        answered = true;
+
+        const q = questions[currentQuestion];
+        const feedback = document.getElementById('quizFeedback');
+        const selected = document.getElementById('opt' + idx);
+
+        // Mark selected
+        selected.classList.add('selected');
+
+        if (idx === q.correct) {
+            score++;
+            selected.classList.remove('selected');
+            selected.classList.add('correct');
+            feedback.className = 'quiz-feedback show correct';
+            feedback.textContent = '✅ Correct! ' + q.explanation;
+        } else {
+            selected.classList.remove('selected');
+            selected.classList.add('wrong');
+            document.getElementById('opt' + q.correct).classList.add('correct');
+            feedback.className = 'quiz-feedback show wrong';
+            feedback.textContent = '❌ Wrong. ' + q.explanation;
+        }
+
+        // Disable all options
+        document.querySelectorAll('.quiz-option').forEach(opt => {
+            opt.style.pointerEvents = 'none';
+        });
+
+        document.getElementById('nextBtn').style.display = 'inline-flex';
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        renderQuiz();
+        document.getElementById('quizContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        renderQuiz();
+    }
+
+    // Initialize quiz
+    renderQuiz();
+
+    // ========================
+    // ACTIVE NAV LINK
+    // ========================
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 120;
+            if (window.scrollY >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+// ========================
+// DARK MODE TOGGLE
+// ========================
+function toggleDark() {
+    document.body.classList.toggle('dark-mode');
+    const btn = document.getElementById('darkToggle');
+    const isDark = document.body.classList.contains('dark-mode');
+    btn.textContent = isDark ? '☀️' : '🌙';
+    btn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    localStorage.setItem('darkMode', isDark ? 'on' : 'off');
+}
+
+// Check saved preference on page load
+(function() {
+    const saved = localStorage.getItem('darkMode');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'on' || (saved === null && prefersDark)) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkToggle').textContent = '☀️';
+        document.getElementById('darkToggle').title = 'Switch to Light Mode';
+    }
+})();
+</script>
+</body>
+</html>
