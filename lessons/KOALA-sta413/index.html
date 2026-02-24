@@ -1,0 +1,3866 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Distribution of Quadratic Forms — STA 413 | Built for Maxwell</title>
+
+    <!-- Anti-flash: apply dark mode before any paint -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("sabi-theme");
+          if (t === "dark" || (!t && true)) {
+            document.documentElement.classList.add("dark-mode");
+          }
+        } catch (e) {
+          document.documentElement.classList.add("dark-mode");
+        }
+      })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ════════════════════════════════════════════════════
+       NOSCRIPT FALLBACK
+       ════════════════════════════════════════════════════ -->
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+        .quiz-section,
+        .interactive-component,
+        .checkpoint {
+          display: block;
+        }
+        .glossary-overlay,
+        .welcome-overlay,
+        .confetti-container,
+        .progress-bar,
+        .dark-toggle {
+          display: none;
+        }
+      </style>
+    </noscript>
+
+    <!-- Film Grain Overlay -->
+    <div class="film-grain" aria-hidden="true"></div>
+
+    <!-- Skip to Main -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ════════════════════════════════════════════════════
+       PROGRESS BAR
+       ════════════════════════════════════════════════════ -->
+    <div class="progress-bar" aria-hidden="true">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════
+       NAVIGATION
+       ════════════════════════════════════════════════════ -->
+    <header>
+      <nav class="nav" id="mainNav" aria-label="Main navigation">
+        <div class="nav-inner container">
+          <a href="#hero" class="nav-brand" aria-label="Back to top">
+            <span class="nav-brand-icon">◈</span>
+            <span class="nav-brand-text">STA 413</span>
+          </a>
+          <div class="nav-links" role="list">
+            <a href="#section-1" class="nav-link" role="listitem"
+              >Quadratic Forms</a
+            >
+            <a href="#section-3" class="nav-link" role="listitem">Theorems</a>
+            <a href="#section-5" class="nav-link" role="listitem"
+              >Applications</a
+            >
+            <a href="#quiz-section" class="nav-link" role="listitem">Quiz</a>
+            <button
+              class="nav-link glossary-trigger"
+              id="glossaryOpen"
+              aria-label="Open glossary"
+              role="listitem"
+            >
+              Glossary
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════ -->
+    <main id="main-content">
+      <!-- ──────────────────────────────────────────────────
+         HERO SECTION
+         ────────────────────────────────────────────────── -->
+      <section class="hero" id="hero" aria-label="Introduction">
+        <div class="hero-orbs" aria-hidden="true">
+          <div class="orb orb-1"></div>
+          <div class="orb orb-2"></div>
+          <div class="orb orb-3"></div>
+        </div>
+        <div class="hero-content container">
+          <span class="hero-badge reveal">STA 413 · Module 1</span>
+          <h1 class="hero-title reveal">
+            <span class="title-word">Distribution</span>
+            <span class="title-word">of</span>
+            <span class="title-word accent-text">Quadratic</span>
+            <span class="title-word accent-text">Forms</span>
+          </h1>
+          <p class="hero-subtitle reveal">
+            Built for Maxwell. Let's turn confusion into clarity.
+          </p>
+          <div class="hero-meta reveal">
+            <span class="meta-item">≈ 60 min</span>
+            <span class="meta-divider">·</span>
+            <span class="meta-item">7 sections</span>
+            <span class="meta-divider">·</span>
+            <span class="meta-item">8 interactives</span>
+            <span class="meta-divider">·</span>
+            <span class="meta-item">1 quiz</span>
+          </div>
+          <a
+            href="#section-1"
+            class="hero-cta reveal"
+            aria-label="Start learning"
+          >
+            Let's Begin
+            <span class="cta-arrow" aria-hidden="true">→</span>
+          </a>
+          <div class="scroll-hint reveal" aria-hidden="true">
+            <span class="scroll-hint-text">Scroll to explore</span>
+            <span class="scroll-hint-icon">↓</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         PREREQUISITES (Collapsible)
+         ────────────────────────────────────────────────── -->
+      <section class="prereqs-section" id="prereqs" aria-label="Prerequisites">
+        <div class="container">
+          <div class="prereqs-header reveal">
+            <h2>Quick Refresher: What You Need Going In</h2>
+            <p>
+              Already comfortable with these? Skip ahead. Rusty? Open any
+              section for a quick recap.
+            </p>
+          </div>
+
+          <!-- Prereq 1: Normal & Chi-Square -->
+          <div class="accordion-item reveal">
+            <button
+              class="accordion-trigger"
+              aria-expanded="false"
+              aria-controls="prereq-1-content"
+            >
+              <span class="accordion-icon" aria-hidden="true">+</span>
+              <span>Normal &amp; Chi-Square Distributions</span>
+            </button>
+            <div class="accordion-content" id="prereq-1-content" hidden>
+              <p>
+                If <span class="fm">Z</span> follows a standard normal
+                distribution — written <span class="fm">Z</span> ∼
+                <span class="fm">N</span>(0, 1) — then
+                <span class="fm">Z</span>² follows a
+                <strong>chi-square distribution with 1 degree of freedom</strong
+                >: <span class="fm">Z</span>² ∼ χ²(1).
+              </p>
+              <p>
+                If you have <span class="fm">k</span> independent standard
+                normals and square them all, the sum follows χ²(<span class="fm"
+                  >k</span
+                >):
+              </p>
+              <div
+                class="eq-block"
+                role="math"
+                aria-label="Z 1 squared plus Z 2 squared plus dot dot dot plus Z k squared follows chi-square with k degrees of freedom"
+              >
+                <span class="fm">Z</span>₁² + <span class="fm">Z</span>₂² + ⋯ +
+                <span class="fm">Z</span><sub>k</sub>² ∼ χ²(<span class="fm"
+                  >k</span
+                >)
+              </div>
+              <div class="callout callout-key">
+                <span class="callout-icon" aria-hidden="true">🔑</span>
+                <p>
+                  <strong>Key facts:</strong> If <span class="fm">W</span> ∼
+                  χ²(<span class="fm">r</span>), then E(<span class="fm">W</span
+                  >) = <span class="fm">r</span> and Var(<span class="fm"
+                    >W</span
+                  >) = 2<span class="fm">r</span>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prereq 2: Matrix Essentials -->
+          <div class="accordion-item reveal">
+            <button
+              class="accordion-trigger"
+              aria-expanded="false"
+              aria-controls="prereq-2-content"
+            >
+              <span class="accordion-icon" aria-hidden="true">+</span>
+              <span>Matrix Essentials</span>
+            </button>
+            <div class="accordion-content" id="prereq-2-content" hidden>
+              <p>
+                A <strong>symmetric matrix</strong> equals its own transpose:
+                <span class="fm">A</span> = <span class="fm">A</span>′. The
+                entries mirror across the diagonal.
+              </p>
+              <p>
+                The <strong>identity matrix</strong>
+                <span class="fm">I</span> has 1s on the diagonal and 0s
+                everywhere else. Multiplying by
+                <span class="fm">I</span> changes nothing — like multiplying a
+                number by 1.
+              </p>
+              <div class="matrix-display">
+                <span class="fm">I</span>₂ =
+                <div
+                  class="matrix m2x2"
+                  aria-label="2 by 2 identity matrix: 1, 0, 0, 1"
+                >
+                  <div class="matrix-cell">1</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">1</div>
+                </div>
+                <span class="matrix-spacer"></span>
+                <span class="fm">I</span>₃ =
+                <div class="matrix m3x3" aria-label="3 by 3 identity matrix">
+                  <div class="matrix-cell">1</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">1</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">0</div>
+                  <div class="matrix-cell">1</div>
+                </div>
+              </div>
+              <p>
+                The <strong>transpose</strong> of a vector flips it from a
+                column to a row (or vice versa). If
+                <span class="fm vec">X</span> = (<span class="fm">X</span>₁,
+                <span class="fm">X</span>₂)′ is a column vector, then
+                <span class="fm vec">X</span>′ = [<span class="fm">X</span>₁
+                &nbsp; <span class="fm">X</span>₂] is a row vector.
+              </p>
+            </div>
+          </div>
+
+          <!-- Prereq 3: Eigenvalues -->
+          <div class="accordion-item reveal">
+            <button
+              class="accordion-trigger"
+              aria-expanded="false"
+              aria-controls="prereq-3-content"
+            >
+              <span class="accordion-icon" aria-hidden="true">+</span>
+              <span>Eigenvalues (Quick Intro)</span>
+            </button>
+            <div class="accordion-content" id="prereq-3-content" hidden>
+              <p>
+                An <strong>eigenvalue</strong> λ of a matrix
+                <span class="fm">A</span> is a number that satisfies:
+                <span class="fm">A</span><span class="fm vec">v</span> = λ<span
+                  class="fm vec"
+                  >v</span
+                >
+                for some non-zero vector <span class="fm vec">v</span>. It tells
+                you how much the matrix <em>scales</em> things in a particular
+                direction.
+              </p>
+              <p>
+                <strong>How to find eigenvalues (2×2):</strong> Solve det(<span
+                  class="fm"
+                  >A</span
+                >
+                − λ<span class="fm">I</span>) = 0.
+              </p>
+              <div class="callout callout-example">
+                <span class="callout-icon" aria-hidden="true">📝</span>
+                <div>
+                  <p>
+                    <strong>Example:</strong> For <span class="fm">A</span> =
+                    <span class="inline-matrix"
+                      >[<span>1, 1</span>; <span>1, 1</span>]</span
+                    >:
+                  </p>
+                  <div
+                    class="eq-block"
+                    role="math"
+                    aria-label="determinant of A minus lambda I equals lambda squared minus 2 lambda equals zero"
+                  >
+                    det(<span class="fm">A</span> − λ<span class="fm">I</span>)
+                    = (1−λ)² − 1 = λ² − 2λ = 0
+                  </div>
+                  <p>So λ(λ − 2) = 0, giving eigenvalues λ = 0 and λ = 2.</p>
+                </div>
+              </div>
+              <p>
+                An <strong>orthogonal matrix</strong>
+                <span class="fm">P</span> satisfies
+                <span class="fm">P</span>′<span class="fm">P</span> =
+                <span class="fm">I</span>. It rotates/reflects without
+                stretching. Every symmetric matrix can be diagonalized using an
+                orthogonal matrix.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 1: What is a Quadratic Form?
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-1"
+        aria-label="Section 1: Quadratic Forms"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 01</span></div>
+          <h2 class="section-heading reveal">What is a Quadratic Form?</h2>
+          <p class="section-subheading reveal">
+            Or: How to score a design composition with matrices
+          </p>
+
+          <div class="bridge-text reveal">
+            <p>
+              In statistics, we constantly work with sums of squares — total
+              variation (TSS), residual error (RSS), group differences (SSB).
+              All of these can be written as something called a
+              <strong>quadratic form</strong>. Let's see what that actually
+              means.
+            </p>
+          </div>
+
+          <!-- Engagement Hook -->
+          <div class="engagement-hook reveal">
+            <div class="hook-icon" aria-hidden="true">💡</div>
+            <p>
+              Before we define anything formally, think about this: if you have
+              3 design elements with intensity values, and a client brief that
+              says how to combine them — how would you compute a single "total
+              impact" score? That's exactly what a quadratic form does.
+            </p>
+          </div>
+
+          <!-- Core Explanation -->
+          <div class="explanation-block reveal">
+            <p>
+              Let <span class="fm vec">X</span> = (<span class="fm">X</span>₁,
+              <span class="fm">X</span>₂, …, <span class="fm">X</span
+              ><sub>n</sub>)′ be a vector of random variables, and let
+              <span class="fm">A</span> be a <strong>symmetric</strong>
+              <span class="fm">n</span> × <span class="fm">n</span> matrix. A
+              <strong>quadratic form</strong> is:
+            </p>
+            <div
+              class="eq-block eq-featured"
+              role="math"
+              aria-label="Q equals X transpose A X equals double sum of a i j X i X j"
+            >
+              <span class="fm">Q</span> = <span class="fm vec">X</span>′<span
+                class="fm"
+                >A</span
+              ><span class="fm vec">X</span> =
+              <span class="sigma-notation">
+                <span class="sigma-upper"><span class="fm">n</span></span>
+                <span class="sigma-symbol">Σ</span>
+                <span class="sigma-lower"><span class="fm">i</span>=1</span>
+              </span>
+              <span class="sigma-notation">
+                <span class="sigma-upper"><span class="fm">n</span></span>
+                <span class="sigma-symbol">Σ</span>
+                <span class="sigma-lower"><span class="fm">j</span>=1</span>
+              </span>
+              <span class="fm">a</span><sub>ij</sub><span class="fm">X</span
+              ><sub>i</sub><span class="fm">X</span><sub>j</sub>
+            </div>
+            <p>
+              What does this actually <em>do</em>? It takes your vector
+              <span class="fm vec">X</span> (the ingredients), runs them through
+              the matrix <span class="fm">A</span> (the recipe), and produces a
+              <strong>single number</strong> <span class="fm">Q</span> (the
+              result). The matrix <span class="fm">A</span> controls how the
+              elements interact.
+            </p>
+          </div>
+
+          <!-- Analogy: Graphic Design -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🎨</span>
+            <div>
+              <p class="callout-label">Design Analogy</p>
+              <p>
+                Imagine you're in Illustrator, building a logo with three
+                elements. Each element has an "intensity" value — that's your
+                vector <span class="fm vec">X</span>. The client brief specifies
+                how they combine: "Element 1 and Element 2 should reinforce each
+                other, Element 3 is independent." That client brief IS the
+                matrix <span class="fm">A</span>. The final design impact score
+                — one single number that captures how the whole composition hits
+                — that's <span class="fm">Q</span> =
+                <span class="fm vec">X</span>′<span class="fm">A</span
+                ><span class="fm vec">X</span>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Simplest Example: A = I -->
+          <div class="explanation-block reveal">
+            <h3>The Simplest Case: A = I (Identity)</h3>
+            <p>
+              When <span class="fm">A</span> is the identity matrix, there are
+              no cross-terms. Each variable just gets squared:
+            </p>
+            <div
+              class="matrix-equation"
+              role="math"
+              aria-label="Q equals X1 squared plus X2 squared, using identity matrix"
+            >
+              <span class="fm">Q</span> =
+              <div class="matrix-row-display">
+                [<span class="fm">X</span>₁ &nbsp; <span class="fm">X</span>₂]
+              </div>
+              <div class="matrix m2x2" aria-label="2 by 2 identity matrix">
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell">1</div>
+              </div>
+              <div class="matrix-col-display">
+                <div><span class="fm">X</span>₁</div>
+                <div><span class="fm">X</span>₂</div>
+              </div>
+              <span class="eq-result"
+                >= <span class="fm">X</span>₁² +
+                <span class="fm">X</span>₂²</span
+              >
+            </div>
+            <p>
+              If <span class="fm">X</span>₁, <span class="fm">X</span>₂ are
+              independent <span class="fm">N</span>(0, 1), then
+              <span class="fm">Q</span> = <span class="fm">X</span>₁² +
+              <span class="fm">X</span>₂² ∼ <strong>χ²(2)</strong>. Each squared
+              standard normal adds one degree of freedom.
+            </p>
+          </div>
+
+          <!-- Cross-terms teaser -->
+          <div class="explanation-block reveal">
+            <h3>What the Matrix Entries Mean</h3>
+            <p>
+              <strong>Diagonal entries</strong> (<span class="fm">a</span>₁₁,
+              <span class="fm">a</span>₂₂) produce pure squared terms like
+              <span class="fm">X</span>₁².
+            </p>
+            <p>
+              <strong>Off-diagonal entries</strong> (<span class="fm">a</span
+              >₁₂, <span class="fm">a</span>₂₁) create
+              <strong>cross-product interactions</strong> like
+              <span class="fm">X</span>₁<span class="fm">X</span>₂. These are
+              where elements "blend" together — and they change everything about
+              the distribution.
+            </p>
+          </div>
+
+          <!-- Idempotent intro -->
+          <div class="explanation-block reveal">
+            <h3>Idempotent Matrices: "Already Settled"</h3>
+            <p>
+              A matrix <span class="fm">A</span> is
+              <strong>idempotent</strong> if <span class="fm">A</span>² =
+              <span class="fm">A</span>. Apply the transformation once, apply it
+              again — same result. The identity matrix
+              <span class="fm">I</span> is idempotent:
+              <span class="fm">I</span>² = <span class="fm">I</span>.
+            </p>
+            <div class="callout callout-analogy reveal">
+              <span class="callout-icon" aria-hidden="true">🎨</span>
+              <div>
+                <p class="callout-label">Design Analogy</p>
+                <p>
+                  You know how Flatten Layers works in Illustrator? Hit
+                  Ctrl+Shift+E, everything merges down. Hit flatten again —
+                  nothing changes. It's already flat. That's
+                  <em>exactly</em> what <span class="fm">A</span>² =
+                  <span class="fm">A</span> means.
+                </p>
+                <p class="pidgin-aside">
+                  <em
+                    >E be like say — you flatten am once, e don settle. Flatten
+                    am again? Same thing. Na so A² = A dey work.</em
+                  >
+                </p>
+              </div>
+            </div>
+            <p>
+              Why does this matter? Because idempotent matrices have a magical
+              property: <strong>their eigenvalues can only be 0 or 1</strong>.
+              No weird scaling. Each direction either contributes fully or not
+              at all. This is the foundation of the Distribution Theorem we'll
+              see shortly.
+            </p>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 1: Matrix ↔ Algebra Builder -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-1"
+            data-component="matrix-builder"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Matrix ↔ Algebra Builder</h3>
+              <p>
+                Click any cell in the matrix to change its value. Watch how the
+                expanded algebra updates in real time.
+              </p>
+            </div>
+            <div class="interactive-body">
+              <div class="matrix-builder-layout">
+                <div class="builder-matrix-area">
+                  <p class="builder-label"><span class="fm">A</span> =</p>
+                  <div
+                    class="builder-matrix"
+                    role="grid"
+                    aria-label="Editable 2 by 2 matrix"
+                  >
+                    <button
+                      class="builder-cell"
+                      role="gridcell"
+                      data-row="0"
+                      data-col="0"
+                      aria-label="Row 1, Column 1. Value: 1"
+                    >
+                      1
+                    </button>
+                    <button
+                      class="builder-cell"
+                      role="gridcell"
+                      data-row="0"
+                      data-col="1"
+                      aria-label="Row 1, Column 2. Value: 0"
+                    >
+                      0
+                    </button>
+                    <button
+                      class="builder-cell"
+                      role="gridcell"
+                      data-row="1"
+                      data-col="0"
+                      aria-label="Row 2, Column 1. Value: 0"
+                    >
+                      0
+                    </button>
+                    <button
+                      class="builder-cell"
+                      role="gridcell"
+                      data-row="1"
+                      data-col="1"
+                      aria-label="Row 2, Column 2. Value: 1"
+                    >
+                      1
+                    </button>
+                  </div>
+                </div>
+                <div class="builder-arrow" aria-hidden="true">→</div>
+                <div class="builder-algebra-area">
+                  <p class="builder-label"><span class="fm">Q</span> =</p>
+                  <div
+                    class="builder-expansion"
+                    id="builderExpansion"
+                    aria-live="polite"
+                  >
+                    <span class="term term-diagonal"
+                      ><span class="fm">X</span>₁²</span
+                    >
+                    <span class="term-op">+</span>
+                    <span class="term term-diagonal"
+                      ><span class="fm">X</span>₂²</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="builder-properties"
+                id="builderProperties"
+                aria-live="polite"
+              >
+                <span class="prop-badge prop-active" data-prop="symmetric"
+                  >Symmetric ✓</span
+                >
+                <span class="prop-badge prop-active" data-prop="idempotent"
+                  >Idempotent ✓</span
+                >
+                <span class="prop-badge" data-prop="identity">Identity ✓</span>
+                <span class="prop-badge prop-active" data-prop="distribution"
+                  >χ²(2)</span
+                >
+              </div>
+              <div
+                class="builder-feedback"
+                id="builderFeedback"
+                aria-live="polite"
+              ></div>
+            </div>
+            <div class="interactive-footer">
+              <button
+                class="btn-reset"
+                data-reset="matrix-builder"
+                aria-label="Reset matrix to identity"
+              >
+                Reset
+              </button>
+              <span class="interactive-hint"
+                >Try setting all entries to 1 — what happens to the
+                cross-terms?</span
+              >
+            </div>
+          </div>
+
+          <!-- Key Takeaways -->
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                A quadratic form <span class="fm">Q</span> =
+                <span class="fm vec">X</span>′<span class="fm">A</span
+                ><span class="fm vec">X</span> takes a vector and a matrix and
+                produces <strong>one number</strong>.
+              </li>
+              <li>
+                Diagonal entries of <span class="fm">A</span> → squared terms.
+                Off-diagonal entries → cross-product interactions.
+              </li>
+              <li>
+                When <span class="fm">A</span> =
+                <span class="fm">I</span> (identity),
+                <span class="fm">Q</span> is simply the sum of squares:
+                <span class="fm">Q</span> = Σ<span class="fm">X</span>ᵢ².
+              </li>
+            </ul>
+          </div>
+
+          <p class="bridge-out reveal">
+            The identity matrix was straightforward. But what happens when
+            <span class="fm">A</span> has off-diagonal entries — when your
+            design elements start interacting? That's where eigenvalues come in.
+          </p>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 2: Eigenvalues Unlock Everything
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-2"
+        aria-label="Section 2: Eigenvalues"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 02</span></div>
+          <h2 class="section-heading reveal">
+            Eigenvalues: The Secret Decoder
+          </h2>
+          <p class="section-subheading reveal">
+            Breaking complex compositions into independent layers
+          </p>
+
+          <div class="bridge-text reveal">
+            <p>
+              We saw that <span class="fm">Q</span> =
+              <span class="fm">X</span>₁² + <span class="fm">X</span>₂² has a
+              nice χ² distribution. But what about <span class="fm">Q</span> =
+              (<span class="fm">X</span>₁ + <span class="fm">X</span>₂)²? This
+              expands to <span class="fm">X</span>₁² + 2<span class="fm">X</span
+              >₁<span class="fm">X</span>₂ + <span class="fm">X</span>₂² —
+              there's a cross-term now. How do we handle that?
+            </p>
+          </div>
+
+          <!-- Prediction Hook -->
+          <div class="engagement-hook reveal" id="prediction-1">
+            <div class="hook-icon" aria-hidden="true">🤔</div>
+            <p>
+              <strong>Quick prediction:</strong> <span class="fm">Q</span> =
+              (<span class="fm">X</span>₁ + <span class="fm">X</span>₂)²
+              involves two variables. Do you think it follows a χ²(2)
+              distribution?
+            </p>
+            <div class="prediction-options">
+              <button class="prediction-btn" data-prediction="yes">
+                Yes — χ²(2)
+              </button>
+              <button class="prediction-btn" data-prediction="no">
+                No — something else
+              </button>
+            </div>
+            <div
+              class="prediction-feedback"
+              aria-live="polite"
+              id="prediction1Feedback"
+            ></div>
+          </div>
+
+          <!-- Core Explanation -->
+          <div class="explanation-block reveal">
+            <h3>Example 2: Unpacking (X₁ + X₂)²</h3>
+            <p>Let's work through this step by step.</p>
+
+            <p><strong>Step 1 — Expand:</strong></p>
+            <div
+              class="eq-block"
+              role="math"
+              aria-label="Q equals X1 squared plus 2 X1 X2 plus X2 squared"
+            >
+              <span class="fm">Q</span> = (<span class="fm">X</span>₁ +
+              <span class="fm">X</span>₂)² = <span class="fm">X</span>₁² +
+              2<span class="fm">X</span>₁<span class="fm">X</span>₂ +
+              <span class="fm">X</span>₂²
+            </div>
+
+            <p><strong>Step 2 — Write the matrix:</strong></p>
+            <div
+              class="matrix-equation"
+              role="math"
+              aria-label="Q equals X transpose times A times X, where A is the 2 by 2 all-ones matrix"
+            >
+              <span class="fm">Q</span> =
+              <div class="matrix-row-display">
+                [<span class="fm">X</span>₁ &nbsp; <span class="fm">X</span>₂]
+              </div>
+              <div
+                class="matrix m2x2"
+                aria-label="matrix with all entries equal to 1"
+              >
+                <div class="matrix-cell hl-cross">1</div>
+                <div class="matrix-cell hl-cross">1</div>
+                <div class="matrix-cell hl-cross">1</div>
+                <div class="matrix-cell hl-cross">1</div>
+              </div>
+              <div class="matrix-col-display">
+                <div><span class="fm">X</span>₁</div>
+                <div><span class="fm">X</span>₂</div>
+              </div>
+            </div>
+
+            <p>
+              <strong>Step 3 — Find eigenvalues:</strong> Solve det(<span
+                class="fm"
+                >A</span
+              >
+              − λ<span class="fm">I</span>) = 0:
+            </p>
+            <div
+              class="eq-block"
+              role="math"
+              aria-label="lambda squared minus 2 lambda equals 0, so lambda equals 0 or 2"
+            >
+              (1−λ)(1−λ) − 1·1 = λ² − 2λ = λ(λ − 2) = 0 &nbsp; → &nbsp;
+              <strong>λ = 0, 2</strong>
+            </div>
+
+            <p>
+              <strong>Step 4 — Diagonalize:</strong> There exists an orthogonal
+              <span class="fm">P</span> such that
+              <span class="fm">P</span>′<span class="fm">A</span
+              ><span class="fm">P</span> = diag(2, 0). Define
+              <span class="fm vec">Z</span> = <span class="fm">P</span>′<span
+                class="fm vec"
+                >X</span
+              >. Since <span class="fm">P</span> is orthogonal and
+              <span class="fm vec">X</span> has independent standard normals,
+              <span class="fm vec">Z</span> also has independent standard
+              normals.
+            </p>
+            <div
+              class="eq-block"
+              role="math"
+              aria-label="Q equals 2 Z1 squared plus 0 times Z2 squared equals 2 Z1 squared"
+            >
+              <span class="fm">Q</span> = 2<span class="fm">Z</span>₁² + 0·<span
+                class="fm"
+                >Z</span
+              >₂² = 2<span class="fm">Z</span>₁²
+            </div>
+
+            <p><strong>Step 5 — State the distribution:</strong></p>
+            <div
+              class="eq-block eq-featured"
+              role="math"
+              aria-label="Q follows 2 times chi-square with 1 degree of freedom"
+            >
+              <span class="fm">Q</span> ∼ 2χ²(1)
+            </div>
+          </div>
+
+          <div class="callout callout-insight reveal">
+            <span class="callout-icon" aria-hidden="true">⚡</span>
+            <div>
+              <p class="callout-label">Key Insight</p>
+              <p>
+                Two variables, but only <strong>1 degree of freedom</strong>!
+                The eigenvalue 0 means one dimension contributes nothing — like
+                an empty layer in your Photoshop file. The eigenvalue 2 means
+                the remaining component is scaled by 2. The
+                <strong>rank</strong> (number of nonzero eigenvalues) determines
+                the true degrees of freedom, not the number of variables.
+              </p>
+            </div>
+          </div>
+
+          <!-- Analogy: Basketball -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🏀</span>
+            <div>
+              <p class="callout-label">Basketball Analogy</p>
+              <p>
+                Think about how Ant-Man breaks down a game. He scores from
+                midrange, from three, and at the rim. Eigenvalue decomposition
+                is like separating his total scoring into those independent
+                categories. Each eigenvalue tells you the "point weight" of that
+                scoring avenue. A zero eigenvalue? That's a shot type he never
+                takes — it contributes nothing to the total.
+              </p>
+            </div>
+          </div>
+
+          <!-- Diagonalization Analogy -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🎨</span>
+            <div>
+              <p class="callout-label">Design Analogy</p>
+              <p>
+                Your original design file is complex — elements overlap,
+                interact, blend into each other. Diagonalization is like
+                exporting each element to its own separate artboard. Now each
+                lives independently. You can analyze each element on its own
+                without the others interfering. That's what
+                <span class="fm">P</span>′<span class="fm">A</span
+                ><span class="fm">P</span> = <span class="fm">D</span> does to a
+                matrix — untangles everything.
+              </p>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 2: Eigenvalue Revealer -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-2"
+            data-component="eigenvalue-revealer"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Eigenvalue Revealer</h3>
+              <p>
+                Step through the eigenvalue computation. Each step reveals one
+                layer of the process.
+              </p>
+            </div>
+            <div class="interactive-body">
+              <div class="revealer-progress">
+                <span class="revealer-step-indicator" id="revealerProgress"
+                  >Step 1 of 5</span
+                >
+              </div>
+              <div class="revealer-cards">
+                <div class="revealer-card revealed card-active" data-step="1">
+                  <span class="step-number">①</span>
+                  <p>
+                    <strong>Start with:</strong> <span class="fm">Q</span> =
+                    (<span class="fm">X</span>₁ + <span class="fm">X</span>₂)²
+                  </p>
+                </div>
+                <div class="revealer-card" data-step="2">
+                  <span class="step-number">②</span>
+                  <p>
+                    <strong>Matrix form:</strong> <span class="fm">A</span> =
+                    <span class="inline-matrix">[1, 1; 1, 1]</span>
+                  </p>
+                </div>
+                <div class="revealer-card" data-step="3">
+                  <span class="step-number">③</span>
+                  <p>
+                    <strong>Eigenvalues:</strong> det(<span class="fm">A</span>
+                    − λ<span class="fm">I</span>) = λ² − 2λ = 0 →
+                    <strong>λ = 0, 2</strong>
+                  </p>
+                </div>
+                <div class="revealer-card" data-step="4">
+                  <span class="step-number">④</span>
+                  <p>
+                    <strong>Rewrite:</strong> <span class="fm">Q</span> =
+                    0·<span class="fm">Z</span>₁² + 2·<span class="fm">Z</span
+                    >₂² = <strong>2<span class="fm">Z</span>₂²</strong>
+                  </p>
+                </div>
+                <div class="revealer-card" data-step="5">
+                  <span class="step-number">⑤</span>
+                  <p>
+                    <strong>Distribution:</strong> <span class="fm">Q</span> ∼
+                    <strong>2χ²(1)</strong>
+                  </p>
+                  <p class="step-conclusion">
+                    Rank 1 → 1 degree of freedom → scaled by λ = 2
+                  </p>
+                </div>
+              </div>
+              <div class="revealer-controls">
+                <button
+                  class="btn-secondary"
+                  id="revealerPrev"
+                  disabled
+                  aria-label="Previous step"
+                >
+                  ← Back
+                </button>
+                <button
+                  class="btn-primary"
+                  id="revealerNext"
+                  aria-label="Next step"
+                >
+                  Next Step →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Takeaways -->
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                Eigenvalues reveal the true independent components of a
+                quadratic form.
+              </li>
+              <li>
+                The number of
+                <strong
+                  >nonzero eigenvalues = rank = effective degrees of
+                  freedom</strong
+                >.
+              </li>
+              <li>
+                <span class="fm">Q</span> = (<span class="fm">X</span>₁ +
+                <span class="fm">X</span>₂)² ∼ 2χ²(1) — two variables, but only
+                1 degree of freedom.
+              </li>
+            </ul>
+          </div>
+
+          <p class="bridge-out reveal">
+            We just saw eigenvalues unlock the distribution. But we needed a
+            specific matrix with eigenvalues 0 and 2. What if we could
+            <em>guarantee</em> the eigenvalues are only 0s and 1s? That's
+            exactly what the Distribution Theorem gives us.
+          </p>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         RECALL CHECKPOINT 1
+         ────────────────────────────────────────────────── -->
+      <section
+        class="checkpoint reveal"
+        id="checkpoint-1"
+        aria-label="Recall checkpoint 1"
+      >
+        <div class="container">
+          <div class="checkpoint-card">
+            <span class="checkpoint-icon" aria-hidden="true">🧠</span>
+            <h3>Quick Recall</h3>
+            <p class="checkpoint-question">
+              What matrix property means "apply it twice, same result as once"?
+            </p>
+            <div
+              class="checkpoint-options"
+              role="radiogroup"
+              aria-label="Checkpoint 1 options"
+            >
+              <button
+                class="checkpoint-option"
+                data-correct="true"
+                role="radio"
+                aria-checked="false"
+              >
+                Idempotent (A² = A)
+              </button>
+              <button
+                class="checkpoint-option"
+                role="radio"
+                aria-checked="false"
+              >
+                Symmetric (A = A′)
+              </button>
+              <button
+                class="checkpoint-option"
+                role="radio"
+                aria-checked="false"
+              >
+                Orthogonal (P′P = I)
+              </button>
+            </div>
+            <div class="checkpoint-feedback" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 3: The Distribution Theorem
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-3"
+        aria-label="Section 3: Distribution Theorem"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 03</span></div>
+          <h2 class="section-heading reveal">The Distribution Theorem</h2>
+          <p class="section-subheading reveal">
+            When quadratic forms guarantee chi-square
+          </p>
+
+          <div class="bridge-text reveal">
+            <p>
+              Eigenvalues can be anything — 0, 2, 3, 17.5. But there's a special
+              case that makes life beautiful: when the matrix
+              <span class="fm">A</span> is both
+              <strong>symmetric AND idempotent</strong>. Then the eigenvalues
+              can only be 0 or 1. And that changes everything.
+            </p>
+          </div>
+
+          <div class="engagement-hook reveal">
+            <div class="hook-icon" aria-hidden="true">💡</div>
+            <p>
+              If eigenvalues can only be 0 or 1, what does that mean for the
+              quadratic form? Think about it: no scaling, no weird weights. Each
+              independent component either contributes fully (eigenvalue = 1) or
+              not at all (eigenvalue = 0). Clean.
+            </p>
+          </div>
+
+          <!-- The Theorem -->
+          <div class="theorem-card reveal">
+            <div class="theorem-label">The Distribution Theorem</div>
+            <div class="theorem-body">
+              <p>
+                If <span class="fm vec">X</span> ∼ <span class="fm">N</span
+                ><sub>n</sub>(<span class="fm vec">0</span>, σ²<span class="fm"
+                  >I</span
+                >) and <span class="fm">A</span> is a
+                <strong>symmetric idempotent</strong> matrix with
+                <strong>rank <span class="fm">r</span></strong
+                >, then:
+              </p>
+              <div
+                class="eq-block eq-featured"
+                role="math"
+                aria-label="Q equals X transpose A X follows sigma squared times chi-square with r degrees of freedom"
+              >
+                <span class="fm">Q</span> = <span class="fm vec">X</span>′<span
+                  class="fm"
+                  >A</span
+                ><span class="fm vec">X</span> ∼ σ²χ²(<span class="fm">r</span>)
+              </div>
+            </div>
+          </div>
+
+          <!-- Proof Walkthrough -->
+          <div class="explanation-block reveal">
+            <h3>The Proof — Step by Step</h3>
+            <p>
+              This proof isn't a wall of symbols. It's a logical chain — each
+              step builds cleanly on the last.
+            </p>
+
+            <div class="proof-steps">
+              <div class="proof-step">
+                <span class="proof-step-num">1</span>
+                <div>
+                  <p>
+                    <strong>Decompose:</strong> Since
+                    <span class="fm">A</span> is symmetric, there exists an
+                    orthogonal matrix <span class="fm">P</span> such that
+                    <span class="fm">P</span>′<span class="fm">A</span
+                    ><span class="fm">P</span> is diagonal.
+                  </p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <span class="proof-step-num">2</span>
+                <div>
+                  <p>
+                    <strong>Constrain:</strong> Since
+                    <span class="fm">A</span> is idempotent (<span class="fm"
+                      >A</span
+                    >² = <span class="fm">A</span>), the diagonal entries can
+                    only be 0 or 1. (If λ² = λ, then λ = 0 or λ = 1.)
+                  </p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <span class="proof-step-num">3</span>
+                <div>
+                  <p>
+                    <strong>Simplify:</strong> So
+                    <span class="fm">P</span>′<span class="fm">A</span
+                    ><span class="fm">P</span> = diag(<span class="fm">I</span
+                    ><sub>r</sub>, <span class="fm">0</span>) — the first
+                    <span class="fm">r</span> entries are 1, the rest are 0.
+                  </p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <span class="proof-step-num">4</span>
+                <div>
+                  <p>
+                    <strong>Transform:</strong> Define
+                    <span class="fm vec">Y</span> =
+                    <span class="fm">P</span>′<span class="fm vec">X</span>.
+                    Since <span class="fm">P</span> is orthogonal,
+                    <span class="fm vec">Y</span> ∼ <span class="fm">N</span
+                    ><sub>n</sub>(<span class="fm vec">0</span>, σ²<span
+                      class="fm"
+                      >I</span
+                    >). The distribution is preserved.
+                  </p>
+                </div>
+              </div>
+              <div class="proof-step">
+                <span class="proof-step-num">5</span>
+                <div>
+                  <p>
+                    <strong>Conclude:</strong> <span class="fm">Q</span> =
+                    <span class="fm vec">X</span>′<span class="fm">A</span
+                    ><span class="fm vec">X</span> =
+                    <span class="fm vec">Y</span>′ diag(<span class="fm">I</span
+                    ><sub>r</sub>, <span class="fm">0</span>)
+                    <span class="fm vec">Y</span> = <span class="fm">Y</span>₁²
+                    + ⋯ + <span class="fm">Y</span><sub>r</sub>².
+                  </p>
+                  <p>
+                    Since each <span class="fm">Y</span>ᵢ/σ ∼
+                    <span class="fm">N</span>(0, 1), we get
+                    <span class="fm">Q</span>/σ² ∼ χ²(<span class="fm">r</span
+                    >). ∎
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="reveal">
+            <em class="pidgin-aside"
+              >Na so e simple reach! Once A behave well — symmetric, idempotent
+              — the distribution just dey fall in place.</em
+            >
+          </p>
+
+          <!-- Analogy for rank -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🎨</span>
+            <div>
+              <p class="callout-label">Design Analogy</p>
+              <p>
+                In a Photoshop file with 10 layers, some might be empty or just
+                duplicates. The <strong>rank</strong> tells you how many layers
+                have actual unique content. A rank-3 matrix in a 10×10 setting
+                means only 3 layers are doing real work. The rest are blank.
+                Count the non-blank layers — that's your degrees of freedom.
+              </p>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 3: Proof Sequencer -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-3"
+            data-component="proof-sequencer"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Proof Sequencer</h3>
+              <p>
+                Drag each proof step into the correct slot. On mobile, tap a
+                step then tap a slot.
+              </p>
+            </div>
+            <div class="interactive-body">
+              <div
+                class="sequencer-slots"
+                id="sequencerSlots"
+                role="list"
+                aria-label="Drop slots for proof steps"
+              >
+                <div class="seq-slot" data-slot="1" role="listitem">
+                  <span class="slot-number">1</span
+                  ><span class="slot-placeholder">Drop step here</span>
+                </div>
+                <div class="seq-slot" data-slot="2" role="listitem">
+                  <span class="slot-number">2</span
+                  ><span class="slot-placeholder">Drop step here</span>
+                </div>
+                <div class="seq-slot" data-slot="3" role="listitem">
+                  <span class="slot-number">3</span
+                  ><span class="slot-placeholder">Drop step here</span>
+                </div>
+                <div class="seq-slot" data-slot="4" role="listitem">
+                  <span class="slot-number">4</span
+                  ><span class="slot-placeholder">Drop step here</span>
+                </div>
+                <div class="seq-slot" data-slot="5" role="listitem">
+                  <span class="slot-number">5</span
+                  ><span class="slot-placeholder">Drop step here</span>
+                </div>
+              </div>
+              <div
+                class="sequencer-cards"
+                id="sequencerCards"
+                role="list"
+                aria-label="Proof steps to arrange"
+              >
+                <button
+                  class="seq-card"
+                  data-correct="3"
+                  role="listitem"
+                  aria-label="Proof step: P prime A P equals diagonal of I r and 0"
+                >
+                  P′AP = diag(I<sub>r</sub>, 0) — first r entries are 1, rest
+                  are 0.
+                </button>
+                <button
+                  class="seq-card"
+                  data-correct="5"
+                  role="listitem"
+                  aria-label="Proof step: Q reduces to sum of r squared normals, so Q over sigma squared follows chi-square r"
+                >
+                  Q = Y₁² + ⋯ + Y<sub>r</sub>², so Q/σ² ∼ χ²(r). ∎
+                </button>
+                <button
+                  class="seq-card"
+                  data-correct="1"
+                  role="listitem"
+                  aria-label="Proof step: A is symmetric so P prime A P is diagonal"
+                >
+                  A is symmetric → ∃ orthogonal P such that P′AP is diagonal.
+                </button>
+                <button
+                  class="seq-card"
+                  data-correct="4"
+                  role="listitem"
+                  aria-label="Proof step: define Y equals P prime X, Y has same distribution"
+                >
+                  Define Y = P′X. Since P is orthogonal, Y ∼ N(0, σ²I).
+                </button>
+                <button
+                  class="seq-card"
+                  data-correct="2"
+                  role="listitem"
+                  aria-label="Proof step: A squared equals A means eigenvalues are 0 or 1"
+                >
+                  A² = A → diagonal entries (eigenvalues) can only be 0 or 1.
+                </button>
+              </div>
+              <div class="sequencer-controls">
+                <button class="btn-primary" id="sequencerCheck" disabled>
+                  Check Order
+                </button>
+                <button
+                  class="btn-reset"
+                  id="sequencerReset"
+                  aria-label="Reset proof sequencer"
+                >
+                  Reset
+                </button>
+              </div>
+              <div
+                class="sequencer-feedback"
+                id="sequencerFeedback"
+                aria-live="polite"
+              ></div>
+            </div>
+          </div>
+
+          <div class="callout callout-warning reveal">
+            <span class="callout-icon" aria-hidden="true">⚠️</span>
+            <div>
+              <p class="callout-label">Common Misconception</p>
+              <p>
+                "All quadratic forms from normal variables follow chi-square." —
+                Not true! Only when <span class="fm">A</span> is symmetric
+                <strong>AND</strong> idempotent. Otherwise, you might get a
+                <em>scaled</em> chi-square or a weighted sum that isn't
+                chi-square at all.
+              </p>
+            </div>
+          </div>
+
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                Symmetric + idempotent <span class="fm">A</span> → eigenvalues
+                are only 0 and 1.
+              </li>
+              <li>
+                Rank <span class="fm">r</span> = count of 1-eigenvalues =
+                degrees of freedom.
+              </li>
+              <li>
+                <span class="fm">Q</span> = <span class="fm vec">X</span>′<span
+                  class="fm"
+                  >A</span
+                ><span class="fm vec">X</span> ∼ σ²χ²(<span class="fm">r</span
+                >). This is THE fundamental result.
+              </li>
+            </ul>
+          </div>
+
+          <p class="bridge-out reveal">
+            But statistics rarely gives us just <em>one</em> quadratic form.
+            What if we need to split the total sum of squares into pieces?
+            That's Cochran's Theorem.
+          </p>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 4: Cochran's Theorem
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-4"
+        aria-label="Section 4: Cochran's Theorem"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 04</span></div>
+          <h2 class="section-heading reveal">Cochran's Theorem</h2>
+          <p class="section-subheading reveal">
+            Splitting one chi-square into independent pieces
+          </p>
+
+          <div class="bridge-text reveal">
+            <p>
+              The Distribution Theorem handles one quadratic form. But in
+              practice — ANOVA, regression, estimation — we constantly split
+              sums of squares into pieces. Can we guarantee those pieces are
+              independent and each follows a chi-square distribution? That's
+              exactly what Cochran's Theorem answers.
+            </p>
+          </div>
+
+          <div class="engagement-hook reveal">
+            <div class="hook-icon" aria-hidden="true">🤔</div>
+            <p>
+              Think about this: you have one total sum of squares Σ<span
+                class="fm"
+                >X</span
+              >ᵢ². You split it into <span class="fm">k</span> pieces:
+              <span class="fm">Q</span>₁ + <span class="fm">Q</span>₂ + ⋯ +
+              <span class="fm">Q</span><sub>k</sub>. Under what conditions can
+              we be sure the pieces don't "leak" information into each other —
+              that they're truly independent?
+            </p>
+          </div>
+
+          <!-- The Theorem -->
+          <div class="theorem-card reveal">
+            <div class="theorem-label">Cochran's Theorem</div>
+            <div class="theorem-body">
+              <p>
+                Let <span class="fm">X</span>₁, …, <span class="fm">X</span
+                ><sub>n</sub> ∼ <span class="fm">N</span>(0, σ²), and suppose:
+              </p>
+              <div
+                class="eq-block"
+                role="math"
+                aria-label="Sum of X i squared equals Q 1 plus Q 2 plus dot dot dot plus Q k"
+              >
+                <span class="sigma-notation">
+                  <span class="sigma-upper"><span class="fm">n</span></span>
+                  <span class="sigma-symbol">Σ</span>
+                  <span class="sigma-lower"><span class="fm">i</span>=1</span>
+                </span>
+                <span class="fm">X</span>ᵢ² = <span class="fm">Q</span>₁ +
+                <span class="fm">Q</span>₂ + ⋯ + <span class="fm">Q</span
+                ><sub>k</sub>
+              </div>
+              <p>
+                where each <span class="fm">Q</span><sub>j</sub> =
+                <span class="fm vec">X</span>′<span class="fm">A</span
+                ><sub>j</sub><span class="fm vec">X</span>, and:
+              </p>
+              <ol class="theorem-conditions">
+                <li>
+                  Each <span class="fm">A</span><sub>j</sub> is symmetric and
+                  idempotent
+                </li>
+                <li>
+                  <span class="fm">A</span><sub>j</sub><span class="fm">A</span
+                  ><sub>l</sub> = <span class="fm">0</span> for
+                  <span class="fm">j</span> ≠ <span class="fm">l</span> &nbsp;
+                  <em>(orthogonal projections)</em>
+                </li>
+                <li>
+                  Σ<span class="fm">A</span><sub>j</sub> =
+                  <span class="fm">I</span> &nbsp;
+                  <em>(partition of identity)</em>
+                </li>
+              </ol>
+              <p>
+                Then: <span class="fm">Q</span><sub>j</sub>/σ² ∼ χ²(<span
+                  class="fm"
+                  >r</span
+                ><sub>j</sub>) <strong>independently</strong>, and
+                <span class="fm">r</span>₁ + <span class="fm">r</span>₂ + ⋯ +
+                <span class="fm">r</span><sub>k</sub> =
+                <span class="fm">n</span>.
+              </p>
+            </div>
+          </div>
+
+          <!-- CMYK Analogy -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🎨</span>
+            <div>
+              <p class="callout-label">Design Analogy — CMYK Separation</p>
+              <p>
+                Think about CMYK printing. You take one full-color logo and
+                separate it into four independent plates: Cyan, Magenta, Yellow,
+                Black. Each plate captures its own color information — they
+                don't interfere with each other. Combined, they perfectly
+                reconstruct the original. Cochran's Theorem does the same thing
+                with sums of squares — splits one total into independent pieces
+                that add back to the whole.
+              </p>
+              <p>
+                The condition <span class="fm">A</span><sub>j</sub
+                ><span class="fm">A</span><sub>l</sub> = 0 is like saying the
+                color plates don't overlap — cyan doesn't bleed into magenta.
+                And Σ<span class="fm">A</span><sub>j</sub> =
+                <span class="fm">I</span> means the plates reconstruct the full
+                image perfectly — nothing is lost.
+              </p>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 4: Decomposition Explorer -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-4"
+            data-component="decomposition-explorer"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Decomposition Explorer</h3>
+              <p>
+                See how a total chi-square decomposes into independent pieces.
+                Pick a scenario:
+              </p>
+            </div>
+            <div class="interactive-body">
+              <div class="decomp-scenarios">
+                <button
+                  class="scenario-btn active"
+                  data-scenario="sample-var"
+                  aria-pressed="true"
+                >
+                  Sample Variance (n−1 + 1)
+                </button>
+                <button
+                  class="scenario-btn"
+                  data-scenario="three-way"
+                  aria-pressed="false"
+                >
+                  Three-Way Split
+                </button>
+                <button
+                  class="scenario-btn"
+                  data-scenario="invalid"
+                  aria-pressed="false"
+                >
+                  Invalid Split ✗
+                </button>
+              </div>
+              <div class="decomp-visual" id="decompVisual">
+                <div class="decomp-bar-container">
+                  <div class="decomp-total-label" id="decompTotalLabel">
+                    Total: χ²(10)
+                  </div>
+                  <div class="decomp-bar" id="decompBar">
+                    <div
+                      class="decomp-segment seg-a"
+                      id="decompSegA"
+                      style="flex: 9"
+                    >
+                      <span class="seg-label">χ²(9)</span>
+                      <span class="seg-desc">Σ(Xᵢ − X̄)²</span>
+                    </div>
+                    <div class="decomp-independence" id="decompIndep">
+                      Independent!
+                    </div>
+                    <div
+                      class="decomp-segment seg-b"
+                      id="decompSegB"
+                      style="flex: 1"
+                    >
+                      <span class="seg-label">χ²(1)</span>
+                      <span class="seg-desc">n(X̄ − μ)²</span>
+                    </div>
+                  </div>
+                  <div class="decomp-df-check" id="decompDfCheck">
+                    9 + 1 = 10 ✓
+                  </div>
+                </div>
+              </div>
+              <div
+                class="decomp-feedback"
+                id="decompFeedback"
+                aria-live="polite"
+              ></div>
+            </div>
+          </div>
+
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                Cochran's Theorem lets us decompose one χ²(<span class="fm"
+                  >n</span
+                >) into <span class="fm">k</span>
+                <strong>independent</strong> χ²(<span class="fm">r</span
+                ><sub>j</sub>) components.
+              </li>
+              <li>
+                Three conditions: each <span class="fm">A</span
+                ><sub>j</sub> idempotent, <span class="fm">A</span><sub>j</sub
+                ><span class="fm">A</span><sub>l</sub> = 0, Σ<span class="fm"
+                  >A</span
+                ><sub>j</sub> = <span class="fm">I</span>.
+              </li>
+              <li>
+                Degrees of freedom add up: <span class="fm">r</span>₁ +
+                <span class="fm">r</span>₂ + ⋯ + <span class="fm">r</span
+                ><sub>k</sub> = <span class="fm">n</span>.
+              </li>
+            </ul>
+          </div>
+
+          <p class="bridge-out reveal">
+            Maxwell, you're past the hardest part. Everything from here builds
+            on what you already understand. Let's see why Cochran's Theorem
+            matters — starting with the most important result in applied
+            statistics.
+          </p>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         RECALL CHECKPOINT 2
+         ────────────────────────────────────────────────── -->
+      <section
+        class="checkpoint reveal"
+        id="checkpoint-2"
+        aria-label="Recall checkpoint 2"
+      >
+        <div class="container">
+          <div class="checkpoint-card">
+            <span class="checkpoint-icon" aria-hidden="true">🧠</span>
+            <h3>Quick Recall</h3>
+            <p class="checkpoint-question">
+              In Cochran's Theorem, what does the condition A<sub>j</sub>A<sub
+                >l</sub
+              >
+              = 0 guarantee?
+            </p>
+            <div
+              class="checkpoint-options"
+              role="radiogroup"
+              aria-label="Checkpoint 2 options"
+            >
+              <button
+                class="checkpoint-option"
+                role="radio"
+                aria-checked="false"
+              >
+                Both are chi-square distributed
+              </button>
+              <button
+                class="checkpoint-option"
+                data-correct="true"
+                role="radio"
+                aria-checked="false"
+              >
+                Independence of Q<sub>j</sub> and Q<sub>l</sub>
+              </button>
+              <button
+                class="checkpoint-option"
+                role="radio"
+                aria-checked="false"
+              >
+                Their ranks are equal
+              </button>
+            </div>
+            <div class="checkpoint-feedback" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 5: Sample Variance Connection
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-5"
+        aria-label="Section 5: Sample Variance"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 05</span></div>
+          <h2 class="section-heading reveal">
+            Sample Variance: Where Theory Meets Practice
+          </h2>
+          <p class="section-subheading reveal">
+            Why we divide by n − 1 (finally, the real reason)
+          </p>
+
+          <div class="bridge-text reveal">
+            <p>
+              Cochran's Theorem sounds abstract. But it's the engine behind one
+              of the most important results in all of statistics — the
+              distribution of the sample variance.
+            </p>
+          </div>
+
+          <div class="engagement-hook reveal">
+            <div class="hook-icon" aria-hidden="true">💡</div>
+            <p>
+              You've probably been told to divide by <span class="fm">n</span>−1
+              when computing sample variance. But <strong>WHY</strong>
+              <span class="fm">n</span>−1 and not <span class="fm">n</span>?
+              It's not a convention. It's not a correction. It's a consequence
+              of Cochran's Theorem.
+            </p>
+          </div>
+
+          <div class="explanation-block reveal">
+            <h3>The Decomposition</h3>
+            <p>
+              Start with <span class="fm">X</span>₁, …, <span class="fm">X</span
+              ><sub>n</sub> ∼ <span class="fm">N</span>(μ, σ²), independent. The
+              total variation around the true mean μ splits perfectly:
+            </p>
+            <div
+              class="eq-block eq-featured"
+              role="math"
+              aria-label="Sum of X i minus mu squared equals sum of X i minus X bar squared plus n times X bar minus mu squared"
+            >
+              <span class="sigma-notation"
+                ><span class="sigma-symbol">Σ</span></span
+              >(<span class="fm">X</span>ᵢ − μ)² =
+              <span class="sigma-notation"
+                ><span class="sigma-symbol">Σ</span></span
+              >(<span class="fm">X</span>ᵢ − <span class="fm">X̄</span>)² +
+              <span class="fm">n</span>(<span class="fm">X̄</span> − μ)²
+            </div>
+            <p>This is a Cochran decomposition! Let:</p>
+            <ul>
+              <li>
+                <span class="fm">Q</span>₁ = Σ(<span class="fm">X</span>ᵢ −
+                <span class="fm">X̄</span>)² — the variation <em>within</em> the
+                sample
+              </li>
+              <li>
+                <span class="fm">Q</span>₂ = <span class="fm">n</span>(<span
+                  class="fm"
+                  >X̄</span
+                >
+                − μ)² — the variation of the <em>mean</em> itself
+              </li>
+            </ul>
+            <p>
+              The matrices <span class="fm">A</span>₁ and
+              <span class="fm">A</span>₂ are idempotent and orthogonal (<span
+                class="fm"
+                >A</span
+              >₁<span class="fm">A</span>₂ = <span class="fm">0</span>). By
+              Cochran's Theorem:
+            </p>
+            <div class="result-pair reveal">
+              <div class="result-card">
+                <div
+                  class="eq-block"
+                  role="math"
+                  aria-label="Q1 over sigma squared follows chi-square with n minus 1 degrees of freedom"
+                >
+                  <span class="fm">Q</span>₁/σ² ∼ χ²(<span class="fm">n</span
+                  >−1)
+                </div>
+                <p class="result-desc">
+                  <span class="fm">n</span>−1 degrees of freedom for
+                  within-sample variation
+                </p>
+              </div>
+              <div class="result-card">
+                <div
+                  class="eq-block"
+                  role="math"
+                  aria-label="Q2 over sigma squared follows chi-square with 1 degree of freedom"
+                >
+                  <span class="fm">Q</span>₂/σ² ∼ χ²(1)
+                </div>
+                <p class="result-desc">1 degree of freedom for the mean</p>
+              </div>
+            </div>
+            <p class="reveal">
+              They are <strong>independent</strong>. And (<span class="fm"
+                >n</span
+              >−1) + 1 = <span class="fm">n</span>. ✓
+            </p>
+          </div>
+
+          <div class="callout callout-key reveal">
+            <span class="callout-icon" aria-hidden="true">⭐</span>
+            <div>
+              <p class="callout-label">The Big Result</p>
+              <div
+                class="eq-block eq-featured"
+                role="math"
+                aria-label="n minus 1 times S squared over sigma squared follows chi-square with n minus 1 degrees of freedom"
+              >
+                <span class="frac"
+                  ><span class="num"
+                    >(<span class="fm">n</span>−1)<span class="fm">S</span
+                    >²</span
+                  ><span class="den">σ²</span></span
+                >
+                =
+                <span class="frac"
+                  ><span class="num"
+                    >Σ(<span class="fm">X</span>ᵢ −
+                    <span class="fm">X̄</span>)²</span
+                  ><span class="den">σ²</span></span
+                >
+                ∼ χ²(<span class="fm">n</span>−1)
+              </div>
+              <p>
+                This is the foundational result for confidence intervals and
+                hypothesis tests. And as a bonus: <span class="fm">X̄</span> and
+                <span class="fm">S</span>² are <strong>independent</strong>!
+              </p>
+            </div>
+          </div>
+
+          <!-- Basketball Analogy for n-1 -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🏀</span>
+            <div>
+              <p class="callout-label">Basketball Analogy</p>
+              <p>
+                Picture a starting five. The team's scoring average is 20 points
+                per player. If you know what four players scored, the fifth
+                player's score is already locked in — it's whatever makes the
+                average hit 20. Out of 5 scores, only 4 are "free." One degree
+                of freedom gets consumed by the average. That's why we divide by
+                <span class="fm">n</span>−1, not <span class="fm">n</span>.
+              </p>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 5: Degrees of Freedom Calculator -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-5"
+            data-component="df-calculator"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Degrees of Freedom Calculator</h3>
+              <p>Adjust the sample size and watch the decomposition change.</p>
+            </div>
+            <div class="interactive-body">
+              <div class="df-slider-area">
+                <label for="dfSlider" class="df-label"
+                  >Sample size <span class="fm">n</span> =
+                  <span id="dfValue">5</span></label
+                >
+                <input
+                  type="range"
+                  id="dfSlider"
+                  min="2"
+                  max="20"
+                  value="5"
+                  step="1"
+                  class="slider"
+                  aria-label="Sample size n"
+                />
+              </div>
+              <div class="df-visual" id="dfVisual">
+                <div class="df-bar-row">
+                  <div class="df-bar df-bar-q1" id="dfBarQ1" style="flex: 4">
+                    <span class="df-bar-label"
+                      >χ²(<span id="dfQ1">4</span>)</span
+                    >
+                    <span class="df-bar-desc">Σ(Xᵢ − X̄)²/σ²</span>
+                  </div>
+                  <div class="df-bar df-bar-q2" id="dfBarQ2" style="flex: 1">
+                    <span class="df-bar-label">χ²(1)</span>
+                    <span class="df-bar-desc">n(X̄−μ)²/σ²</span>
+                  </div>
+                </div>
+                <p class="df-summary" id="dfSummary">
+                  Out of <strong>5</strong> observations,
+                  <strong>4</strong> deviations are free. The mean consumes
+                  <strong>1</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                Total variation splits into within-variation (<span class="fm"
+                  >n</span
+                >−1 df) and mean-variation (1 df).
+              </li>
+              <li>
+                (<span class="fm">n</span>−1)<span class="fm">S</span>²/σ² ∼
+                χ²(<span class="fm">n</span>−1) — the foundation for inference.
+              </li>
+              <li>
+                <span class="fm">X̄</span> and <span class="fm">S</span>² are
+                independent — a direct consequence of Cochran's Theorem.
+              </li>
+            </ul>
+          </div>
+
+          <p class="bridge-out reveal">
+            Everything so far had idempotent matrices with eigenvalues of 0 and
+            1. But what happens when the eigenvalues are other numbers — like 1,
+            2, and 3? Things get… interesting.
+          </p>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         RECALL CHECKPOINT 3
+         ────────────────────────────────────────────────── -->
+      <section
+        class="checkpoint reveal"
+        id="checkpoint-3"
+        aria-label="Recall checkpoint 3"
+      >
+        <div class="container">
+          <div class="checkpoint-card">
+            <span class="checkpoint-icon" aria-hidden="true">🧠</span>
+            <h3>Quick Recall</h3>
+            <p class="checkpoint-question">
+              If Q = 5X₁² + 5X₂² where X<sub>i</sub> ∼ N(0,1), is Q a standard
+              chi-square distribution?
+            </p>
+            <div
+              class="checkpoint-options"
+              role="radiogroup"
+              aria-label="Checkpoint 3 options"
+            >
+              <button
+                class="checkpoint-option"
+                role="radio"
+                aria-checked="false"
+              >
+                Yes — χ²(2)
+              </button>
+              <button
+                class="checkpoint-option"
+                data-correct="true"
+                role="radio"
+                aria-checked="false"
+              >
+                No — it's 5χ²(2), a scaled chi-square
+              </button>
+              <button
+                class="checkpoint-option"
+                role="radio"
+                aria-checked="false"
+              >
+                Yes — χ²(10)
+              </button>
+            </div>
+            <div class="checkpoint-feedback" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 6: When Weights Break Chi-Square
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-6"
+        aria-label="Section 6: Weighted Sums"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 06</span></div>
+          <h2 class="section-heading reveal">When Weights Break Chi-Square</h2>
+          <p class="section-subheading reveal">
+            Not every quadratic form plays nice
+          </p>
+
+          <div class="bridge-text reveal">
+            <p>
+              We've been living in a world where <span class="fm">A</span> is
+              idempotent — eigenvalues are 0 or 1 — and everything falls neatly
+              into chi-square distributions. But what about
+              <span class="fm">Q</span> = <span class="fm">X</span>₁² + 2<span
+                class="fm"
+                >X</span
+              >₂² + 3<span class="fm">X</span>₃²? The matrix is diagonal with
+              entries 1, 2, 3. Not idempotent. Not equal weights.
+            </p>
+          </div>
+
+          <div class="engagement-hook reveal" id="prediction-2">
+            <div class="hook-icon" aria-hidden="true">🤔</div>
+            <p>
+              <strong>Gut check:</strong> <span class="fm">Q</span> =
+              <span class="fm">X</span>₁² + 2<span class="fm">X</span>₂² +
+              3<span class="fm">X</span>₃² involves three chi-square(1)
+              variables. Is <span class="fm">Q</span> itself a chi-square
+              distribution?
+            </p>
+            <div class="prediction-options">
+              <button class="prediction-btn" data-prediction="yes">
+                Yes — some kind of χ²
+              </button>
+              <button class="prediction-btn" data-prediction="no">
+                No — something different
+              </button>
+            </div>
+            <div
+              class="prediction-feedback"
+              aria-live="polite"
+              id="prediction2Feedback"
+            ></div>
+          </div>
+
+          <div class="explanation-block reveal">
+            <h3>The Setup</h3>
+            <p>Here, <span class="fm">A</span> is diagonal:</p>
+            <div class="matrix-display">
+              <span class="fm">A</span> =
+              <div
+                class="matrix m3x3"
+                aria-label="diagonal matrix with entries 1, 2, 3"
+              >
+                <div class="matrix-cell hl-diag">1</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell hl-diag">2</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell">0</div>
+                <div class="matrix-cell hl-diag">3</div>
+              </div>
+            </div>
+            <p>
+              So <span class="fm">Q</span> = 1·<span class="fm">X</span>₁² +
+              2·<span class="fm">X</span>₂² + 3·<span class="fm">X</span>₃².
+              Each term is a <strong>scaled</strong> χ²(1). But scaling breaks
+              the chi-square property — <span class="fm">c</span>·<span
+                class="fm"
+                >Z</span
+              >
+              is NOT chi-square unless <span class="fm">c</span> = 1.
+            </p>
+          </div>
+
+          <div class="explanation-block reveal">
+            <h3>Proving It's Not Chi-Square</h3>
+            <p>
+              If <span class="fm">Q</span> were χ²(<span class="fm">r</span>),
+              it would satisfy E(<span class="fm">Q</span>) =
+              <span class="fm">r</span> and Var(<span class="fm">Q</span>) =
+              2<span class="fm">r</span>, so Var(<span class="fm">Q</span>) =
+              2·E(<span class="fm">Q</span>). Let's check:
+            </p>
+
+            <div class="computation-block">
+              <p>
+                <strong>E(<span class="fm">Q</span>)</strong> = 1·E(<span
+                  class="fm"
+                  >X</span
+                >₁²) + 2·E(<span class="fm">X</span>₂²) + 3·E(<span class="fm"
+                  >X</span
+                >₃²) = 1 + 2 + 3 = <strong>6</strong>
+              </p>
+            </div>
+            <div class="computation-block">
+              <p>
+                <strong>Var(<span class="fm">Q</span>)</strong> = Var(1·<span
+                  class="fm"
+                  >X</span
+                >₁²) + Var(2·<span class="fm">X</span>₂²) + Var(3·<span
+                  class="fm"
+                  >X</span
+                >₃²)
+              </p>
+              <p>
+                Since Var(<span class="fm">c</span>·χ²(1)) =
+                <span class="fm">c</span>²·Var(χ²(1)) =
+                <span class="fm">c</span>²·2 = 2<span class="fm">c</span>²:
+              </p>
+              <p>
+                Var(<span class="fm">Q</span>) = 2(1² + 2² + 3²) = 2(1 + 4 + 9)
+                = <strong>28</strong>
+              </p>
+            </div>
+
+            <div class="callout callout-warning reveal">
+              <span class="callout-icon" aria-hidden="true">❌</span>
+              <div>
+                <p>
+                  <strong>Chi-square check:</strong> Is Var(<span class="fm"
+                    >Q</span
+                  >) = 2·E(<span class="fm">Q</span>)? Is 28 = 12?
+                  <strong>NO!</strong>
+                </p>
+                <p>
+                  If <span class="fm">Q</span> ∼ χ²(<span class="fm">r</span>),
+                  we'd need <span class="fm">r</span> = 6 (from E) but also
+                  2<span class="fm">r</span> = 28 → <span class="fm">r</span> =
+                  14. Contradiction. <span class="fm">Q</span> is
+                  <strong>not</strong> chi-square.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="explanation-block reveal">
+            <h3>The General Formulas</h3>
+            <p>
+              For any weighted sum <span class="fm">Q</span> =
+              <span class="fm">a</span>₁<span class="fm">X</span>₁² +
+              <span class="fm">a</span>₂<span class="fm">X</span>₂² + ⋯ +
+              <span class="fm">a</span><sub>n</sub><span class="fm">X</span
+              ><sub>n</sub>²:
+            </p>
+            <div
+              class="eq-block"
+              role="math"
+              aria-label="E of Q equals sum of a i, equals trace of A"
+            >
+              E(<span class="fm">Q</span>) = Σ<span class="fm">a</span>ᵢ =
+              tr(<span class="fm">A</span>)
+            </div>
+            <div
+              class="eq-block"
+              role="math"
+              aria-label="Var of Q equals 2 times sum of a i squared"
+            >
+              Var(<span class="fm">Q</span>) = 2Σ<span class="fm">a</span>ᵢ²
+            </div>
+            <div class="callout callout-key reveal">
+              <span class="callout-icon" aria-hidden="true">🔑</span>
+              <div>
+                <p>
+                  <strong>Quick chi-square check:</strong>
+                  <span class="fm">Q</span> ∼ χ²(<span class="fm">r</span>) only
+                  if Var(<span class="fm">Q</span>) = 2·E(<span class="fm"
+                    >Q</span
+                  >), which requires all weights to equal 1.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basketball Analogy -->
+          <div class="callout callout-analogy reveal">
+            <span class="callout-icon" aria-hidden="true">🏀</span>
+            <div>
+              <p class="callout-label">Basketball Analogy</p>
+              <p>
+                If Ant scored ONLY from free throws (1 point each), his total
+                would follow a clean chi-square pattern — each shot is equally
+                weighted. But real Ant mixes free throws (1pt), midrange (2pt),
+                and threes (3pt). Each shot type carries a different weight.
+                When the weights aren't all equal, the total distribution isn't
+                a simple chi-square — it's a weighted combination with its own
+                unique shape.
+              </p>
+              <p class="pidgin-aside">
+                <em
+                  >Omo, this one no follow chi-square o. The different weights
+                  don scatter the pattern.</em
+                >
+              </p>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 6: Weight Explorer -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-6"
+            data-component="weight-explorer"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Weight Explorer</h3>
+              <p>
+                Adjust the weights and watch how E(Q), Var(Q), and the
+                chi-square check respond.
+              </p>
+            </div>
+            <div class="interactive-body">
+              <div class="weight-sliders">
+                <div class="weight-slider-row">
+                  <label for="weightA1"
+                    ><span class="fm">a</span>₁ =
+                    <span id="weightA1Val">1</span></label
+                  >
+                  <input
+                    type="range"
+                    id="weightA1"
+                    min="1"
+                    max="5"
+                    value="1"
+                    step="1"
+                    class="slider"
+                    aria-label="Weight a1"
+                  />
+                </div>
+                <div class="weight-slider-row">
+                  <label for="weightA2"
+                    ><span class="fm">a</span>₂ =
+                    <span id="weightA2Val">1</span></label
+                  >
+                  <input
+                    type="range"
+                    id="weightA2"
+                    min="1"
+                    max="5"
+                    value="1"
+                    step="1"
+                    class="slider"
+                    aria-label="Weight a2"
+                  />
+                </div>
+                <div class="weight-slider-row">
+                  <label for="weightA3"
+                    ><span class="fm">a</span>₃ =
+                    <span id="weightA3Val">1</span></label
+                  >
+                  <input
+                    type="range"
+                    id="weightA3"
+                    min="1"
+                    max="5"
+                    value="1"
+                    step="1"
+                    class="slider"
+                    aria-label="Weight a3"
+                  />
+                </div>
+              </div>
+              <div class="weight-results" id="weightResults">
+                <div class="weight-result-item">
+                  <span class="weight-result-label">E(Q) = Σaᵢ</span>
+                  <span class="weight-result-value" id="weightEQ">3</span>
+                </div>
+                <div class="weight-result-item">
+                  <span class="weight-result-label">Var(Q) = 2Σaᵢ²</span>
+                  <span class="weight-result-value" id="weightVarQ">6</span>
+                </div>
+                <div class="weight-result-item">
+                  <span class="weight-result-label">2 · E(Q)</span>
+                  <span class="weight-result-value" id="weight2EQ">6</span>
+                </div>
+              </div>
+              <div class="weight-check" id="weightCheck" aria-live="polite">
+                <span class="weight-check-icon">✓</span>
+                <span class="weight-check-text"
+                  >YES — it's χ²(3)! Var(Q) = 2·E(Q)</span
+                >
+              </div>
+              <div class="weight-bars" id="weightBars">
+                <div class="weight-bar" data-weight="1"><span>a₁=1</span></div>
+                <div class="weight-bar" data-weight="1"><span>a₂=1</span></div>
+                <div class="weight-bar" data-weight="1"><span>a₃=1</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                <span class="fm">Q</span> = Σ<span class="fm">a</span>ᵢχ²(1) is
+                NOT chi-square unless all <span class="fm">a</span>ᵢ = 1.
+              </li>
+              <li>
+                E(<span class="fm">Q</span>) = Σ<span class="fm">a</span>ᵢ (sum
+                of weights). Var(<span class="fm">Q</span>) = 2Σ<span class="fm"
+                  >a</span
+                >ᵢ² (twice sum of squared weights).
+              </li>
+              <li>
+                Quick check: <span class="fm">Q</span> ∼ χ²(<span class="fm"
+                  >r</span
+                >) only if Var(<span class="fm">Q</span>) = 2·E(<span class="fm"
+                  >Q</span
+                >).
+              </li>
+            </ul>
+          </div>
+
+          <p class="bridge-out reveal">
+            You now have the complete toolkit: identify the matrix, check its
+            properties, compute eigenvalues, determine the distribution. Let's
+            put it all together with practice problems.
+          </p>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SECTION 7: Practice & Synthesis
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section"
+        id="section-7"
+        aria-label="Section 7: Practice"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Section 07</span></div>
+          <h2 class="section-heading reveal">Practice &amp; Synthesis</h2>
+          <p class="section-subheading reveal">Putting it all together</p>
+
+          <div class="bridge-text reveal">
+            <p>
+              You've learned the definition, the eigenvalue trick, the
+              Distribution Theorem, Cochran's Theorem, the sample variance
+              result, and the weighted sum edge case. Now let's bring it all
+              together.
+            </p>
+          </div>
+
+          <!-- Decision Framework -->
+          <div class="explanation-block reveal">
+            <h3>The Decision Framework</h3>
+            <p>When you encounter a quadratic form, follow these steps:</p>
+            <div class="decision-tree">
+              <div class="decision-step">
+                <span class="decision-num">1</span>
+                <p>
+                  Write <span class="fm">Q</span> =
+                  <span class="fm vec">X</span>′<span class="fm">A</span
+                  ><span class="fm vec">X</span>. Identify the matrix
+                  <span class="fm">A</span>.
+                </p>
+              </div>
+              <div class="decision-step">
+                <span class="decision-num">2</span>
+                <p>
+                  Is <span class="fm">A</span> = <span class="fm">I</span>? →
+                  <span class="fm">Q</span> ∼ χ²(<span class="fm">n</span>).
+                  Done.
+                </p>
+              </div>
+              <div class="decision-step">
+                <span class="decision-num">3</span>
+                <p>
+                  Is <span class="fm">A</span> idempotent? → Find rank
+                  <span class="fm">r</span> → <span class="fm">Q</span> ∼
+                  σ²χ²(<span class="fm">r</span>). Done.
+                </p>
+              </div>
+              <div class="decision-step">
+                <span class="decision-num">4</span>
+                <p>
+                  Is <span class="fm">A</span> diagonal with unequal entries? →
+                  Weighted sum, NOT chi-square. Find E(<span class="fm">Q</span
+                  >) and Var(<span class="fm">Q</span>).
+                </p>
+              </div>
+              <div class="decision-step">
+                <span class="decision-num">5</span>
+                <p>
+                  None of the above? → Diagonalize. Find eigenvalues.
+                  <span class="fm">Q</span> = Σλᵢ<span class="fm">Z</span>ᵢ².
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Worked Examples -->
+          <div class="explanation-block reveal">
+            <h3>Worked Example: Q = (X₁ + X₂ + X₃)²</h3>
+            <p>
+              Matrix <span class="fm">A</span> is the 3×3 all-ones matrix
+              <span class="fm">J</span>:
+            </p>
+            <div class="matrix-display">
+              <span class="fm">A</span> =
+              <div class="matrix m3x3" aria-label="3 by 3 all-ones matrix">
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">1</div>
+              </div>
+            </div>
+            <p>
+              Eigenvalues: 3, 0, 0 (rank 1). So <span class="fm">Q</span> =
+              3<span class="fm">Z</span>₁² ∼ <strong>3χ²(1)</strong>.
+            </p>
+          </div>
+
+          <div class="explanation-block reveal">
+            <h3>Worked Example: Q = (X₁ − X₂)²</h3>
+            <p>
+              <span class="fm">Q</span> = <span class="fm">X</span>₁² − 2<span
+                class="fm"
+                >X</span
+              >₁<span class="fm">X</span>₂ + <span class="fm">X</span>₂².
+              Matrix:
+            </p>
+            <div class="matrix-display">
+              <span class="fm">A</span> =
+              <div class="matrix m2x2" aria-label="matrix: 1, -1, -1, 1">
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">−1</div>
+                <div class="matrix-cell">−1</div>
+                <div class="matrix-cell">1</div>
+              </div>
+            </div>
+            <p>
+              Eigenvalues: 0, 2 (rank 1). So <span class="fm">Q</span> = 2<span
+                class="fm"
+                >Z</span
+              >₁² ∼ <strong>2χ²(1)</strong>.
+            </p>
+          </div>
+
+          <!-- Assignment Scaffolding -->
+          <div class="explanation-block reveal">
+            <h3>Assignment Problems (with Hints)</h3>
+            <div class="assignment-card">
+              <p>
+                <strong>Problem 1:</strong> If <span class="fm">X</span>₁,
+                <span class="fm">X</span>₂, <span class="fm">X</span>₃ ∼
+                <span class="fm">N</span>(0,1), find the distribution of
+                <span class="fm">Q</span> = (<span class="fm">X</span>₁ +
+                <span class="fm">X</span>₂ + <span class="fm">X</span>₃)².
+              </p>
+              <button
+                class="hint-toggle"
+                aria-expanded="false"
+                aria-controls="hint-1"
+              >
+                Show Hint
+              </button>
+              <div class="hint-content" id="hint-1" hidden>
+                <p>
+                  This is the same as the worked example above! The matrix
+                  <span class="fm">A</span> is the 3×3 all-ones matrix.
+                  Eigenvalues: 3, 0, 0. So <span class="fm">Q</span> ∼ 3χ²(1).
+                </p>
+              </div>
+            </div>
+            <div class="assignment-card">
+              <p>
+                <strong>Problem 2:</strong> <span class="fm vec">X</span> ∼
+                <span class="fm">N</span>₃(<span class="fm vec">0</span>,
+                <span class="fm">I</span>₃), <span class="fm">A</span> =
+                <span class="frac"
+                  ><span class="num">1</span><span class="den">3</span></span
+                ><span class="fm">J</span> where <span class="fm">J</span> is
+                the 3×3 all-ones matrix. Find the distribution of
+                <span class="fm">Q</span> = <span class="fm vec">X</span>′<span
+                  class="fm"
+                  >A</span
+                ><span class="fm vec">X</span>.
+              </p>
+              <button
+                class="hint-toggle"
+                aria-expanded="false"
+                aria-controls="hint-2"
+              >
+                Show Hint
+              </button>
+              <div class="hint-content" id="hint-2" hidden>
+                <p>
+                  <strong>Step 1:</strong> Check idempotency.
+                  <span class="fm">A</span>² = (1/3)<span class="fm">J</span> ×
+                  (1/3)<span class="fm">J</span> = (1/9)<span class="fm">J</span
+                  >² = (1/9)(3<span class="fm">J</span>) = (1/3)<span class="fm"
+                    >J</span
+                  >
+                  = <span class="fm">A</span>. ✓ Idempotent!
+                </p>
+                <p>
+                  <strong>Step 2:</strong> Since <span class="fm">J</span> has
+                  eigenvalues 3, 0, 0, then <span class="fm">A</span> =
+                  (1/3)<span class="fm">J</span> has eigenvalues 1, 0, 0. Only
+                  0s and 1s!
+                </p>
+                <p>
+                  <strong>Step 3:</strong> Rank = 1. By the Distribution
+                  Theorem: <span class="fm">Q</span> ∼ χ²(1).
+                </p>
+                <p>
+                  <em>The 1/3 scaling made J into an idempotent matrix!</em>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE COMPONENT 7: Distribution Identifier -->
+          <div
+            class="interactive-component reveal"
+            id="interactive-7"
+            data-component="distribution-identifier"
+          >
+            <div class="interactive-header">
+              <span class="interactive-badge">Interactive</span>
+              <h3>Distribution Identifier</h3>
+              <p>
+                Practice the full decision process. Work through each problem
+                step by step.
+              </p>
+            </div>
+            <div class="interactive-body">
+              <div
+                class="identifier-tabs"
+                role="tablist"
+                aria-label="Practice problems"
+              >
+                <button
+                  class="identifier-tab active"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="id-panel-1"
+                  data-tab="1"
+                >
+                  Problem 1
+                </button>
+                <button
+                  class="identifier-tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="id-panel-2"
+                  data-tab="2"
+                >
+                  Problem 2
+                </button>
+                <button
+                  class="identifier-tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="id-panel-3"
+                  data-tab="3"
+                >
+                  Problem 3
+                </button>
+              </div>
+
+              <!-- Panel 1 -->
+              <div
+                class="identifier-panel active"
+                id="id-panel-1"
+                role="tabpanel"
+                aria-labelledby="tab-1"
+              >
+                <p class="id-problem">
+                  <strong>Q = (X₁ + X₂ + X₃)²</strong>, each Xᵢ ∼ N(0,1)
+                </p>
+                <div class="id-steps">
+                  <div class="id-step" data-step="1">
+                    <p class="id-step-label">Step 1: What is the matrix A?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="identity"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        I₃ (identity)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="allones"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        J (all-ones 3×3)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="diag123"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        diag(1, 2, 3)
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="2" hidden>
+                    <p class="id-step-label">Step 2: Is A idempotent?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="yes"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        Yes
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="no"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        No (J² = 3J ≠ J)
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="3" hidden>
+                    <p class="id-step-label">
+                      Step 3: What are the eigenvalues?
+                    </p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="111"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        1, 1, 1
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="003"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        0, 0, 3
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="123"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        1, 2, 3
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="4" hidden>
+                    <p class="id-step-label">
+                      Step 4: What's the distribution?
+                    </p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="chi3"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        χ²(3)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="3chi1"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        3χ²(1)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="chi1"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        χ²(1)
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                </div>
+                <div class="id-completion" hidden>✓ Complete!</div>
+              </div>
+
+              <!-- Panel 2 -->
+              <div
+                class="identifier-panel"
+                id="id-panel-2"
+                role="tabpanel"
+                aria-labelledby="tab-2"
+                hidden
+              >
+                <p class="id-problem">
+                  <strong>Q = (X₁ − X₂)²</strong>, each Xᵢ ∼ N(0,1)
+                </p>
+                <div class="id-steps">
+                  <div class="id-step" data-step="1">
+                    <p class="id-step-label">Step 1: What is the matrix A?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="1n1n"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        [1, −1; −1, 1]
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="1111"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        [1, 1; 1, 1]
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="i2"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        I₂
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="2" hidden>
+                    <p class="id-step-label">Step 2: Is A idempotent?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="yes"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        Yes
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="no"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        No (A² = 2A ≠ A)
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="3" hidden>
+                    <p class="id-step-label">Step 3: Eigenvalues?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="02"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        0, 2
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="11"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        1, 1
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="12"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        −1, 2
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="4" hidden>
+                    <p class="id-step-label">Step 4: Distribution?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="chi2"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        χ²(2)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="2chi1"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        2χ²(1)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="chi1"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        χ²(1)
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                </div>
+                <div class="id-completion" hidden>✓ Complete!</div>
+              </div>
+
+              <!-- Panel 3 -->
+              <div
+                class="identifier-panel"
+                id="id-panel-3"
+                role="tabpanel"
+                aria-labelledby="tab-3"
+                hidden
+              >
+                <p class="id-problem">
+                  <strong>A = (1/3)J</strong>, J = all-ones 3×3. X ∼ N₃(0, I₃).
+                  Find distribution of Q = X′AX.
+                </p>
+                <div class="id-steps">
+                  <div class="id-step" data-step="1">
+                    <p class="id-step-label">Step 1: Is A idempotent?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="yes"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        Yes! A² = (1/9)J² = (1/9)(3J) = (1/3)J = A
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="no"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        No
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="2" hidden>
+                    <p class="id-step-label">Step 2: Eigenvalues of A?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="100"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        1, 0, 0 (since J has eigenvalues 3,0,0 → (1/3)J has
+                        1,0,0)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="003"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        0, 0, 3
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="111"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        1/3, 1/3, 1/3
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="3" hidden>
+                    <p class="id-step-label">Step 3: Rank?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="1"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        Rank 1 (one nonzero eigenvalue)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="3"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        Rank 3
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                  <div class="id-step" data-step="4" hidden>
+                    <p class="id-step-label">Step 4: Distribution?</p>
+                    <div class="id-options" role="radiogroup">
+                      <button
+                        class="id-option"
+                        data-value="chi1"
+                        data-correct="true"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        χ²(1) — by the Distribution Theorem!
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="3chi1"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        3χ²(1)
+                      </button>
+                      <button
+                        class="id-option"
+                        data-value="chi3"
+                        role="radio"
+                        aria-checked="false"
+                      >
+                        χ²(3)
+                      </button>
+                    </div>
+                    <div class="id-step-feedback" aria-live="polite"></div>
+                  </div>
+                </div>
+                <div class="id-completion" hidden>✓ Complete!</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="takeaway-box reveal">
+            <h4 class="takeaway-title">Key Takeaways</h4>
+            <ul class="takeaway-list">
+              <li>
+                Always start by writing <span class="fm">Q</span> =
+                <span class="fm vec">X</span>′<span class="fm">A</span
+                ><span class="fm vec">X</span> and identifying
+                <span class="fm">A</span>.
+              </li>
+              <li>
+                Check if <span class="fm">A</span> is idempotent — if yes, use
+                the Distribution Theorem directly.
+              </li>
+              <li>
+                If not idempotent, find eigenvalues — they determine the
+                distribution.
+              </li>
+              <li>
+                The chi-square check: Var(<span class="fm">Q</span>) = 2·E(<span
+                  class="fm"
+                  >Q</span
+                >) only for genuine chi-square distributions.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         SUMMARY
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section summary-section"
+        id="summary"
+        aria-label="Summary"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Summary</span></div>
+          <h2 class="section-heading reveal">Everything at a Glance</h2>
+
+          <div class="summary-grid reveal">
+            <div class="summary-card">
+              <h4>A = I (Identity)</h4>
+              <p class="summary-eigenvalues">Eigenvalues: all 1s</p>
+              <p class="summary-result">Q ∼ χ²(n)</p>
+            </div>
+            <div class="summary-card">
+              <h4>A Idempotent, rank r</h4>
+              <p class="summary-eigenvalues">Eigenvalues: 0s and 1s</p>
+              <p class="summary-result">Q ∼ σ²χ²(r)</p>
+            </div>
+            <div class="summary-card">
+              <h4>A = cI or single λ</h4>
+              <p class="summary-eigenvalues">One nonzero eigenvalue λ</p>
+              <p class="summary-result">Q ∼ λ · χ²(1)</p>
+            </div>
+            <div class="summary-card">
+              <h4>Diagonal, unequal entries</h4>
+              <p class="summary-eigenvalues">Weights a₁, a₂, …, aₙ</p>
+              <p class="summary-result">Σaᵢχ²(1), NOT χ²</p>
+            </div>
+          </div>
+
+          <div class="summary-formulas reveal">
+            <h3>Key Formulas</h3>
+            <table class="formula-table" role="table">
+              <thead>
+                <tr>
+                  <th>Formula</th>
+                  <th>When to Use</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Q = X′AX</td>
+                  <td>Definition of quadratic form</td>
+                </tr>
+                <tr>
+                  <td>Q ∼ σ²χ²(r) when A² = A</td>
+                  <td>Distribution Theorem</td>
+                </tr>
+                <tr>
+                  <td>E(Q) = Σaᵢ = tr(A)</td>
+                  <td>Expected value of weighted sum</td>
+                </tr>
+                <tr>
+                  <td>Var(Q) = 2Σaᵢ²</td>
+                  <td>Variance of weighted sum</td>
+                </tr>
+                <tr>
+                  <td>(n−1)S²/σ² ∼ χ²(n−1)</td>
+                  <td>Sample variance distribution</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         QUIZ
+         ────────────────────────────────────────────────── -->
+      <section
+        class="content-section quiz-section"
+        id="quiz-section"
+        aria-label="Quiz"
+      >
+        <div class="container">
+          <div class="section-label reveal"><span>Quiz</span></div>
+          <h2 class="section-heading reveal">Test Your Understanding</h2>
+          <p class="section-subheading reveal">
+            10 questions · Take your time · Learn from the feedback
+          </p>
+          <p
+            class="quiz-progress-text reveal"
+            id="quizProgress"
+            aria-live="polite"
+          >
+            0 of 10 answered
+          </p>
+
+          <!-- Q1 -->
+          <div class="quiz-card reveal" data-question="1" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">1</span>
+              <span class="quiz-category">Conceptual</span>
+            </div>
+            <p class="quiz-question-text">
+              A quadratic form Q = X′AX combines a random vector X with a matrix
+              A to produce:
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 1 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text"
+                  >A new vector of the same dimension</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text"
+                  >A single number that captures squared terms AND cross-product
+                  interactions</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">A diagonal matrix</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text"
+                  >A probability value between 0 and 1</span
+                >
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="quiz-card reveal" data-question="2" data-correct="c">
+            <div class="quiz-question-header">
+              <span class="quiz-number">2</span>
+              <span class="quiz-category">Application</span>
+            </div>
+            <p class="quiz-question-text">
+              If X₁, X₂, X₃ are independent N(0,1) random variables, what is the
+              distribution of Q = X₁² + X₂² + X₃²?
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 2 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">χ²(1)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text">3χ²(1)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">χ²(3)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">N(0, 3)</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="quiz-card reveal" data-question="3" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">3</span>
+              <span class="quiz-category">Conceptual</span>
+            </div>
+            <p class="quiz-question-text">
+              A matrix A is called <em>idempotent</em> when:
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 3 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">A + A = 2A</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text"
+                  >A² = A (applying it twice gives the same result as
+                  once)</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text"
+                  >All entries of A are either 0 or 1</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text"
+                  >A is equal to the identity matrix I</span
+                >
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="quiz-card reveal" data-question="4" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">4</span>
+              <span class="quiz-category">Application</span>
+            </div>
+            <p class="quiz-question-text">
+              If X₁, X₂ ∼ N(0,1) independently, and Q = (X₁ + X₂)², the matrix A
+              has eigenvalues 0 and 2. What is the distribution of Q?
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 4 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">χ²(2)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text">2χ²(1)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">χ²(1)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">2χ²(2)</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="quiz-card reveal" data-question="5" data-correct="c">
+            <div class="quiz-question-header">
+              <span class="quiz-number">5</span>
+              <span class="quiz-category">Conceptual</span>
+            </div>
+            <p class="quiz-question-text">
+              In Cochran's Theorem, the condition A<sub>j</sub>A<sub>l</sub> = 0
+              (for j ≠ l) ensures that the quadratic forms Q<sub>j</sub> and
+              Q<sub>l</sub> are:
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 5 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">Equal in distribution</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text"
+                  >Both chi-square distributed</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">Independent of each other</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">Summing to zero</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q6 -->
+          <div class="quiz-card reveal" data-question="6" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">6</span>
+              <span class="quiz-category">Computation</span>
+            </div>
+            <p class="quiz-question-text">
+              For a random sample of size n = 10 from N(μ, σ²), the quantity
+              (n−1)S²/σ² follows:
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 6 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">χ²(10)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text">χ²(9)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">χ²(1)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">9χ²(1)</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q7 -->
+          <div class="quiz-card reveal" data-question="7" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">7</span>
+              <span class="quiz-category">Computation</span>
+            </div>
+            <p class="quiz-question-text">
+              If Q = 2X₁² + 2X₂² + 2X₃² where each Xᵢ ∼ N(0,1) independently,
+              what are E(Q) and Var(Q)?
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 7 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">E(Q) = 6, Var(Q) = 12</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text">E(Q) = 6, Var(Q) = 24</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">E(Q) = 3, Var(Q) = 6</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">E(Q) = 6, Var(Q) = 6</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q8 -->
+          <div class="quiz-card reveal" data-question="8" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">8</span>
+              <span class="quiz-category">Synthesis</span>
+            </div>
+            <p class="quiz-question-text">
+              Matrix A is 4×4, symmetric, with eigenvalues 1, 1, 0, 0. If X ∼
+              N₄(0, I₄), what is the distribution of Q = X′AX?
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 8 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">χ²(4)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text">χ²(2)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">2χ²(2)</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">Cannot be determined</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q9 -->
+          <div class="quiz-card reveal" data-question="9" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">9</span>
+              <span class="quiz-category">Scenario</span>
+            </div>
+            <p class="quiz-question-text">
+              In a one-way ANOVA with n = 15 observations in k = 3 groups of 5,
+              how many degrees of freedom does the within-group sum of squares
+              (SSW) have?
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 9 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text">15</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text">12</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text">3</span>
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text">2</span>
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Q10 -->
+          <div class="quiz-card reveal" data-question="10" data-correct="b">
+            <div class="quiz-question-header">
+              <span class="quiz-number">10</span>
+              <span class="quiz-category">Synthesis</span>
+            </div>
+            <p class="quiz-question-text">
+              Let X = (X₁, X₂, X₃)′ ∼ N₃(0, I₃) and A = (1/3)J where J is the
+              3×3 all-ones matrix. Which statement about Q = X′AX is TRUE?
+            </p>
+            <div
+              class="quiz-options"
+              role="radiogroup"
+              aria-label="Question 10 options"
+            >
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="a"
+              >
+                <span class="quiz-option-marker">A</span
+                ><span class="quiz-option-text"
+                  >Q ∼ 3χ²(1) because the eigenvalues of J are 3, 0, 0</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="b"
+              >
+                <span class="quiz-option-marker">B</span
+                ><span class="quiz-option-text"
+                  >Q ∼ χ²(1) because A is idempotent with rank 1</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="c"
+              >
+                <span class="quiz-option-marker">C</span
+                ><span class="quiz-option-text"
+                  >Q ∼ χ²(3) because A is 3×3</span
+                >
+              </button>
+              <button
+                class="quiz-option"
+                role="radio"
+                aria-checked="false"
+                data-value="d"
+              >
+                <span class="quiz-option-marker">D</span
+                ><span class="quiz-option-text"
+                  >Q is not chi-square because A is not the identity
+                  matrix</span
+                >
+              </button>
+            </div>
+            <div class="quiz-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Quiz Submit -->
+          <div class="quiz-submit-area reveal">
+            <button class="btn-primary quiz-submit" id="quizSubmit" disabled>
+              Submit Quiz
+            </button>
+            <p class="quiz-submit-hint" id="quizSubmitHint">
+              Answer all 10 questions to submit
+            </p>
+          </div>
+
+          <!-- Quiz Results -->
+          <div class="quiz-results" id="quizResults" hidden>
+            <div class="quiz-score-display">
+              <span class="quiz-score-number" id="quizScoreNumber">0</span>
+              <span class="quiz-score-label">/ 10</span>
+            </div>
+            <p class="quiz-score-message" id="quizScoreMessage"></p>
+            <button class="btn-secondary" id="quizRetry">
+              Review &amp; Retry
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────────────────────────
+         CELEBRATION
+         ────────────────────────────────────────────────── -->
+      <section
+        class="celebration-section"
+        id="celebration"
+        hidden
+        aria-label="Celebration"
+      >
+        <div class="container">
+          <div class="celebration-content">
+            <span class="celebration-emoji" aria-hidden="true">🎉</span>
+            <h2 class="celebration-heading">Incredible Work!</h2>
+            <p class="celebration-message" id="celebrationMessage"></p>
+            <a href="#section-1" class="btn-secondary">Review the Material</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ════════════════════════════════════════════════════
+       GLOSSARY PANEL
+       ════════════════════════════════════════════════════ -->
+    <div
+      class="glossary-overlay"
+      id="glossaryOverlay"
+      hidden
+      aria-hidden="true"
+    ></div>
+    <aside
+      class="glossary-panel"
+      id="glossaryPanel"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Glossary"
+      hidden
+    >
+      <div class="glossary-header">
+        <h2>Glossary</h2>
+        <button
+          class="glossary-close"
+          id="glossaryClose"
+          aria-label="Close glossary"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="glossary-search">
+        <input
+          type="search"
+          id="glossarySearch"
+          placeholder="Search terms…"
+          aria-label="Search glossary terms"
+        />
+      </div>
+      <div class="glossary-list" id="glossaryList">
+        <div class="glossary-item" data-term="quadratic form">
+          <h4>Quadratic Form</h4>
+          <p>
+            An expression Q = X′AX where X is a vector of random variables and A
+            is a symmetric matrix. Produces a single number from the vector.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="symmetric matrix">
+          <h4>Symmetric Matrix</h4>
+          <p>
+            A matrix where A = A′ (equals its own transpose). Entries mirror
+            across the main diagonal.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="idempotent matrix">
+          <h4>Idempotent Matrix</h4>
+          <p>
+            A matrix where A² = A. Applying it twice gives the same result as
+            applying it once. Its eigenvalues can only be 0 or 1.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="eigenvalue">
+          <h4>Eigenvalue</h4>
+          <p>
+            A scalar λ satisfying Av = λv for some non-zero vector v.
+            Eigenvalues reveal how much a matrix scales in each independent
+            direction.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="orthogonal matrix">
+          <h4>Orthogonal Matrix</h4>
+          <p>
+            A matrix P where P′P = I. Orthogonal transformations rotate/reflect
+            without stretching, preserving distances and distributions.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="diagonalization">
+          <h4>Diagonalization</h4>
+          <p>
+            The process of finding P such that P′AP is diagonal. This separates
+            a matrix into independent components along its eigenvectors.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="rank">
+          <h4>Rank</h4>
+          <p>
+            The number of nonzero eigenvalues of a matrix. Equals the effective
+            number of independent dimensions in the quadratic form.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="chi-square distribution">
+          <h4>Chi-Square Distribution</h4>
+          <p>
+            The distribution of a sum of squared standard normal variables.
+            χ²(k) has mean k and variance 2k.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="degrees of freedom">
+          <h4>Degrees of Freedom</h4>
+          <p>
+            The number of independent components in a sum of squares. For
+            quadratic forms with idempotent A: df = rank(A).
+          </p>
+        </div>
+        <div class="glossary-item" data-term="cochran's theorem">
+          <h4>Cochran's Theorem</h4>
+          <p>
+            States conditions under which a sum of squares can be decomposed
+            into independent chi-square components: each matrix idempotent,
+            mutually orthogonal, summing to the identity.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="distribution theorem">
+          <h4>Distribution Theorem</h4>
+          <p>
+            If A is symmetric idempotent with rank r and X ∼ N(0, σ²I), then
+            X′AX ∼ σ²χ²(r).
+          </p>
+        </div>
+        <div class="glossary-item" data-term="sample variance">
+          <h4>Sample Variance</h4>
+          <p>
+            S² = Σ(Xᵢ − X̄)²/(n−1). By Cochran's Theorem, (n−1)S²/σ² ∼ χ²(n−1).
+          </p>
+        </div>
+        <div class="glossary-item" data-term="weighted sum">
+          <h4>Weighted Chi-Square Sum</h4>
+          <p>
+            Q = Σaᵢχ²(1) where weights aᵢ are not all equal. NOT a chi-square
+            distribution. E(Q) = Σaᵢ, Var(Q) = 2Σaᵢ².
+          </p>
+        </div>
+        <div class="glossary-item" data-term="independence">
+          <h4>Statistical Independence</h4>
+          <p>
+            Two quadratic forms are independent if their projection matrices
+            satisfy AⱼAₗ = 0 — they project onto orthogonal subspaces.
+          </p>
+        </div>
+        <div class="glossary-item" data-term="projection matrix">
+          <h4>Projection Matrix</h4>
+          <p>
+            A matrix that is both symmetric and idempotent. Projects vectors
+            onto a subspace. Used in Cochran's Theorem decompositions.
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ════════════════════════════════════════════════════
+       DARK MODE TOGGLE
+       ════════════════════════════════════════════════════ -->
+    <button
+      class="dark-toggle"
+      id="darkToggle"
+      aria-label="Toggle dark mode"
+      title="Toggle dark mode"
+    >
+      <span class="dark-toggle-icon" aria-hidden="true">◐</span>
+    </button>
+
+    <!-- ════════════════════════════════════════════════════
+       WELCOME-BACK OVERLAY
+       ════════════════════════════════════════════════════ -->
+    <div
+      class="welcome-overlay"
+      id="welcomeOverlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-label="Welcome back"
+    >
+      <div class="welcome-card">
+        <h3>Welcome back!</h3>
+        <p id="welcomeMessage">You were on Section 3 last time.</p>
+        <div class="welcome-actions">
+          <button class="btn-primary" id="welcomeResume">
+            Continue where I left off
+          </button>
+          <button class="btn-secondary" id="welcomeRestart">
+            Start from the top
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p><strong>STA 413: Distribution Theory II</strong> · Module 1</p>
+            <p>
+              Source: Lecture Notes by Mr. S. A. Yusuf · Federal University of
+              Lafia
+            </p>
+            <p class="footer-contact">
+              Contact: adewale.yusuf@science.fulafia.edu.ng
+            </p>
+          </div>
+          <div class="footer-actions">
+            <button
+              class="btn-reset-progress"
+              id="resetProgress"
+              aria-label="Reset all progress"
+            >
+              Reset Progress
+            </button>
+          </div>
+        </div>
+        <p class="footer-powered">
+          Crafted with care by the SABI Knowledge Engine
+        </p>
+      </div>
+    </footer>
+
+    <!-- Confetti Container -->
+    <div
+      class="confetti-container"
+      id="confettiContainer"
+      aria-hidden="true"
+    ></div>
+
+    <!-- ════════════════════════════════════════════════════
+       SCRIPTS
+       ════════════════════════════════════════════════════ -->
+    <script src="./gsap.min.js"></script>
+    <script src="./ScrollTrigger.min.js"></script>
+    <script src="./script.js"></script>
+
+    <!-- GSAP Animation Engine -->
+    <script>
+      /* GSAP choreography — loaded after script.js */
+      /* Full implementation in Phase 2 */
+    </script>
+  </body>
+</html>
